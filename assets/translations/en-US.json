@@ -1,0 +1,59 @@
+{
+  "comment_login": "Related to Login Page",
+  "hello": "Hello",
+  "welcome": "Welcome to Monkey App",
+  "change_language": "Change Language",
+  "phone_number": "Phone Number",
+  "password": "Password",
+  "login": "Login",
+
+  "comment_drawer": "Related to Drawer Menu",
+  "App_name": "Monkey Mania",
+  "school": "School",
+  "children": "Children",
+  "nightMode": "Night Mode",
+  "logOut": "Logout",
+
+  "comment_school": "Related to School Screen",
+  "name": "Name",
+  "Address": "Address",
+  "Notes": "Notes (optional)",
+
+  "comment_child": "Related to Children Screen",
+  "AddChild": "Add Child",
+  "dateOfBirth": "Date of Birth",
+  "relationShip": "Relationship",
+  "addNumber": "Add Number",
+  "save": "Save",
+  "edit": "Edit",
+
+  "comment_child2": "😍😍 Success and Error Messages",
+
+  "loginSuccess": "Logged in successfully",
+  "LoginError": "Invalid credentials, please try again",
+
+  "addNote": "Added successfully",
+  "nameRequired": "This field is required",
+  "alreadyExists": "already Exists",
+  "NotFoundNote": "not found notes",
+  "created Successfully": "created Successfully",
+  "updatedSuccessfully": "updatedSuccessfully",
+  "enterAddressManually": "enterAddressManually",
+  "cansel": "Cansel",
+  "ok": "ok",
+  "search":"search",
+  "relation": "relation",
+
+  "loginFailure": "No active account found with the given credentials",
+
+
+  "createdBy": "Create By",
+  "createdAt": "Created At",
+  "lastUpdate": "LastUpdate",
+  "age": "age",
+  "active": "Active?",
+  "specialNeeds": "SpecialNeeds?",
+  "systemMessage": "SystemMessage",
+  "notFound":"Not Found"
+
+}
