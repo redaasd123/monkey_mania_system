@@ -1,16 +1,26 @@
 part of 'post_cubit.dart';
 
 @immutable
-sealed class PostState {}
+sealed class CreateSchoolState {}
 
-final class PostInitial extends PostState {}
-final class PostLoadingState extends PostState {}
-final class PostSuccessState extends PostState {
+final class CreateInitialState extends CreateSchoolState {}
+
+final class CreateLoadingState extends CreateSchoolState {}
+
+final class CreateSuccessState extends CreateSchoolState {
   final SchoolModel schoolModel;
 
-  PostSuccessState({required this.schoolModel});
+  CreateSuccessState({required this.schoolModel});
 }
-final class PostFailureState extends PostState {
+
+final class CreateFailureState extends CreateSchoolState {
   final String errMessage;
-  PostFailureState({required this.errMessage});
+
+  CreateFailureState({required this.errMessage});
+}
+
+final class CreateOfflineState extends CreateSchoolState {
+  final String errMessage;
+
+  CreateOfflineState({required this.errMessage});
 }

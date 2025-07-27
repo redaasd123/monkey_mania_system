@@ -4,19 +4,15 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const CustomButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const CustomButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gradient = LinearGradient(
       colors: isDark
-          ? [Color(0xFF4D65FF), Color(0xFFB388FF)]
-          : [Color(0xFF4D65FF), Color(0xFFB388FF)],
+          ? [Colors.purple, Colors.brown]
+          : [Colors.brown, Colors.brown],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );

@@ -42,7 +42,7 @@ class ChildrenListView extends StatelessWidget {
                         birthDate: data.birthDate));
               }
             },
-            child: ChildrenViewBodyItem(childrenModel: children[reversedIndex]),
+            child: ChildrenViewBodyItem(childrenEntity: children[reversedIndex]),
           );
         },
       ),

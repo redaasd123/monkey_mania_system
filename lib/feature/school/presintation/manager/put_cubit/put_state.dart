@@ -18,4 +18,9 @@ final class UpdateFailureState extends UpdateState {
   UpdateFailureState({required this.errMessage});
 
 }
+final class UpdateOfflineState extends UpdateState {
+  final String errMessage;
 
+  UpdateOfflineState({required this.errMessage});
+
+}

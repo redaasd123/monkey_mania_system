@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/list_view_sschool_fading.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/school_list_view.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../manager/school_cubit/school_cubit.dart';
 
@@ -15,17 +16,30 @@ class SchoolListViewBlocBuilder extends StatelessWidget {
       builder: (context, state) {
         if (state is SchoolSelectedState) {
           return SchoolListView(school: [state.selectedSchool]);
-
-        }
-        else if (state is SchoolSuccessState) {
+        } else if (state is SchoolSuccessState) {
           return SchoolListView(school: state.schools);
         } else if (state is SchoolFailureState) {
           return Center(child: Text(state.errMessage));
+        } else if (state is SchoolLoadingState) {
+          return Skeletonizer(
+            enabled: true,
+            child: ListView.builder(
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(),
+                  title: Text("Loading name..."),
+                  subtitle: Text("Loading address..."),
+                );
+              },
+            ),
+          ); // ✅ هتظهر وقت التحميل
         } else {
-          return CustomListViewFading();
+          return SizedBox(); // أو أي حاجة مناسبة كـ fallback
         }
       },
     );
+
 
   }
 }

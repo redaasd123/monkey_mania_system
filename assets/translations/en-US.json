@@ -54,6 +54,7 @@
   "active": "Active?",
   "specialNeeds": "SpecialNeeds?",
   "systemMessage": "SystemMessage",
-  "notFound":"Not Found"
+  "notFound":"Not Found",
+  "messageFailureOffLine": "No internet connection is available and the file has been temporarily saved. It will be sent automatically when internet connection is available. This may take a few minutes."
 
 }

@@ -84,15 +84,15 @@ class _SplashViewBodyState extends State<SplashViewBody>
               // ✨ عنوان التطبيق
               _showShimmer
                   ? Shimmer.fromColors(
-                baseColor: colorScheme.primary.withOpacity(0.3),
-                highlightColor: colorScheme.primary,
+                baseColor: Colors.brown, // بني فاتح
+                highlightColor: Colors.green, // بني أفتح
                 period: const Duration(milliseconds: 1200),
                 child: Text(
                   'Monkey Mania',
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w600,
-                    color: colorScheme.primary,
+                    color: colorScheme.primary, // يفضل تسيبها كده علشان التيكست يكون واضح لما الشيمر ينتهي
                   ),
                 ),
               )

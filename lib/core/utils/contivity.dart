@@ -9,7 +9,7 @@ class ConnectivityService {
     _connectivity.onConnectivityChanged.listen((result) async {
       if (result != ConnectivityResult.none && !_isSyncing) {
         _isSyncing = true;
-        await onConnected(); // ✅ ده Future
+        await onConnected();
         _isSyncing = false;
       }
     });

@@ -43,7 +43,7 @@ class _LoaderDialog extends StatelessWidget {
           child: const SpinKitWave(
             //بـ SpinKitFadingCube
             //استبدل SpinKitCircle
-            color: Color(0xFF4D65FF),
+            color: Colors.brown,
             size: 70,
             duration: Duration(milliseconds: 2200),
           ),

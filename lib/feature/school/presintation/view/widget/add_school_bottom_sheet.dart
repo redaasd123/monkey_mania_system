@@ -1,14 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_app/core/param/create_school_param/create_school_param.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/core/use_case/params/post_school_param.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/feature/school/data/model/school_model.dart';
 
 import '../../../domain/entity/school_entity.dart';
 
 class AddSchoolBottomSheet extends StatefulWidget {
-  const AddSchoolBottomSheet({super.key, required this.text, required this.model});
+  const AddSchoolBottomSheet({
+    super.key,
+    required this.text,
+    required this.model,
+  });
+
   final String text;
   final SchoolEntity? model;
 
@@ -21,6 +26,7 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
   final _nameCtrl = TextEditingController();
   final _addrCtrl = TextEditingController();
   final _notesCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +60,7 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
           gradient: LinearGradient(
             colors: [
               colorScheme.primaryContainer,
-              colorScheme.primary.withOpacity(0.8)
+              colorScheme.primary.withOpacity(0.8),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -86,16 +92,19 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
       height: 4,
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-          color: Colors.white54, borderRadius: BorderRadius.circular(4)),
+        color: Colors.white54,
+        borderRadius: BorderRadius.circular(4),
+      ),
     ),
   );
 
   Widget _buildHeader(ColorScheme colorScheme) => Row(
     children: [
       const CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 23, backgroundImage:
-      AssetImage(kTest)),
+        backgroundColor: Colors.white,
+        radius: 23,
+        backgroundImage: AssetImage(kTest),
+      ),
       const SizedBox(width: 12),
       Text(
         LangKeys.appName.tr(),
@@ -117,7 +126,7 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
       padding: const EdgeInsets.all(16),
@@ -171,16 +180,13 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
   }
 
   void _submit() {
-
-
-
     if (_formKey.currentState!.validate()) {
-      Navigator.pop(context, {
-
-        'name': _nameCtrl.text.trim(),
-        'address': _addrCtrl.text.trim(),
-        'notes': _notesCtrl.text.trim(),
-      });
+      final schoolParam = CreateSchoolParam(
+        name: _nameCtrl.text.trim(),
+        address: _addrCtrl.text.trim(),
+        notes: _notesCtrl.text.trim(),
+      );
+      Navigator.pop(context, schoolParam);
     }
   }
 

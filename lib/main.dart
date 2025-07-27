@@ -25,7 +25,7 @@ class MonkeyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<SchoolCubit>()..fetchSchool()),
-        BlocProvider(create: (context) => getIt<PostCubit>()),
+        BlocProvider(create: (context) => getIt<CreateSchoolCubit>()),
         BlocProvider(create: (context) => getIt<UpdateSchoolCubit>()),
         BlocProvider(create: (_) => ThemeCubit()), // ✅ بدون Hive
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:monkey_app/feature/children/data/model/children_model.dart';
+import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/show_detail_children.dart';
 import 'package:monkey_app/feature/login/presentaion/view/login_view.dart';
@@ -28,7 +29,7 @@ abstract class AppRouter{
 
 
     GoRoute(path: kShowDetailChildren,
-      builder: (context, state) => ShowDetailChildren(childrenModel: state.extra as ChildrenModel,),),
+      builder: (context, state) => ShowDetailChildren(childrenEntity: state.extra as ChildrenEntity,),),
 
     GoRoute(path: kLoginView,
       builder: (context, state) => const LoginView(),),

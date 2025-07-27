@@ -92,8 +92,8 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton<SchoolCubit>(
     () => SchoolCubit(getIt<FetchSchoolUseCase>()),
   );
-  getIt.registerLazySingleton<PostCubit>(
-    () => PostCubit(getIt<PostSchoolUseCase>()),
+  getIt.registerLazySingleton<CreateSchoolCubit>(
+    () => CreateSchoolCubit(getIt<PostSchoolUseCase>()),
   );
   getIt.registerLazySingleton<UpdateSchoolCubit>(
     () => UpdateSchoolCubit(updateSchoolUseCase: getIt.get()),

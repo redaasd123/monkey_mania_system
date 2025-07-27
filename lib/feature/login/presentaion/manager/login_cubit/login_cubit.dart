@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:monkey_app/core/use_case/params/login_param.dart';
 import 'package:monkey_app/feature/login/domain/use_case/login_repo_use_case.dart';
+
+import '../../../../../core/param/login_param/login_param.dart';
 
 part 'login_state.dart';
 

@@ -52,11 +52,10 @@ class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
       body: param.tojson(),
     );
     return response;
-
   }
 
   @override
-  Future createChildren(CreateChildrenParam param) async{
+  Future createChildren(CreateChildrenParam param) async {
     print('🧒 DATA FROM SHEET: $param');
     print('🧒 JSON: ${param.toJson()}');
     final response = await getIt.get<Api>().post(
@@ -65,21 +64,4 @@ class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
     );
     return response;
   }
-}
-
-
-
-  // Save data to Hive if no internet
-
-// final response = await getIt.get<Api>().post(
-//   endPoint: "child/create/",
-//   body: param.toJson(),
-// );
-
-Future<bool> checkInternet() async {
-  final result = await Connectivity().checkConnectivity();
-  if (result == ConnectivityResult.none) {
-    return false; // لا يوجد اتصال بالإنترنت
-  }
-  return true; // يوجد اتصال بالإنترنت
 }

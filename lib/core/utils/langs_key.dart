@@ -53,5 +53,6 @@ class LangKeys {
   static const String systemMessage = "System Message";
   static const String notFound = "Not Found";
   static const String active = "Active?";
+  static const String messageFailureOffLine = "messageFailureOffLine";
 
 }

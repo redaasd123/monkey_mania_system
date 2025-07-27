@@ -9,9 +9,9 @@ import 'package:monkey_app/feature/children/domain/entity/children/children_enti
 import '../../../../../core/utils/styles.dart';
 
 class ChildrenViewBodyItem extends StatelessWidget {
-  const ChildrenViewBodyItem({super.key, required this.childrenModel});
+  const ChildrenViewBodyItem({super.key, required this.childrenEntity});
 
-  final ChildrenEntity childrenModel;
+  final ChildrenEntity childrenEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
                 _buildInfo(
                   icon: Icons.school,
                   label: LangKeys.name.tr(),
-                  text: childrenModel.name ?? 'لا يوجد اسم',
+                  text: childrenEntity.name ?? 'لا يوجد اسم',
                   style: Styles.textStyle20.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.primary, // اللون حسب الثيم
@@ -46,7 +46,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
                 _buildInfo(
                   icon: Icons.location_on_outlined,
                   label: LangKeys.address.tr(),
-                  text: childrenModel.address ?? 'لا يوجد عنوان',
+                  text: childrenEntity.address ?? 'لا يوجد عنوان',
                   style: Styles.textStyle16.copyWith(
                     color: colorScheme.onSurface.withOpacity(0.9), // اللون حسب الثيم
                   ),
@@ -56,8 +56,8 @@ class ChildrenViewBodyItem extends StatelessWidget {
                 _buildInfo(
                   icon: Icons.phone,
                   label: LangKeys.phoneNumber.tr(),
-                  text: childrenModel.childPhoneNumbersSet?.isNotEmpty == true
-                      ? childrenModel.childPhoneNumbersSet!.first.phoneNumber ?? 'لا يوجد رقم'
+                  text: childrenEntity.childPhoneNumbersSet?.isNotEmpty == true
+                      ? childrenEntity.childPhoneNumbersSet!.first.phoneNumber ?? 'لا يوجد رقم'
                       : 'لا يوجد رقم',
                   style: Styles.textStyle16.copyWith(
                     fontStyle: FontStyle.italic,
@@ -72,10 +72,10 @@ class ChildrenViewBodyItem extends StatelessWidget {
 
         Positioned(
           top: isArabic ? 180 : 180,
-          right: isArabic ? 340 : 20,
+          right: isArabic ? 310 : 20,
           child: GestureDetector(
             onTap: () {
-              GoRouter.of(context).push(AppRouter.kShowDetailChildren, extra: childrenModel);
+              GoRouter.of(context).push(AppRouter.kShowDetailChildren, extra: childrenEntity);
             },
             child: Icon(Icons.edit, color: colorScheme.primary), // اللون حسب الثيم
           ),

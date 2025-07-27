@@ -19,7 +19,10 @@ class ChildrenCubit extends Cubit<ChildrenState> {
   ChildrenCubit(this.fetchChildrenUseCase) : super(ChildrenInitial());
 
   Future<void> fetchChildren() async {
-    // نعرض البيانات من الكاش الأول
+    print("📢 fetchChildren STARTED");
+    emit(ChildrenLoadingState());
+    print("🔴 emitted Loading");
+
     final result = await fetchChildrenUseCase.call(NoParam());
     selectChild = null;
 

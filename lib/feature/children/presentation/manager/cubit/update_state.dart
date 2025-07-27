@@ -12,3 +12,8 @@ final class UpdateFailureState extends UpdateChildrenState {
   UpdateFailureState({required this.errMessage});
 }
 final class UpdateLoadingState extends UpdateChildrenState {}
+final class ChildrenOffLineState extends UpdateChildrenState {
+  final String errMessage;
+
+  ChildrenOffLineState({required this.errMessage});
+}
