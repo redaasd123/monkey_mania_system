@@ -15,12 +15,12 @@ import '../../../../school/domain/entity/school_entity.dart';
 
 class AddChildBottomSheet extends StatefulWidget {
   final String title;
-  final ChildrenEntity? childrenModel;
+  final ChildrenEntity? childrenEntity;
 
   const AddChildBottomSheet({
     super.key,
     required this.title,
-    this.childrenModel,
+    this.childrenEntity,
   });
 
   @override
@@ -43,15 +43,15 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.childrenModel != null) {
-      _selectedSchoolId = widget.childrenModel!.school?.toInt();
-      _schoolCtrl.text = widget.childrenModel!.name?.toString() ?? '';
-      _nameCtrl.text = widget.childrenModel!.name ?? '';
-      _birthDateCtrl.text = widget.childrenModel!.birthDate ?? '';
-      _addrCtrl.text = widget.childrenModel!.address ?? '';
-      _notesCtrl.text = widget.childrenModel!.notes ?? '';
+    if (widget.childrenEntity != null) {
+      _selectedSchoolId = widget.childrenEntity!.school;
+      _schoolCtrl.text = widget.childrenEntity!.name?.toString() ?? '';
+      _nameCtrl.text = widget.childrenEntity!.name ?? '';
+      _birthDateCtrl.text = widget.childrenEntity!.birthDate ?? '';
+      _addrCtrl.text = widget.childrenEntity!.address ?? '';
+      _notesCtrl.text = widget.childrenEntity!.notes ?? '';
       phoneNumbers =
-          widget.childrenModel?.childPhoneNumbersSet
+          widget.childrenEntity?.childPhoneNumbersSet
               ?.map(
                 (e) => {
                   'value': e.phoneNumber ?? '',
@@ -506,7 +506,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       DateFormat('yyyy-MM-dd').parseStrict(value.trim());
       return null;
     } catch (_) {
-      // return 'صيغة التاريخ يجب أن تكون yyyy-mm-dd';
     }
   }
 }

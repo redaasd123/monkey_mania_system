@@ -13,9 +13,9 @@ class Api {
 
   Future<dynamic> get({
   required String endPoint,
-  String? token,                     // ◀️ جعله اختياري
+  String? token,
+    Map<String,dynamic>?queryParameters
   }) async {
-  // 1️⃣ جهِّز الـ Headers إذا وُجد توكِن
   final headers = <String, String>{
   if (token != null) 'Authorization': 'Bearer $token',
   };
@@ -25,6 +25,7 @@ class Api {
   final response = await dio.get(
   _baseUrl + endPoint,
   options: Options(headers: headers),
+    queryParameters: queryParameters,
   );
 
   print('📦 Status: ${response.statusCode}');

@@ -6,6 +6,7 @@ import 'package:monkey_app/feature/children/presentation/manager/cubit/children_
 import 'package:monkey_app/feature/children/presentation/view/widget/children_list_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/reseve_data_floating_actio_button.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/search_children_builder.dart';
+import '../../../../../branch_service.dart';
 import '../../../../../core/utils/langs_key.dart';
 import 'children_bloc_builder_list_view.dart';
 
@@ -24,6 +25,27 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
+        leading: PopupMenuButton<String>(
+          icon: Padding(
+            padding: const EdgeInsets.only(top: 18.0),
+            child: const Icon(Icons.more_vert, color: Colors.white),
+          ),
+          onSelected: (value) {
+            if (value == 'branch') {
+              BranchService().showBranchList(context);
+            } else if (value == 'date') {
+              BranchService().showDateBicker(context);
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem<String>(value: 'branch', child: Text('Branch')),
+            const PopupMenuItem<String>(
+              value: 'date',
+              child: Text('DateBiker'),
+            ),
+          ],
+        ),
+
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         title: BlocBuilder<ChildrenCubit, ChildrenState>(
@@ -32,30 +54,30 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
             final isSearch = cubit.isSearching;
             return isSearch
                 ? SizedBox(
-              height: 40,
-                  child: TextField(
+                    height: 40,
+                    child: TextField(
                       controller: nameCtrl,
                       onChanged: (query) {
                         BlocProvider.of<ChildrenCubit>(
                           context,
                         ).searchChild(query);
                       },
-                    style: TextStyle(
-                      color: colorScheme.onPrimary, // لون النص جوه TextField
-                    ),
-                    cursorColor: colorScheme.onPrimary,
-                    decoration: InputDecoration(
-                      hintText: LangKeys.children.tr(),
-                      hintStyle: TextStyle(
-                        color: colorScheme.onPrimary.withOpacity(0.6),
+                      style: TextStyle(
+                        color: colorScheme.onPrimary, // لون النص جوه TextField
                       ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      filled: true,
-                      fillColor: colorScheme.primary, // نفس لون AppBar
+                      cursorColor: colorScheme.onPrimary,
+                      decoration: InputDecoration(
+                        hintText: LangKeys.children.tr(),
+                        hintStyle: TextStyle(
+                          color: colorScheme.onPrimary.withOpacity(0.6),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        filled: true,
+                        fillColor: colorScheme.primary, // نفس لون AppBar
+                      ),
                     ),
-                    ),
-                )
+                  )
                 : Text('');
           },
         ),
@@ -86,16 +108,13 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
         builder: (context, state) {
           final cubit = BlocProvider.of<ChildrenCubit>(context);
 
-          if(cubit.selectChild!=null&&!cubit.isSearching){
+          if (cubit.selectChild != null && !cubit.isSearching) {
             return ChildrenListView(children: [cubit.selectChild!]);
           }
           return ChildrenListView(children: cubit.filterChildren);
-
-
         },
       ),
       floatingActionButton: ReseveDataChildrenActionButton(context),
     );
   }
 }
-

@@ -18,7 +18,7 @@ Future<CreateChildrenParam?>? showAddChildBottomSheet(
       padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
       child: AddChildBottomSheet(
         title: title,
-        childrenModel: model,
+        childrenEntity: model,
       ),
     ),
   );

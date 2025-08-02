@@ -32,7 +32,7 @@ class UpdateChildrenParam {
   Map<String, dynamic> tojson() {
     return {
       "name": name,
-      "school": school,
+      "school": school is int ? school : int.tryParse(school.toString()) ?? 0,
       "birth_date": birthDate,
       "address": address,
       "notes": notes, //nullableZ

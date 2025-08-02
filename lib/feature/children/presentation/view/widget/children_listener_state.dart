@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
+import 'package:monkey_app/feature/children/presentation/view/widget/children_bloc_builder_list_view.dart';
 
 import '../../../../../core/funcation/show_snack_bar.dart';
 import '../../../../../core/utils/langs_key.dart';
@@ -13,7 +14,7 @@ import '../../manager/cubit/update_children_cubit.dart';
 import 'children_view_body.dart';
 
 class ChildrenListenerState extends StatelessWidget {
-  const ChildrenListenerState({super.key});
+  const ChildrenListenerState({super.key, required ChildrenViewBody child});
 
   @override
   Widget build(BuildContext context) {

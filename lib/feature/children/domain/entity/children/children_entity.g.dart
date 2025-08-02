@@ -17,6 +17,7 @@ class ChildrenEntityAdapter extends TypeAdapter<ChildrenEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ChildrenEntity(
+      schoolName: fields[12] as String?,
       id: fields[0] as num?,
       name: fields[1] as String?,
       birthDate: fields[2] as String?,
@@ -28,15 +29,15 @@ class ChildrenEntityAdapter extends TypeAdapter<ChildrenEntity> {
       created: fields[8] as String?,
       updated: fields[9] as String?,
       createdBy: fields[10] as String?,
-      school: fields[11] as num?,
-      childPhoneNumbersSet: (fields[12] as List?)?.cast<PhoneEntity>(),
+      school: fields[11] as int?,
+      childPhoneNumbersSet: (fields[13] as List?)?.cast<PhoneEntity>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ChildrenEntity obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,6 +63,8 @@ class ChildrenEntityAdapter extends TypeAdapter<ChildrenEntity> {
       ..writeByte(11)
       ..write(obj.school)
       ..writeByte(12)
+      ..write(obj.schoolName)
+      ..writeByte(13)
       ..write(obj.childPhoneNumbersSet);
   }
 

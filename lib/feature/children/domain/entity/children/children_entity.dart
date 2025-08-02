@@ -28,11 +28,14 @@ class ChildrenEntity {
   @HiveField(10)
   final String? createdBy;
   @HiveField(11)
-  final num? school;
+  final int? school;
   @HiveField(12)
+  final String? schoolName;
+  @HiveField(13)
   final List<PhoneEntity>? childPhoneNumbersSet;
 
   ChildrenEntity({
+    required this.schoolName,
     required this.id,
     required this.name,
     required this.birthDate,

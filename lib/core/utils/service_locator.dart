@@ -2,6 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:monkey_app/core/utils/api_serviece.dart';
+import 'package:monkey_app/feature/bills/data/data_source/bills_remote_data_source.dart';
+import 'package:monkey_app/feature/bills/data/repos/bills_repo_impl.dart';
+import 'package:monkey_app/feature/bills/domain/repo/bills_repo.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/bills_use_case.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/bills_cubit.dart';
+import 'package:monkey_app/feature/branch/data/data_source/branch_remote_data_source.dart';
+import 'package:monkey_app/feature/branch/data/repos/branch_repos_impl.dart';
+import 'package:monkey_app/feature/branch/domain/repo/branch_repo.dart';
+import 'package:monkey_app/feature/branch/domain/use_case/branch_use_case.dart';
+import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/children/data/data_source/childern_local_data_source.dart';
 import 'package:monkey_app/feature/children/data/data_source/children_remote_data_source.dart';
 import 'package:monkey_app/feature/children/data/repos/children_repo_impl.dart';
@@ -68,12 +78,13 @@ void setUpServiceLocator() {
 
   /* ───────── School Layer ───────── */
 
-  getIt.registerLazySingleton<SchoolRepo>(()=>SchoolRepoImpl(
-      getIt.get(), schoolRemoteDataSource: getIt.get()));
+  getIt.registerLazySingleton<SchoolRepo>(
+    () => SchoolRepoImpl(getIt.get(), schoolRemoteDataSource: getIt.get()),
+  );
 
-
-  getIt.registerLazySingleton<SchoolLocalDataSource>(()=>
-  SchoolLocalDataSourceImpl());
+  getIt.registerLazySingleton<SchoolLocalDataSource>(
+    () => SchoolLocalDataSourceImpl(),
+  );
   getIt.registerLazySingleton<FetchSchoolUseCase>(
     () => FetchSchoolUseCase(schoolRpo: getIt()),
   );
@@ -84,7 +95,6 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton<PostSchoolUseCase>(
     () => PostSchoolUseCase(schoolRepo: getIt.get()),
   );
-
 
   getIt.registerLazySingleton<SchoolRemoteDataSource>(
     () => SchoolRemoteDataSourceImpl(api: getIt.get()),
@@ -104,7 +114,9 @@ void setUpServiceLocator() {
     () => ChildrenRepoImpl(getIt.get(), childrenRemoteDataSource: getIt.get()),
   );
 
-  getIt.registerLazySingleton<ChildrenLocalDataSource>(()=>ChildrenLocalDataSourceImpl());
+  getIt.registerLazySingleton<ChildrenLocalDataSource>(
+    () => ChildrenLocalDataSourceImpl(),
+  );
 
   getIt.registerLazySingleton<FetchChildrenUseCase>(
     () => FetchChildrenUseCase(childrenRepo: getIt.get()),
@@ -131,5 +143,21 @@ void setUpServiceLocator() {
       updateChildrenUseCase: getIt<UpdateChildrenUseCase>(),
     ),
   );
+  getIt.registerLazySingleton<BranchRepo>(
+    () => BranchRepoImpl(branchRemoteDataSource: getIt.get()),
+  );
+  getIt.registerLazySingleton<BranchUseCase>(
+    () => BranchUseCase(branchRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<BranchRemoteDataSource>(
+    () => BranchRemoteDataSourceImpl(),
+  );
+
+  getIt.registerFactory<BranchCubit>(() => BranchCubit(getIt.get()));
   getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
+
+  getIt.registerLazySingleton<BillsUseCase>(()=>BillsUseCase(billsRepo: getIt.get()));
+  getIt.registerLazySingleton<BillsRemoteDataSource>(()=>BillsRemoteDataSourceImpl());
+  getIt.registerFactory<BillsCubit>(()=>BillsCubit(getIt<BillsUseCase>()));
+  getIt.registerLazySingleton<BillsRepo>(()=>BillsRepoImpl(billsRemoteDataSource: getIt.get()));
 }

@@ -6,8 +6,7 @@ import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
-import 'package:monkey_app/core/utils/styles.dart';
-import 'package:monkey_app/feature/home/presentation/view/widget/manager/theme_Cubit.dart';
+import '../../feature/home/presentation/manager/theme_Cubit.dart';
 
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
@@ -69,6 +68,15 @@ class MyAppDrawer extends StatelessWidget {
 
             _buildDrawerItem(
               onTap: () {
+               GoRouter.of(context).push(AppRouter.kBillsView);
+              },
+              context,
+              icon: Icons.account_balance_rounded,
+              text: LangKeys.changeLanguage.tr(),
+            ),
+
+            _buildDrawerItem(
+              onTap: () {
                 Locale newLocale = context.locale.languageCode == 'en'
                     ? Locale('ar', 'EG')
                     : Locale('en', 'US');
@@ -78,6 +86,7 @@ class MyAppDrawer extends StatelessWidget {
               icon: Icons.language,
               text: LangKeys.changeLanguage.tr(),
             ),
+
 
             _buildDrawerItem(
               context,

@@ -46,6 +46,7 @@ class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
 
   @override
   Future updateChildren(UpdateChildrenParam param) async {
+    print('📤 PUT BODY: ${param.tojson()}');
     print("${param.tojson()}😽😽😽😽😽😽👄👄👄");
     var response = await getIt.get<Api>().put(
       endPoint: 'child/${param.id}/update/',

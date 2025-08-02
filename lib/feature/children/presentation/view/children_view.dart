@@ -28,7 +28,7 @@ class ChildrenView extends StatelessWidget {
         BlocProvider(create: (context) => getIt<CreateChildCubit>()),
         BlocProvider(create: (context) => getIt<UpdateChildrenCubit>()),
       ],
-      child:  Scaffold(body: ChildrenBlocBuilderListView(child: ChildrenListenerState())) ,
+      child:  Scaffold(body: ChildrenListenerState(child: ChildrenViewBody())) ,
     );
   }
 }

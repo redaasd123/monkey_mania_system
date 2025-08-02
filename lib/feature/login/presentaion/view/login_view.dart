@@ -14,7 +14,7 @@ class LoginView extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<LoginCubit>(),
       child: Scaffold(
-        body: AppBackgroundWrapper(
+        body: CustomAppBar(
           child: LoginViewBody(),
         ),
       ),

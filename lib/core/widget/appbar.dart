@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class AppBackgroundWrapper extends StatelessWidget {
+class CustomAppBar extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
 
-  const AppBackgroundWrapper({
+  const CustomAppBar({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),

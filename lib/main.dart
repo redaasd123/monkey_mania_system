@@ -1,14 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'core/utils/app_router.dart';
 import 'core/utils/main_init.dart';
 import 'core/utils/service_locator.dart';
-import 'feature/home/presentation/view/widget/manager/theme_Cubit.dart';
+import 'feature/home/presentation/manager/theme_Cubit.dart';
 import 'feature/school/presintation/manager/post_cubit/post_cubit.dart';
 import 'feature/school/presintation/manager/put_cubit/put_cubit.dart';
 import 'feature/school/presintation/manager/school_cubit/school_cubit.dart';
-import 'core/theme_color/color_them.dart'; // ✅ الثيمات
+import 'core/theme_color/color_them.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -27,6 +28,7 @@ class MonkeyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<SchoolCubit>()..fetchSchool()),
         BlocProvider(create: (context) => getIt<CreateSchoolCubit>()),
         BlocProvider(create: (context) => getIt<UpdateSchoolCubit>()),
+        BlocProvider(create: (context)=>getIt<BranchCubit>()),
         BlocProvider(create: (_) => ThemeCubit()), // ✅ بدون Hive
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(

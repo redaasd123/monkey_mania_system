@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:monkey_app/feature/bills/presentation/view/bills_view.dart';
 import 'package:monkey_app/feature/children/data/model/children_model.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
@@ -19,6 +20,7 @@ abstract class AppRouter{
   static const kEditSchool = '/edit-school';
   static const kChildrenSchool = '/children';
   static const kShowDetailChildren = '/kShowDetailChildren';
+  static const kBillsView = '/kBillsView';
   static final router = GoRouter(
     navigatorKey: navigatorKey,
       routes: [
@@ -27,8 +29,11 @@ abstract class AppRouter{
         GoRoute(path: '/',
           builder: (context, state) => const SplashView(),),
 
+        GoRoute(path: kBillsView,
+          builder: (context, state) => BillsView(),),
 
-    GoRoute(path: kShowDetailChildren,
+
+        GoRoute(path: kShowDetailChildren,
       builder: (context, state) => ShowDetailChildren(childrenEntity: state.extra as ChildrenEntity,),),
 
     GoRoute(path: kLoginView,

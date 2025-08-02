@@ -18,6 +18,7 @@ import 'package:monkey_app/feature/children/domain/entity/phone/phone_entity.dar
 
 class ChildrenModel extends ChildrenEntity {
   ChildrenModel({
+    this.schoolName,
     this.id,
     this.name,
     this.birthDate,
@@ -32,6 +33,7 @@ class ChildrenModel extends ChildrenEntity {
     this.school,
     this.childPhoneNumbersSet,
   }) : super(
+    schoolName: schoolName,
          id: id,
          notes: notes,
          name: name,
@@ -66,8 +68,9 @@ class ChildrenModel extends ChildrenEntity {
       specialNeeds: json['special_needs'],
       created: json['created'],
       updated: json['updated'],
-      createdBy: json['created_by'],
-      school: json['school'],
+      createdBy: json['created_by']?.toString(),
+      schoolName: json['school_name'],
+      school: json['school_id'] is int ? json['school_id'] : int.tryParse(json['school_id'].toString()),
       childPhoneNumbersSet: phoneNumbers,
     );
   }
@@ -83,7 +86,8 @@ class ChildrenModel extends ChildrenEntity {
   String? created;
   String? updated;
   String? createdBy;
-  num? school;
+  int? school;
+  String? schoolName;
   List<ChildPhoneNumbersSet>? childPhoneNumbersSet;
 
   ChildrenModel copyWith({
@@ -98,7 +102,7 @@ class ChildrenModel extends ChildrenEntity {
     String? created,
     String? updated,
     String? createdBy,
-    num? school,
+    int? school,
     List<ChildPhoneNumbersSet>? childPhoneNumbersSet,
   }) => ChildrenModel(
     id: id ?? this.id,
@@ -131,7 +135,7 @@ class ChildrenModel extends ChildrenEntity {
     map['created'] = created;
     map['updated'] = updated;
     map['created_by'] = createdBy;
-    map['school'] = school;
+    map['school_id'] = school;
     if (childPhoneNumbersSet != null) {
       map['child_phone_numbers_set'] = childPhoneNumbersSet
           ?.map((v) => v.toJson())

@@ -17,7 +17,6 @@ class ChildrenViewBodyItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
     final colorScheme = Theme.of(context).colorScheme;
-
     return Stack(
       children: [
         Card(
@@ -26,7 +25,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          color: colorScheme.surface, // اللون حسب الثيم
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
