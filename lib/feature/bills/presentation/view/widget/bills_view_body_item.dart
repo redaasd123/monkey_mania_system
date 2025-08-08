@@ -6,85 +6,102 @@ import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/utils/styles.dart';
 
 class BillsViewBodyItem extends StatelessWidget {
-  const BillsViewBodyItem({super.key, required this.bills});
-
+  const BillsViewBodyItem({super.key, required this.bills,required this.ApplyDiscountonPressed, required this.closeOnPressed});
+  final void  Function() ApplyDiscountonPressed;
   final BillsEntity bills;
+  final void Function() closeOnPressed;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfo(
-              context: context,
-              icon: Icons.person,
-              label: 'Name',
-              text: bills.name ?? 'لا يوجد اسم',
-              style: Styles.textStyle20.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
+    return Stack(
+      children: [ Card(
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildInfo(
+                context: context,
+                icon: Icons.person,
+                label: LangKeys.name.tr(),
+                text: bills.children?[0].name ?? LangKeys.notFound.tr(),
+                style: Styles.textStyle20.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.phone,
-              label: 'Phone Number',
-              text: bills.phoneNumber ?? 'لا يوجد رقم',
-              style: Styles.textStyle16.copyWith(
-                fontStyle: FontStyle.italic,
-                color: colorScheme.onSurface.withOpacity(0.8),
+              const SizedBox(height: 16),
+              _buildInfo(
+                context: context,
+                icon: Icons.phone,
+                label: LangKeys.phoneNumber.tr(),
+                text: bills.children?[0].phoneNumbers?.map((e)=>e.phoneNumber).join(',') ?? LangKeys.notFound.tr(),
+
+                style: Styles.textStyle16.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.timelapse_outlined,
-              label: 'Spent Time',
-              text: bills.SpentTime?.toString() ?? 'غير متاح',
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
+              const SizedBox(height: 16),
+              _buildInfo(
+                context: context,
+                icon: Icons.timelapse_outlined,
+                label: LangKeys.spentTime.tr(),
+                text: bills.spentTime?.toString() ?? LangKeys.notFound.tr(),
+                style: Styles.textStyle16.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.monetization_on_outlined,
-              label: 'Total Price',
-              text: bills.TotalPrice.toString() ?? 'غير متاح',
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
+              const SizedBox(height: 16),
+              _buildInfo(
+                context: context,
+                icon: Icons.monetization_on_outlined,
+                label: LangKeys.totalPrice.tr(),
+                text: bills.totalPrice.toString() ?? LangKeys.notFound,
+                style: Styles.textStyle16.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.child_care,
-              label: 'Children Count',
-              text: bills.ChildrenCount?.toString() ?? 'غير متاح',
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
+              const SizedBox(height: 16),
+              _buildInfo(
+                context: context,
+                icon: Icons.child_care,
+                label: LangKeys.childrenCount.tr(),
+                text: bills.childrenCount?.toString() ?? LangKeys.notFound.tr(),
+                style: Styles.textStyle16.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
-            ),
-          ],
+              Row(children: [
+                Spacer(),
+                ElevatedButton(onPressed: ApplyDiscountonPressed, child: Text(LangKeys.applyDiscount.tr()))
+              ],)
+            ],
+          ),
         ),
       ),
+        Positioned(
+          top: 10,
+          right: 20,
+          child: IconButton(
+            onPressed: closeOnPressed,
+            icon: Icon(Icons.close, color: Colors.red),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildInfo({
     required IconData icon,
     required String label,
-    required String text,
+    required dynamic text,
     required TextStyle style,
     required BuildContext context,
   }) {
@@ -114,8 +131,11 @@ class BillsViewBodyItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
+
           ),
         ),
+
+
       ],
     );
   }

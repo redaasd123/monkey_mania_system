@@ -205,7 +205,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             _buildAddressField(),
             const SizedBox(height: 12),
             TextFieldSchoolID(
-              schoolCtrl: _schoolCtrl,
+              childrenCtrl: _schoolCtrl,
               colorScheme: Theme.of(context).colorScheme,
               onSelected: (int id) {
                 _selectedSchoolId = id;
@@ -513,10 +513,10 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 class TextFieldSchoolID extends StatefulWidget {
   const TextFieldSchoolID({
     super.key,
-    required TextEditingController schoolCtrl,
+    required TextEditingController childrenCtrl,
     required this.colorScheme,
     this.onSelected,
-  }) : _schoolCtrl = schoolCtrl;
+  }) : _schoolCtrl = childrenCtrl;
 
   final TextEditingController _schoolCtrl;
   final ColorScheme colorScheme;

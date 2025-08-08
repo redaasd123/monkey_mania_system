@@ -55,6 +55,31 @@
   "specialNeeds": "SpecialNeeds?",
   "systemMessage": "SystemMessage",
   "notFound":"Not Found",
-  "messageFailureOffLine": "No internet connection is available and the file has been temporarily saved. It will be sent automatically when internet connection is available. This may take a few minutes."
+  "messageFailureOffLine": "No internet connection is available and the file has been temporarily saved. It will be sent automatically when internet connection is available. This may take a few minutes.",
+"Bills":"Bills",
+
+
+
+  "cash": "Cash",
+  "visa": "Visa",
+  "instapay": "Instapay",
+  "totalPrice": "Total Price",
+  "productsPrice": "Products Price",
+  "timePrice": "Time Price",
+  "spentTime": "Spent Time",
+  "discountValue": "Discount Value",
+  "discountType": "Discount Type",
+  "branch": "Branch",
+  "isActive": "Is Active",
+  "isSubscription": "Is Subscription",
+  "moneyUnbalance": "Money Unbalance",
+  "created": "Created At",
+  "finished": "Finished At",
+  "createdBy": "Created By",
+  "finishedBy": "Finished By",
+  "childrenCount": "ChildrenCount",
+  "applyDiscount" : "Apply Discount"
+
+
 
 }

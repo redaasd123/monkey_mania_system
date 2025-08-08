@@ -54,5 +54,27 @@ class LangKeys {
   static const String notFound = "Not Found";
   static const String active = "Active?";
   static const String messageFailureOffLine = "messageFailureOffLine";
+  static const String Bills = 'Bills';
+
+
+
+  static const cash = 'cash';
+  static const visa = 'visa';
+  static const instapay = 'instapay';
+  static const totalPrice = 'totalPrice';
+  static const productsPrice = 'productsPrice';
+  static const timePrice = 'timePrice';
+  static const spentTime = 'spentTime';
+  static const discountValue = 'discountValue';
+  static const discountType = 'discountType';
+  static const branch = 'branch';
+  static const isActive = 'isActive';
+  static const isSubscription = 'isSubscription';
+  static const moneyUnbalance = 'moneyUnbalance';
+  static const created = 'created';
+  static const finished = 'finished';
+  static const finishedBy = 'finishedBy';
+  static const childrenCount = 'ChildrenCount';
+  static const applyDiscount = 'Apply Discount';
 
 }

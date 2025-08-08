@@ -7,7 +7,7 @@ import 'add_school_bottom_sheet.dart';
 Future<CreateSchoolParam?> schoolShowAddSchoolSheet(
     BuildContext ctx, {
       required String text,
-      SchoolEntity? model, // هنا بقت named & optional
+      SchoolEntity? model,
     }) {
   return showModalBottomSheet<CreateSchoolParam>(
     context: ctx,

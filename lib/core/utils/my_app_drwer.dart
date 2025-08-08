@@ -13,15 +13,17 @@ class MyAppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme; // جلب الـ colorScheme من الثيم
+    final colorScheme = Theme.of(
+      context,
+    ).colorScheme; // جلب الـ colorScheme من الثيم
 
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              colorScheme.primary,  // استخدام اللون الأساسي من الثيم
-              colorScheme.secondary,  // استخدام اللون الثانوي من الثيم
+              colorScheme.primary, // استخدام اللون الأساسي من الثيم
+              colorScheme.secondary, // استخدام اللون الثانوي من الثيم
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -36,14 +38,16 @@ class MyAppDrawer extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: colorScheme.onPrimary, // استخدام اللون من الثيم
+                    backgroundColor: colorScheme.onPrimary,
+                    // استخدام اللون من الثيم
                     child: Image.asset(kTest, height: 80),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     LangKeys.appName.tr(),
                     style: TextStyle(
-                      color: colorScheme.onBackground, // استخدام اللون المتوافق مع الخلفية
+                      color: colorScheme.onBackground,
+                      // استخدام اللون المتوافق مع الخلفية
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -66,14 +70,33 @@ class MyAppDrawer extends StatelessWidget {
               onTap: () => GoRouter.of(context).push(AppRouter.kChildrenSchool),
             ),
 
-            _buildDrawerItem(
-              onTap: () {
-               GoRouter.of(context).push(AppRouter.kBillsView);
-              },
-              context,
-              icon: Icons.account_balance_rounded,
-              text: LangKeys.changeLanguage.tr(),
+            ExpansionTile(
+              leading: Icon(Icons.receipt_long),
+              title: Text(LangKeys.Bills.tr()),
+              children: [
+                _buildDrawerItem(
+                  onTap: () {
+                   GoRouter.of(context).push(AppRouter.kGetAllBillsView);
+                  },
+                  context,
+                  icon: Icons.receipt_long
+                  ,
+                  text: 'get All'
+                ),
+
+                _buildDrawerItem(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRouter.kGetAllActiveBillsView);
+                  },
+                  context,
+                  icon: Icons.recent_actors
+                  ,
+                  text:'get All Active'
+                ),
+              ],
             ),
+
+            //
 
             _buildDrawerItem(
               onTap: () {
@@ -86,7 +109,6 @@ class MyAppDrawer extends StatelessWidget {
               icon: Icons.language,
               text: LangKeys.changeLanguage.tr(),
             ),
-
 
             _buildDrawerItem(
               context,
@@ -122,18 +144,24 @@ class MyAppDrawer extends StatelessWidget {
   }
 
   Widget _buildDrawerItem(
-      BuildContext context, {
-        required IconData icon,
-        required String text,
-        required VoidCallback onTap,
-      }) {
-    final colorScheme = Theme.of(context).colorScheme; // جلب الـ colorScheme من الثيم
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    final colorScheme = Theme.of(
+      context,
+    ).colorScheme; // جلب الـ colorScheme من الثيم
 
     return ListTile(
-      leading: Icon(icon, color: colorScheme.onSurface), // اللون المناسب للأيقونات حسب الثيم
+      leading: Icon(icon, color: colorScheme.onSurface),
+      // اللون المناسب للأيقونات حسب الثيم
       title: Text(
         text,
-        style: TextStyle(color: colorScheme.onSurface, fontSize: 16), // استخدام اللون المناسب للنصوص
+        style: TextStyle(
+          color: colorScheme.onSurface,
+          fontSize: 16,
+        ), // استخدام اللون المناسب للنصوص
       ),
       onTap: onTap,
     );

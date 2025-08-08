@@ -7,19 +7,14 @@ import 'package:monkey_app/feature/children/presentation/view/widget/add_child_b
 
 import '../../../../../core/param/create_children_params/create_children_params.dart';
 
-
-Future<CreateChildrenParam?>? showAddChildBottomSheet(
-  BuildContext ctx, String title,{ChildrenEntity? model,}) {
+Future<CreateChildrenParam?>? showAddChildBottomSheet(BuildContext ctx, String title, {ChildrenEntity? model}) {
   return showModalBottomSheet<CreateChildrenParam>(
     context: ctx,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-      child: AddChildBottomSheet(
-        title: title,
-        childrenEntity: model,
-      ),
+      child: AddChildBottomSheet(title: title, childrenEntity: model),
     ),
   );
 }

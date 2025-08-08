@@ -22,9 +22,6 @@ class ChildrenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => getIt<ChildrenCubit>()..fetchChildren(),
-        ),
         BlocProvider(create: (context) => getIt<CreateChildCubit>()),
         BlocProvider(create: (context) => getIt<UpdateChildrenCubit>()),
       ],

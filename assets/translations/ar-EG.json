@@ -57,12 +57,30 @@
   "specialNeeds": "احتياجات خاصة؟",
   "systemMessage": "رسالة النظام",
   "notFound": "لا يوجد",
-  "messageFailureOffLine": "لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق."
+  "messageFailureOffLine": "لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.",
+"Bills": "الفواتير",
 
 
 
-
-
+  "cash": "نقدي",
+  "visa": "فيزا",
+  "instapay": "انستا باي",
+  "totalPrice": "السعر الكلي",
+  "productsPrice": "سعر المنتجات",
+  "timePrice": "سعر الوقت",
+  "spentTime": "الوقت المستغرق",
+  "discountValue": "قيمة الخصم",
+  "discountType": "نوع الخصم",
+  "branch": "الفرع",
+  "isActive": "نشط؟",
+  "isSubscription": "اشتراك؟",
+  "moneyUnbalance": "فرق الفلوس",
+  "created": "تاريخ الإنشاء",
+  "finished": "تاريخ الانتهاء",
+  "createdBy": "أنشأ بواسطة",
+  "finishedBy": "تم الانتهاء بواسطة",
+  "childrenCount": "عدد الاطفال",
+  "applyDiscount": "Apply Discount"
 
 
 }

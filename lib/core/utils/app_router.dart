@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:monkey_app/feature/bills/presentation/view/bills_view.dart';
+import 'package:monkey_app/feature/bills/domain/entity/Bills_entity.dart';
+import 'package:monkey_app/feature/bills/presentation/view/get_all_bills_view.dart';
+import 'package:monkey_app/feature/bills/presentation/view/widget/all_active_bills/all_active_bills_view.dart';
+import 'package:monkey_app/feature/bills/presentation/view/widget/show_detail_bills/show_detail_bills.dart';
 import 'package:monkey_app/feature/children/data/model/children_model.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
@@ -12,7 +15,7 @@ import 'package:monkey_app/feature/splash/presentation/views/splash_view.dart';
 import '../../feature/home/presentation/view/home_view.dart';
 import '../../main.dart';
 
-abstract class AppRouter{
+abstract class AppRouter {
 
   static const kLoginView = '/login';
   static const kSchoolView = '/school';
@@ -20,40 +23,51 @@ abstract class AppRouter{
   static const kEditSchool = '/edit-school';
   static const kChildrenSchool = '/children';
   static const kShowDetailChildren = '/kShowDetailChildren';
-  static const kBillsView = '/kBillsView';
+  static const kGetAllBillsView = '/kBillsView';
+  static const kShowDetailBills = '/kShowDetailBills';
+  static const kGetAllActiveBillsView = '/kGetAllActiveBillsView';
   static final router = GoRouter(
-    navigatorKey: navigatorKey,
+      navigatorKey: navigatorKey,
       routes: [
+
+
+        GoRoute(path: kShowDetailBills,
+          builder: (context, state) =>  ShowDetailBills(billsEntity:state.extra as BillsEntity),),
+
+        GoRoute(path: kGetAllActiveBillsView,
+          builder: (context, state) => const GetAllActiveBillsView(),),
 
 
         GoRoute(path: '/',
           builder: (context, state) => const SplashView(),),
 
-        GoRoute(path: kBillsView,
+        GoRoute(path: kGetAllBillsView,
           builder: (context, state) => BillsView(),),
 
 
         GoRoute(path: kShowDetailChildren,
-      builder: (context, state) => ShowDetailChildren(childrenEntity: state.extra as ChildrenEntity,),),
+          builder: (context, state) =>
+              ShowDetailChildren(
+                childrenEntity: state.extra as ChildrenEntity,),),
 
-    GoRoute(path: kLoginView,
-      builder: (context, state) => const LoginView(),),
+        GoRoute(path: kLoginView,
+          builder: (context, state) => const LoginView(),),
 
-    GoRoute(path: kHomeView,
-      builder: (context, state) => const HomeView(),),
+        GoRoute(path: kHomeView,
+          builder: (context, state) => const HomeView(),),
 
-    GoRoute(path: kSchoolView,
-      builder: (context, state) => const SchoolView(),),
+        GoRoute(path: kSchoolView,
+          builder: (context, state) => const SchoolView(),),
 
-    GoRoute(path: kChildrenSchool,
-      builder: (context, state) => const ChildrenView(),),
+        GoRoute(path: kChildrenSchool,
+          builder: (context, state) => const ChildrenView(),),
 
-    // GoRoute(path: kEditSchool,
-    //   builder: (context, state) =>
-    //   EditSchoolView(postModel: state.extra as PostModel,),)
+        // GoRoute(path: kEditSchool,
+        //   builder: (context, state) =>
+        //   EditSchoolView(postModel: state.extra as PostModel,),)
 
 
-  ]);
+      ]);
 
 
 }

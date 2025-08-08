@@ -6,7 +6,7 @@ import 'package:monkey_app/feature/children/presentation/manager/cubit/children_
 import 'package:monkey_app/feature/children/presentation/view/widget/children_list_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/reseve_data_floating_actio_button.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/search_children_builder.dart';
-import '../../../../../branch_service.dart';
+import '../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
 import '../../../../../core/utils/langs_key.dart';
 import 'children_bloc_builder_list_view.dart';
 
@@ -25,27 +25,6 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        leading: PopupMenuButton<String>(
-          icon: Padding(
-            padding: const EdgeInsets.only(top: 18.0),
-            child: const Icon(Icons.more_vert, color: Colors.white),
-          ),
-          onSelected: (value) {
-            if (value == 'branch') {
-              BranchService().showBranchList(context);
-            } else if (value == 'date') {
-              BranchService().showDateBicker(context);
-            }
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem<String>(value: 'branch', child: Text('Branch')),
-            const PopupMenuItem<String>(
-              value: 'date',
-              child: Text('DateBiker'),
-            ),
-          ],
-        ),
-
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         title: BlocBuilder<ChildrenCubit, ChildrenState>(

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../core/theme_color/app_colors.dart';
@@ -42,7 +43,12 @@ class _SplashViewBodyState extends State<SplashViewBody>
     });
 
     Future.delayed(const Duration(milliseconds: 4500), () {
+      final accessToken = AuthHelper.getAccessToken();
+      if(accessToken!=null){
+        GoRouter.of(context).push(AppRouter.kHomeView);
+      }else{
       if (mounted) GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
+      }
     });
   }
 

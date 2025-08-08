@@ -5,8 +5,16 @@ import 'package:monkey_app/core/utils/api_serviece.dart';
 import 'package:monkey_app/feature/bills/data/data_source/bills_remote_data_source.dart';
 import 'package:monkey_app/feature/bills/data/repos/bills_repo_impl.dart';
 import 'package:monkey_app/feature/bills/domain/repo/bills_repo.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/bills_use_case.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/bills_cubit.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/apply_discount_use_case.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/close_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/create_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/fetch_active_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/domain/use_case/fetch_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
 import 'package:monkey_app/feature/branch/data/data_source/branch_remote_data_source.dart';
 import 'package:monkey_app/feature/branch/data/repos/branch_repos_impl.dart';
 import 'package:monkey_app/feature/branch/domain/repo/branch_repo.dart';
@@ -156,8 +164,41 @@ void setUpServiceLocator() {
   getIt.registerFactory<BranchCubit>(() => BranchCubit(getIt.get()));
   getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
 
-  getIt.registerLazySingleton<BillsUseCase>(()=>BillsUseCase(billsRepo: getIt.get()));
-  getIt.registerLazySingleton<BillsRemoteDataSource>(()=>BillsRemoteDataSourceImpl());
-  getIt.registerFactory<BillsCubit>(()=>BillsCubit(getIt<BillsUseCase>()));
-  getIt.registerLazySingleton<BillsRepo>(()=>BillsRepoImpl(billsRemoteDataSource: getIt.get()));
+  getIt.registerLazySingleton<BillsRemoteDataSource>(
+    () => BillsRemoteDataSourceImpl(),
+  );
+
+  getIt.registerLazySingleton<BillsRepo>(
+    () => BillsRepoImpl(billsRemoteDataSource: getIt.get()),
+  );
+
+  getIt.registerLazySingleton<BillsUseCase>(
+    () => BillsUseCase(billsRepo: getIt.get()),
+  );
+
+  getIt.registerFactory<BillsCubit>(() => BillsCubit(getIt<BillsUseCase>()));
+  getIt.registerLazySingleton<CreateBillsUseCase>(
+    () => CreateBillsUseCase(billsRepo: getIt.get()),
+  );
+  getIt.registerFactory<CreateBillsCubit>(() => CreateBillsCubit(getIt.get()));
+  getIt.registerLazySingleton<ApplyDiscountUseCase>(
+    () => ApplyDiscountUseCase(billsRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<ApplyDiscountCubit>(
+    () => ApplyDiscountCubit(getIt.get()),
+  );
+  getIt.registerLazySingleton<FetchActiveBillsUseCase>(
+    () => FetchActiveBillsUseCase(billsRepo: getIt.get()),
+  );
+  getIt.registerFactory<FetchActiveBillsCubit>(
+    () => FetchActiveBillsCubit(getIt.get()),
+  );
+
+  getIt.registerLazySingleton<CloseBillsUseCase>(
+        () => CloseBillsUseCase(billsRepo: getIt.get()),
+  );
+  getIt.registerFactory<CloseBillsCubit>(
+        () => CloseBillsCubit(getIt.get()),
+  );
+
 }

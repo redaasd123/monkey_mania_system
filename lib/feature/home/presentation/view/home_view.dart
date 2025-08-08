@@ -10,22 +10,13 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(
       context,
-    ).colorScheme; // جلب اللون من الثيم الحالي
+    ).colorScheme;
     return Scaffold(
-      body: Column(
-        children: [
-          Builder(
-            builder: (context) {
-              return CustomAppBar(
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            }
-          ),
-          HomeViewBode(),
-        ],
+      appBar: AppBar(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
       ),
+      body: HomeViewBody(),
       backgroundColor: colorScheme.background,
       drawer: const MyAppDrawer(),
     );
