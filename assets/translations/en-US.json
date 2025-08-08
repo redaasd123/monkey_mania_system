@@ -78,7 +78,9 @@
   "createdBy": "Created By",
   "finishedBy": "Finished By",
   "childrenCount": "ChildrenCount",
-  "applyDiscount" : "Apply Discount"
+  "applyDiscount" : "Apply Discount",
+  "allBills":"All Bills",
+  "allِActiveBills":"All Active Bills"
 
 
 

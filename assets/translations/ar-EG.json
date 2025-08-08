@@ -80,7 +80,9 @@
   "createdBy": "أنشأ بواسطة",
   "finishedBy": "تم الانتهاء بواسطة",
   "childrenCount": "عدد الاطفال",
-  "applyDiscount": "Apply Discount"
+  "applyDiscount": "Apply Discount",
+  "allBills":"جميع الفواتير",
+  "allِActiveBills":"جميع الفواتير النشطة"
 
 
 }

@@ -68,12 +68,13 @@ class MonkeyApp extends StatelessWidget {
                 locale: context.locale,
                 supportedLocales: context.supportedLocales,
                 localizationsDelegates: context.localizationDelegates,
+
                 builder: (context, child) {
-                  return Directionality(
-                    textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                    child: child!,
-                  );
-                },
+                                  return Directionality(
+                                    textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                                    child: child!,
+                                  );
+                                },
               );
             },
           );

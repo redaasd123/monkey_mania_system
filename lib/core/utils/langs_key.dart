@@ -76,5 +76,7 @@ class LangKeys {
   static const finishedBy = 'finishedBy';
   static const childrenCount = 'ChildrenCount';
   static const applyDiscount = 'Apply Discount';
+  static const allBills = 'All Bills';
+  static const allِActiveBills = 'All Active Bills';
 
 }
