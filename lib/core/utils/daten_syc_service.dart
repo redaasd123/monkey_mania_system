@@ -1,24 +1,23 @@
-import 'dart:ui';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hive/hive.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
+
 import 'api_serviece.dart';
 
-
 //ده بيخلق نوع بيانات جديد اسمه HttpMethod وله قيمتين فقط: HttpMethod.post و HttpMethod.put
-enum HttpMethod  {post, put}
+enum HttpMethod { post, put }
+
 class DataSyncService<T> {
   final String boxName;
   final String? endPoint;
   final String Function(T param)? endpointBuilder;
   final Map<String, dynamic> Function(T) toJson;
   final void Function()? onSuccess;
-  final HttpMethod method ;
+  final HttpMethod method;
 
   DataSyncService({
     required this.method,
-     this.endpointBuilder,
+    this.endpointBuilder,
     required this.boxName,
     this.endPoint,
     required this.toJson,
@@ -43,18 +42,11 @@ class DataSyncService<T> {
               ? endpointBuilder!(item)
               : endPoint!;
 
-          if(method ==HttpMethod.post){
-            await getIt.get<Api>().post(
-              endPoint: endpoint,
-              body: toJson(item),
-            );
-          }else{
-            await getIt.get<Api>().put(
-              endPoint: endpoint,
-              body: toJson(item),
-            );
+          if (method == HttpMethod.post) {
+            await getIt.get<Api>().post(endPoint: endpoint, body: toJson(item));
+          } else {
+            await getIt.get<Api>().put(endPoint: endpoint, body: toJson(item));
           }
-
 
           await box.delete(key);
         } catch (e) {
@@ -66,8 +58,3 @@ class DataSyncService<T> {
     onSuccess?.call();
   }
 }
-
-
-
-
-

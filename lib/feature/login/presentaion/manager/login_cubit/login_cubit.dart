@@ -9,6 +9,7 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this.loginRepoUseCase) : super(LoginInitialState());
   final LoginRepoUseCase loginRepoUseCase;
+
   Future<void> loginUser({required String number, required String pass}) async {
     emit(LoginLoadingState());
 
@@ -19,16 +20,14 @@ class LoginCubit extends Cubit<LoginState> {
     );
 
     result.fold(
-          (failure) {
+      (failure) {
         print('❌ Login failed: ${failure.errMessage}');
         emit(LoginFailureState(errMessage: failure.errMessage));
       },
-          (login) {
+      (login) {
         print('✅ Login success');
         emit(LoginSuccessState());
       },
     );
   }
-
-  }
-
+}

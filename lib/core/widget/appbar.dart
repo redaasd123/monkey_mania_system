@@ -26,10 +26,7 @@ class CustomAppBar extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Padding(
-          padding: padding,
-          child: child,
-        ),
+        child: Padding(padding: padding, child: child),
       ),
     );
   }

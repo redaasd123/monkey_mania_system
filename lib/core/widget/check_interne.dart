@@ -1,5 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dartz/dartz.dart' as ConnectivityResult;
 
 
 // Future<bool> checkInternet() async {

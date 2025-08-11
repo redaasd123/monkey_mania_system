@@ -20,7 +20,7 @@ final class ChildrenFailureState extends ChildrenState {
 final class ChildrenLoadingState extends ChildrenState {}
 
 final class ChildrenSelectedState extends ChildrenState {
- final ChildrenEntity selectChildren;
+  final ChildrenEntity selectChildren;
 
   ChildrenSelectedState({required this.selectChildren});
 }

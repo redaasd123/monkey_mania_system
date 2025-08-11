@@ -30,8 +30,8 @@ class SchoolSearchToggledState extends SchoolState {
 
   SchoolSearchToggledState({required this.isSearch});
 }
-final class SchoolSearchResultState extends SchoolState {}
 
+final class SchoolSearchResultState extends SchoolState {}
 
 //import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter/cupertino.dart';

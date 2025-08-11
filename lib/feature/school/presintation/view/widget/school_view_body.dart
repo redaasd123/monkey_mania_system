@@ -1,19 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/core/utils/styles.dart';
-import 'package:monkey_app/feature/school/data/model/school_model.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/reseve_data_school_action_button.dart';
-import 'package:monkey_app/feature/school/presintation/view/widget/school_bloc_builder.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/school_list_view.dart';
-import 'package:monkey_app/feature/school/presintation/view/widget/search_school_bloc_builder.dart';
-import 'package:monkey_app/feature/school/presintation/view/widget/show_add_bottom_sheet.dart';
-
-import '../../manager/post_cubit/post_cubit.dart';
 
 class SchoolViewBody extends StatefulWidget {
   const SchoolViewBody({super.key});
@@ -30,11 +21,12 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SchoolCubit>().canselSearch();
-    });  }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       backgroundColor: colorScheme.background,
       appBar: AppBar(
@@ -45,32 +37,32 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
             final isSearching = context.read<SchoolCubit>().isSearch;
             return isSearching
                 ? SizedBox(
-              height: 40,
-              child: TextField(
-                controller: searchCtrl,
-                onChanged: (query) {
-                  context.read<SchoolCubit>().searchSchools(query);
-                },
-                style: TextStyle(
-                  color: colorScheme.onPrimary, // لون النص جوه TextField
-                ),
-                cursorColor: colorScheme.onPrimary,
-                decoration: InputDecoration(
-                  hintText: LangKeys.school.tr(),
-                  hintStyle: TextStyle(
-                    color: colorScheme.onPrimary.withOpacity(0.6),
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                  filled: true,
-                  fillColor: colorScheme.primary, // نفس لون AppBar
-                ),
-              ),
-            )
+                    height: 40,
+                    child: TextField(
+                      controller: searchCtrl,
+                      onChanged: (query) {
+                        context.read<SchoolCubit>().searchSchools(query);
+                      },
+                      style: TextStyle(
+                        color: colorScheme.onPrimary, // لون النص جوه TextField
+                      ),
+                      cursorColor: colorScheme.onPrimary,
+                      decoration: InputDecoration(
+                        hintText: LangKeys.school.tr(),
+                        hintStyle: TextStyle(
+                          color: colorScheme.onPrimary.withOpacity(0.6),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        filled: true,
+                        fillColor: colorScheme.primary, // نفس لون AppBar
+                      ),
+                    ),
+                  )
                 : Text(
-              LangKeys.school.tr(),
-              style: TextStyle(color: colorScheme.onPrimary),
-            );
+                    LangKeys.school.tr(),
+                    style: TextStyle(color: colorScheme.onPrimary),
+                  );
           },
         ),
         actions: [
@@ -101,19 +93,18 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
 
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:  BlocBuilder<SchoolCubit, SchoolState>(
+        child: BlocBuilder<SchoolCubit, SchoolState>(
           builder: (context, state) {
             final cubit = context.read<SchoolCubit>();
 
             if (cubit.selectedSchool != null && !cubit.isSearch) {
               cubit.fetchSchool();
               return SchoolListView(school: [cubit.selectedSchool!]);
-
             }
 
             return SchoolListView(school: cubit.filteredSchools);
           },
-        )
+        ),
       ),
 
       floatingActionButton: ReseveDataSchoolActionButton(
@@ -123,11 +114,3 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
     );
   }
 }
-
-
-//    final state = context
-//                       .findAncestorStateOfType<_SchoolViewBodyState>();
-//                   // state?.setState(() {
-//                   //   state.isSearching = false;
-//                   //   state.searchCtrl.clear();
-//                   // });

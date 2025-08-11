@@ -1,8 +1,8 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../utils/constans.dart';
-
 
 class LogoWithAnimatedText extends StatefulWidget {
   const LogoWithAnimatedText({super.key});
@@ -14,7 +14,7 @@ class LogoWithAnimatedText extends StatefulWidget {
 class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
     with TickerProviderStateMixin {
   late final AnimationController _entranceCtrl; // Fade + Scale
-  late final AnimationController _breathCtrl;   // دوران هادئ
+  late final AnimationController _breathCtrl; // دوران هادئ
   late final Animation<double> _scale;
   late final Animation<double> _fade;
   late final Animation<double> _rotation;
@@ -32,9 +32,10 @@ class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
     _scale = Tween(begin: .9, end: 2.0).animate(
       CurvedAnimation(parent: _entranceCtrl, curve: Curves.easeOutBack),
     );
-    _fade = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _entranceCtrl, curve: Curves.easeIn),
-    );
+    _fade = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _entranceCtrl, curve: Curves.easeIn));
 
     // ➋ دوران تنفّسي لا نهائى
     _breathCtrl = AnimationController(
@@ -42,9 +43,10 @@ class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
       duration: const Duration(seconds: 4),
     )..repeat(reverse: true);
 
-    _rotation = Tween(begin: -0.03, end: 0.03).animate(
-      CurvedAnimation(parent: _breathCtrl, curve: Curves.easeInOut),
-    );
+    _rotation = Tween(
+      begin: -0.03,
+      end: 0.03,
+    ).animate(CurvedAnimation(parent: _breathCtrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -61,11 +63,11 @@ class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
         AnimatedBuilder(
           animation: Listenable.merge([_entranceCtrl, _breathCtrl]),
           builder: (_, __) => Opacity(
-            opacity: _fade.value,                 // يبقى بين 0→1 دائمًا
+            opacity: _fade.value, // يبقى بين 0→1 دائمًا
             child: Transform.rotate(
-              angle: _rotation.value * math.pi,   // تنفّس
+              angle: _rotation.value * math.pi, // تنفّس
               child: Transform.scale(
-                scale: _scale.value,              // دخول
+                scale: _scale.value, // دخول
                 child: const CircleAvatar(
                   radius: 90,
                   backgroundImage: AssetImage(kTest),
@@ -76,7 +78,7 @@ class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
           ),
         ),
         const SizedBox(height: 14),
-       //  ColorChangingShimmerText(),         // النص المتلألئ
+        //  ColorChangingShimmerText(),         // النص المتلألئ
       ],
     );
   }
@@ -85,10 +87,6 @@ class _LogoWithAnimatedTextState extends State<LogoWithAnimatedText>
 /* -------------------------------------------------------------------------- */
 /*               نص Monkey Mania – شيمر + تبديل ألوان غير محدود              */
 /* -------------------------------------------------------------------------- */
-
-
-
-
 
 //class LogoWithAnimatedText extends StatefulWidget {
 //   const LogoWithAnimatedText({super.key});

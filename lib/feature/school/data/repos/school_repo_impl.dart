@@ -44,6 +44,7 @@ class SchoolRepoImpl implements SchoolRepo {
       return Left(ServerFailure(errMessage: e.toString()));
     }
   }
+
   Future<void> _fetchAndCacheFromServer() async {
     try {
       final data = await schoolRemoteDataSource.fetchSchools();
@@ -58,7 +59,6 @@ class SchoolRepoImpl implements SchoolRepo {
   Future<Either<Failure, SchoolModel>> createSchool(
     CreateSchoolParam param,
   ) async {
-
     final isConnected = await checkInternet();
     print('🌐 INTERNET STATUS: $isConnected');
     print('🧒 CHILD PARAM TO SAVE OR SEND: ${param.toJson()}');
@@ -85,7 +85,12 @@ class SchoolRepoImpl implements SchoolRepo {
       print('⚠️ NO INTERNET. SAVING TO HIVE.');
       print('📦 SAVING CHILD TO HIVE: ${param.toJson()}');
       box.add(param);
-      return left(OfflineFailure(errMessage: 'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.'));
+      return left(
+        OfflineFailure(
+          errMessage:
+              'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.',
+        ),
+      );
     }
   }
 
@@ -97,7 +102,7 @@ class SchoolRepoImpl implements SchoolRepo {
     print('🌐 INTERNET STATUS: $isConnected');
     print('🧒 CHILD PARAM TO SAVE OR SEND: ${param.toJson()}');
     final box = Hive.box<UpdateSchoolParam>(kSaveUpdateSchool);
-    if(isConnected){
+    if (isConnected) {
       try {
         var result = await schoolRemoteDataSource.updateSchool(param);
         print('✅ school CREATED SUCCESSFULLY');
@@ -117,14 +122,19 @@ class SchoolRepoImpl implements SchoolRepo {
         box.add(param);
         return Left(ServerFailure(errMessage: e.toString()));
       }
-    }else{
+    } else {
       print('⚠️ NO INTERNET. SAVING TO HIVE.');
       print('📦 SAVING CHILD TO HIVE: ${param.toJson()}');
       box.add(param);
-      return left(OfflineFailure(errMessage: 'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.'));
+      return left(
+        OfflineFailure(
+          errMessage:
+              'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.',
+        ),
+      );
     }
-
   }
+
   Future<bool> checkInternet() async {
     final result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {

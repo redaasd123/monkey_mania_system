@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
@@ -74,7 +73,9 @@ class _LoginPageItemState extends State<LoginPageItem> {
                   padding: const EdgeInsets.all(16.0),
                   child: CircleAvatar(
                     radius: 24,
-                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).primaryColor.withOpacity(0.1),
                     child: Tooltip(
                       message: context.locale.languageCode == 'en'
                           ? 'Change Language'
@@ -95,10 +96,6 @@ class _LoginPageItemState extends State<LoginPageItem> {
                   ),
                 ),
               ),
-
-
-
-
             ],
           ),
         ),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -55,7 +53,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     children: [
                       Row(
                         children: [
-                          Text('عنصر ${index + 1}', style: TextStyle(fontSize: 18)),
+                          Text(
+                            'عنصر ${index + 1}',
+                            style: TextStyle(fontSize: 18),
+                          ),
                           Spacer(),
                           IconButton(
                             onPressed: () {
@@ -101,7 +102,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                             Expanded(
                               flex: 2,
                               child: TextField(
-                                decoration: InputDecoration(labelText: "رقم الهاتف"),
+                                decoration: InputDecoration(
+                                  labelText: "رقم الهاتف",
+                                ),
                                 onChanged: (val) {
                                   phoneValue["value"] = val;
                                 },
@@ -118,7 +121,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                                     phoneValue["relationShip"] = val;
                                   });
                                 },
-                                decoration: InputDecoration(labelText: "العلاقة"),
+                                decoration: InputDecoration(
+                                  labelText: "العلاقة",
+                                ),
                               ),
                             ),
                             IconButton(
@@ -150,7 +155,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     ],
                   ),
                 );
-
               }),
             ),
           ),
@@ -159,5 +163,3 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     );
   }
 }
-
-

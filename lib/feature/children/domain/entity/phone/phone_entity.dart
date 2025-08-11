@@ -1,7 +1,7 @@
-
 import 'package:hive/hive.dart';
 
 part 'phone_entity.g.dart';
+
 @HiveType(typeId: 3)
 class PhoneEntity {
   @HiveField(0)

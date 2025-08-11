@@ -32,7 +32,9 @@ class AuthHelper {
   }
 
   static String? getAccessToken() => _authBox.get(AuthKeys.accessToken);
+
   static String? getRefreshToken() => _authBox.get(AuthKeys.refreshToken);
+
   static String? getUsername() => _authBox.get(AuthKeys.username);
 
   static Future<void> clearAuthData() async => await _authBox.clear();

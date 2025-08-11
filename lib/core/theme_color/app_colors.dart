@@ -24,6 +24,6 @@ class AppColors {
 
   // --- Optional Extra Colors ---
   static const Color goldenSand = Color(0xFFD4A018); // Gold
-  static const Color walnut = Color(0xFF6D4C41);     // Brown
-  static const Color sapling = Color(0xFF4CAF50);    // Green
+  static const Color walnut = Color(0xFF6D4C41); // Brown
+  static const Color sapling = Color(0xFF4CAF50); // Green
 }

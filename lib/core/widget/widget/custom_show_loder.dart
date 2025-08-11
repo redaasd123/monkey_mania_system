@@ -2,25 +2,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-/// 🌟 استدعِ showLoader(context) قبل أى عملية طويلة
+bool _isLoaderShowing = false;
+
 void showLoader(BuildContext context) {
+  if (_isLoaderShowing) return;
+  _isLoaderShowing = true;
+
   showDialog(
     context: context,
-    barrierDismissible: false,           // يمنع الإغلاق بالضغط خارجًا
+    barrierDismissible: false,
     builder: (_) => const _LoaderDialog(),
   );
 }
 
-/// 🌟 استدعِ hideLoader(context) بعد انتهاء العملية
 void hideLoader(BuildContext context) {
-  if (Navigator.of(context, rootNavigator: true).canPop()) {
+  if (_isLoaderShowing && Navigator.of(context, rootNavigator: true).canPop()) {
+    _isLoaderShowing = false;
     Navigator.of(context, rootNavigator: true).pop();
   }
 }
 
 /// 🔄 ويدجت اللودر
 class _LoaderDialog extends StatelessWidget {
-
   const _LoaderDialog();
 
   @override

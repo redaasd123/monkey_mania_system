@@ -60,7 +60,8 @@
   "messageFailureOffLine": "لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.",
 "Bills": "الفواتير",
 
-
+  "mainBills": "الفواتير الرئيسية",
+  "coffeeBills": "فواتير الكافية",
 
   "cash": "نقدي",
   "visa": "فيزا",
@@ -69,7 +70,7 @@
   "productsPrice": "سعر المنتجات",
   "timePrice": "سعر الوقت",
   "spentTime": "الوقت المستغرق",
-  "discountValue": "قيمة الخصم",
+  "discountCoupon": "كوبون الخصم",
   "discountType": "نوع الخصم",
   "branch": "الفرع",
   "isActive": "نشط؟",
@@ -77,12 +78,17 @@
   "moneyUnbalance": "فرق الفلوس",
   "created": "تاريخ الإنشاء",
   "finished": "تاريخ الانتهاء",
-  "createdBy": "أنشأ بواسطة",
   "finishedBy": "تم الانتهاء بواسطة",
   "childrenCount": "عدد الاطفال",
-  "applyDiscount": "Apply Discount",
+  "applyDiscount": " تطبيق خصم",
   "allBills":"جميع الفواتير",
-  "allِActiveBills":"جميع الفواتير النشطة"
+  "allActiveBills":"جميع الفواتير النشطة",
+  "enterValue": "ادخل القيمة",
+  "payment": "الدفع",
+  "takeAway": " في الخارج ",
+  "tableNumber": "رقم الترابيزة",
+  "billsNumber": "رقم الفاتورة"
+
 
 
 }

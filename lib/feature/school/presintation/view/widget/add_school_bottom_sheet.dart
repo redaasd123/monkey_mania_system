@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_app/core/param/create_school_param/create_school_param.dart';
-import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/constans.dart';
-import 'package:monkey_app/feature/school/data/model/school_model.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 
 import '../../../domain/entity/school_entity.dart';
 

@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz_streaming.dart';
 import 'package:meta/meta.dart';
 import 'package:monkey_app/core/use_case/use_case.dart';
-import 'package:monkey_app/feature/children/data/model/children_model.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/fetch_children_use_case.dart';
 
 import '../../../domain/entity/children/children_entity.dart';
@@ -11,8 +9,8 @@ part 'children_state.dart';
 
 class ChildrenCubit extends Cubit<ChildrenState> {
   final FetchChildrenUseCase fetchChildrenUseCase;
-   List<ChildrenEntity> allChildren = [];
-   List<ChildrenEntity> filterChildren = [];
+  List<ChildrenEntity> allChildren = [];
+  List<ChildrenEntity> filterChildren = [];
   ChildrenEntity? selectChild;
   bool isSearching = false;
 
@@ -27,11 +25,11 @@ class ChildrenCubit extends Cubit<ChildrenState> {
     selectChild = null;
 
     result.fold(
-          (failure) {
+      (failure) {
         if (!isClosed)
           emit(ChildrenFailureState(errMessage: failure.errMessage));
       },
-          (children) {
+      (children) {
         allChildren = children;
         filterChildren = children;
 
@@ -39,7 +37,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
       },
     );
   }
-
 
   void searchChild(String query) {
     if (query.isEmpty) {
@@ -60,20 +57,14 @@ class ChildrenCubit extends Cubit<ChildrenState> {
     emit(ChildrenToggleState(isSearch: isSearching));
   }
 
-  void toggleChildren(){
+  void toggleChildren() {
     isSearching = !isSearching;
     emit(ChildrenToggleState(isSearch: isSearching));
   }
-  void closeSearch(){
+
+  void closeSearch() {
     isSearching = false;
     emit(ChildrenToggleState(isSearch: isSearching));
     fetchChildren();
   }
-
-
-
-
-
-
-
 }

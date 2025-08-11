@@ -6,6 +6,7 @@ import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/login/presentaion/manager/login_cubit/login_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/login_page_item.dart';
+
 import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/widget/widget/custom_show_loder.dart';
 
@@ -15,7 +16,6 @@ class LoginViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
-
       listener: (context, state) async {
         // أغلق أى حوار لو كان مفتوحًا
         hideLoader(context);
@@ -29,12 +29,14 @@ class LoginViewBody extends StatelessWidget {
             GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
           }
         } else if (state is LoginFailureState) {
-          showRedFlush(context, LangKeys.loginFailure.tr()); // أو أي دالة بتظهر رسالة خطأ
+          showRedFlush(
+            context,
+            LangKeys.loginFailure.tr(),
+          ); // أو أي دالة بتظهر رسالة خطأ
         }
       },
       child: const LoginPageItem(),
     );
-
   }
 }
 

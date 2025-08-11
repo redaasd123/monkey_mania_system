@@ -16,7 +16,7 @@ class BranchCubit extends Cubit<BranchState> {
     var result = await branchUseCase.call(NoParam());
     result.fold(
       (failure) => emit(BranchFailureState(errMessage: failure.errMessage)),
-      (branch) => emit(BranchSuccessState(branch: branch)),
+          (branch) => emit(BranchSuccessState(branch: branch)),
     );
   }
 }

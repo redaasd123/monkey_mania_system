@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/param/create_school_param/create_school_param.dart';
@@ -35,7 +34,7 @@ class ReseveDataSchoolActionButton extends StatelessWidget {
             CreateSchoolParam(
               name: data.name,
               address: data.address,
-              notes: data.notes?.trim().isEmpty??true?null:data.notes,
+              notes: data.notes?.trim().isEmpty ?? true ? null : data.notes,
             ),
             // name: data['name']!,
             // address: data['address']!,

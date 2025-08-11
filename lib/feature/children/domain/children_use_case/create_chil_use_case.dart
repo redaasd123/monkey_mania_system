@@ -5,7 +5,6 @@ import 'package:monkey_app/feature/children/domain/children_repo/children_repo.d
 
 import '../../../../core/param/create_children_params/create_children_params.dart';
 
-
 class CreateChildUseCase extends MyUseCase<dynamic, CreateChildrenParam> {
   final ChildrenRepo childrenRepo;
 
@@ -13,6 +12,6 @@ class CreateChildUseCase extends MyUseCase<dynamic, CreateChildrenParam> {
 
   @override
   Future<Either<Failure, dynamic>> call(CreateChildrenParam param) async {
-    return await childrenRepo.createChildren(param );
+    return await childrenRepo.createChildren(param);
   }
 }

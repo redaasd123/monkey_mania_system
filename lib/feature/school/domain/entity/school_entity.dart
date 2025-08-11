@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
+
 part 'school_entity.g.dart';
+
 @HiveType(typeId: 0)
 class SchoolEntity {
   @HiveField(0)

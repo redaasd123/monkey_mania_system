@@ -1,14 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/core/funcation/show_snack_bar.dart';
-import 'package:monkey_app/core/utils/api_serviece.dart';
-import 'package:monkey_app/core/utils/service_locator.dart';
 import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import 'package:monkey_app/feature/bills/presentation/view/widget/param/fetch_bills_param.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-
+import '../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../manager/branch_cubit.dart';
 
 class BranchBottomSheetBody extends StatefulWidget {
@@ -34,7 +28,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
             builder: (context, setState) {
               return ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.8, // أقصى ارتفاع 80% من الشاشة
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.8, // أقصى ارتفاع 80% من الشاشة
                 ),
                 child: SingleChildScrollView(
                   child: Padding(
@@ -101,7 +97,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             suffixIcon: const Icon(Icons.date_range),
                           ),
                           onTap: () async {
-
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
@@ -117,33 +112,48 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                         const SizedBox(height: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: color.primary
+                            backgroundColor: color.primary,
                           ),
                           onPressed: () async {
                             final selectBranch = selectIndex
                                 .map((b) => branches[b].id)
                                 .toList();
-                            if(selectBranch.isEmpty){
-                              showRedFlush(context, 'من فضلك اختر فرع علي الاقل');
+                            if (selectBranch.isEmpty) {
+                              showRedFlush(
+                                context,
+                                'من فضلك اختر فرع علي الاقل',
+                              );
                               return;
                             }
                             if (startDate != null && endDate != null) {
                               if (endDate!.isBefore(startDate!)) {
-                                showRedFlush(context, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية');
+                                showRedFlush(
+                                  context,
+                                  'تاريخ النهاية يجب أن يكون بعد تاريخ البداية',
+                                );
                                 return;
                               }
                             }
-                            final bool bothDatesSelected = startDate != null && endDate != null;
+                            final bool bothDatesSelected =
+                                startDate != null && endDate != null;
                             final bool onlyOneDateSelected =
-                                (startDate != null && endDate == null) || (startDate == null && endDate != null);
+                                (startDate != null && endDate == null) ||
+                                (startDate == null && endDate != null);
 
                             if (onlyOneDateSelected) {
-                              showRedFlush(context, 'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين');
+                              showRedFlush(
+                                context,
+                                'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين',
+                              );
                               return;
                             }
 
-                            if (bothDatesSelected && endDate!.isBefore(startDate!)) {
-                              showRedFlush(context, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية');
+                            if (bothDatesSelected &&
+                                endDate!.isBefore(startDate!)) {
+                              showRedFlush(
+                                context,
+                                'تاريخ النهاية يجب أن يكون بعد تاريخ البداية',
+                              );
                               return;
                             }
                             print('🧩 Selected Branch IDs: $selectBranch');
@@ -158,7 +168,12 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             print('🛰 Sending Param: $param');
                             Navigator.pop(context, param);
                           },
-                          child:  Text('تم',style: Styles.textStyle20.copyWith(color:color.onPrimary ),),
+                          child: Text(
+                            'تم',
+                            style: Styles.textStyle20.copyWith(
+                              color: color.onPrimary,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 20),
                       ],

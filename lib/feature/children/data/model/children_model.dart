@@ -33,7 +33,7 @@ class ChildrenModel extends ChildrenEntity {
     this.school,
     this.childPhoneNumbersSet,
   }) : super(
-    schoolName: schoolName,
+         schoolName: schoolName,
          id: id,
          notes: notes,
          name: name,
@@ -70,7 +70,9 @@ class ChildrenModel extends ChildrenEntity {
       updated: json['updated'],
       createdBy: json['created_by']?.toString(),
       schoolName: json['school_name'],
-      school: json['school_id'] is int ? json['school_id'] : int.tryParse(json['school_id'].toString()),
+      school: json['school_id'] is int
+          ? json['school_id']
+          : int.tryParse(json['school_id'].toString()),
       childPhoneNumbersSet: phoneNumbers,
     );
   }
@@ -150,7 +152,7 @@ class ChildrenModel extends ChildrenEntity {
 
 class ChildPhoneNumbersSet extends PhoneEntity {
   ChildPhoneNumbersSet({String? phoneNumber, String? relationship})
-      : super(phoneNumber: phoneNumber, relationship: relationship);
+    : super(phoneNumber: phoneNumber, relationship: relationship);
 
   factory ChildPhoneNumbersSet.fromJson(dynamic json) {
     return ChildPhoneNumbersSet(
@@ -166,10 +168,7 @@ class ChildPhoneNumbersSet extends PhoneEntity {
       );
 
   Map<String, dynamic> toJson() {
-    return {
-      'phone_number': phoneNumber,
-      'relationship': relationship,
-    };
+    return {'phone_number': phoneNumber, 'relationship': relationship};
   }
 }
 

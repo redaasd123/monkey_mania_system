@@ -17,5 +17,6 @@ class CreateChildSuccess extends CreateChildState {}
 
 class CreateChildOfflineSaved extends CreateChildState {
   final String message;
+
   CreateChildOfflineSaved(this.message);
 } // ✅ جديد

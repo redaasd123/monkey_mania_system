@@ -77,13 +77,17 @@ class ServerFailure extends Failure {
         case 403:
           return ServerFailure(errMessage: errorMessage);
         case 404:
-          return ServerFailure(errMessage: '🔍 لم يتم العثور على المورد المطلوب.');
+          return ServerFailure(
+            errMessage: '🔍 لم يتم العثور على المورد المطلوب.',
+          );
         case 500:
         case 502:
         case 503:
           return ServerFailure(errMessage: '🛠 خطأ من الخادم. حاول لاحقًا.');
         default:
-          return ServerFailure(errMessage: '📄 خطأ برمز غير متوقع: $statusCode');
+          return ServerFailure(
+            errMessage: '📄 خطأ برمز غير متوقع: $statusCode',
+          );
       }
     } catch (e) {
       return ServerFailure(errMessage: '❗ فشل في فهم الاستجابة من الخادم.');

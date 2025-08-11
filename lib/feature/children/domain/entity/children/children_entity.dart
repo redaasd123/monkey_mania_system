@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
-import 'package:monkey_app/feature/children/data/model/children_model.dart';
 import 'package:monkey_app/feature/children/domain/entity/age/age_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/phone/phone_entity.dart';
+
 part 'children_entity.g.dart';
+
 @HiveType(typeId: 1)
 class ChildrenEntity {
   @HiveField(0)

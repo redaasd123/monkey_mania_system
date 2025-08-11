@@ -27,8 +27,9 @@ class UpdateSchoolCubit extends Cubit<UpdateState> {
           emit(
             UpdateOfflineState(
               errMessage:
-              'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.'
-          ));
+                  'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.',
+            ),
+          );
         } else {
           if (!isClosed)
             emit(UpdateFailureState(errMessage: failure.errMessage));

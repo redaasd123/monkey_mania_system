@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 
 import '../../utils/constans.dart';
 
-Widget CustombuildHeader(ColorScheme colorScheme,String title,Color color) {
+Widget CustombuildHeader(ColorScheme colorScheme, String title, Color color) {
   return Row(
     children: [
       const CircleAvatar(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -28,15 +27,15 @@ class _ColorChangingShimmerTextState extends State<ColorChangingShimmerText>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..addStatusListener((s) {
-      if (s == AnimationStatus.completed) {
-        setState(() => idx = (idx + 1) % colorCombos.length);
-        _ctrl.forward(from: 0);
-      }
-    })..forward();
+    _ctrl =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3))
+          ..addStatusListener((s) {
+            if (s == AnimationStatus.completed) {
+              setState(() => idx = (idx + 1) % colorCombos.length);
+              _ctrl.forward(from: 0);
+            }
+          })
+          ..forward();
   }
 
   @override

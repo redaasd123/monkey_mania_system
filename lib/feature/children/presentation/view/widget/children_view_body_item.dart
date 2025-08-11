@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
+
 import '../../../../../core/utils/styles.dart';
 
 class ChildrenViewBodyItem extends StatelessWidget {
@@ -46,7 +46,9 @@ class ChildrenViewBodyItem extends StatelessWidget {
                   label: LangKeys.address.tr(),
                   text: childrenEntity.address ?? 'لا يوجد عنوان',
                   style: Styles.textStyle16.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.9), // اللون حسب الثيم
+                    color: colorScheme.onSurface.withOpacity(
+                      0.9,
+                    ), // اللون حسب الثيم
                   ),
                   context: context,
                 ),
@@ -55,11 +57,17 @@ class ChildrenViewBodyItem extends StatelessWidget {
                   icon: Icons.phone,
                   label: LangKeys.phoneNumber.tr(),
                   text: childrenEntity.childPhoneNumbersSet?.isNotEmpty == true
-                      ? childrenEntity.childPhoneNumbersSet!.first.phoneNumber ?? 'لا يوجد رقم'
+                      ? childrenEntity
+                                .childPhoneNumbersSet!
+                                .first
+                                .phoneNumber ??
+                            'لا يوجد رقم'
                       : 'لا يوجد رقم',
                   style: Styles.textStyle16.copyWith(
                     fontStyle: FontStyle.italic,
-                    color: colorScheme.onSurface.withOpacity(0.7), // اللون حسب الثيم
+                    color: colorScheme.onSurface.withOpacity(
+                      0.7,
+                    ), // اللون حسب الثيم
                   ),
                   context: context,
                 ),
@@ -73,9 +81,14 @@ class ChildrenViewBodyItem extends StatelessWidget {
           right: isArabic ? 310 : 20,
           child: GestureDetector(
             onTap: () {
-              GoRouter.of(context).push(AppRouter.kShowDetailChildren, extra: childrenEntity);
+              GoRouter.of(
+                context,
+              ).push(AppRouter.kShowDetailChildren, extra: childrenEntity);
             },
-            child: Icon(Icons.edit, color: colorScheme.primary), // اللون حسب الثيم
+            child: Icon(
+              Icons.edit,
+              color: colorScheme.primary,
+            ), // اللون حسب الثيم
           ),
         ),
       ],
@@ -104,7 +117,9 @@ class ChildrenViewBodyItem extends StatelessWidget {
                 label,
                 style: Styles.textStyle14.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: colorScheme.primary.withOpacity(0.8), // اللون حسب الثيم
+                  color: colorScheme.primary.withOpacity(
+                    0.8,
+                  ), // اللون حسب الثيم
                 ),
               ),
               const SizedBox(height: 4),

@@ -12,7 +12,6 @@ class ShowDetailChildrenBody extends StatelessWidget {
 
   final ChildrenEntity childrenEntity;
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

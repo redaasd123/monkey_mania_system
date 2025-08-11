@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/save_data.dart';
 import 'package:monkey_app/feature/children/data/data_source/children_remote_data_source.dart';
 import 'package:monkey_app/feature/children/domain/children_repo/children_repo.dart';
+
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
 import '../../domain/entity/children/children_entity.dart';
@@ -63,18 +65,15 @@ class ChildrenRepoImpl extends ChildrenRepo {
 
     final isConnected = await checkInternet();
 
-
     if (isConnected) {
       try {
         var result = await childrenRemoteDataSource.createChildren(param);
-
 
         final updatedList = await childrenRemoteDataSource.fetchChildren();
         saveChildrenData(updatedList, kChildrenBox);
         return right(result);
       } on Exception catch (e) {
         if (e is DioException) {
-
           box.add(param);
           return left(ServerFailure.fromDioError(e));
         } else {
@@ -84,7 +83,6 @@ class ChildrenRepoImpl extends ChildrenRepo {
         }
       }
     } else {
-
       box.add(param);
       return left(OfflineFailure(errMessage: 'لا يوجد اتصال بالإنترنت'));
     }

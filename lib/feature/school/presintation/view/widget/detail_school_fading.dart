@@ -38,15 +38,14 @@ class DetailSchoolFading extends StatelessWidget {
                 children: [
                   line(14, 70),
                   const SizedBox(width: 8),
-                  Icon(Icons.access_time,
-                      color: Theme.of(context).colorScheme.outlineVariant),
+                  Icon(
+                    Icons.access_time,
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: line(14, 90),
-              ),
+              Align(alignment: Alignment.bottomRight, child: line(14, 90)),
             ],
           ),
         ),

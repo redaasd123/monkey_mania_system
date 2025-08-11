@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 
-import '../../../../../main.dart';
-import '../../../data/model/school_model.dart';
 import '../../../domain/entity/school_entity.dart';
 import '../../../domain/use_case/fetch_school_use_case.dart';
 
@@ -12,11 +9,13 @@ part 'school_state.dart';
 class SchoolCubit extends Cubit<SchoolState> {
   SchoolCubit(this.schoolUseCase) : super(SchoolInitial());
   final FetchSchoolUseCase schoolUseCase;
+
   //search
   //
 
   List<SchoolEntity> allSchools = []; // الأصلية
   List<SchoolEntity> filteredSchools = [];
+
   //select
   SchoolEntity? selectedSchool;
   bool isSearch = false;
@@ -35,6 +34,7 @@ class SchoolCubit extends Cubit<SchoolState> {
       },
     );
   }
+
   void searchSchools(String query) {
     if (query.isEmpty) {
       filteredSchools = allSchools;
@@ -54,20 +54,17 @@ class SchoolCubit extends Cubit<SchoolState> {
     emit(SchoolSearchToggledState(isSearch: isSearch));
   }
 
-  void toggleSearch(){
-isSearch = !isSearch;
-emit(SchoolSearchToggledState(isSearch: isSearch));
-
+  void toggleSearch() {
+    isSearch = !isSearch;
+    emit(SchoolSearchToggledState(isSearch: isSearch));
   }
 
-  void canselSearch(){
+  void canselSearch() {
     isSearch = false;
-    selectedSchool=null;
+    selectedSchool = null;
     emit(SchoolSearchToggledState(isSearch: isSearch));
     fetchSchool();
   }
-
-
 
   void updateSchoolLocally(SchoolEntity updatedSchool) {
     // شيل المدرسة القديمة بنفس الـ id
@@ -81,7 +78,4 @@ emit(SchoolSearchToggledState(isSearch: isSearch));
     // حدث الواجهة
     emit(SchoolSuccessState(schools: filteredSchools));
   }
-
-
-
 }

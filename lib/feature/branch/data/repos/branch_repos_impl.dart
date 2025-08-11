@@ -6,20 +6,21 @@ import 'package:monkey_app/feature/branch/domain/entity/branch_entity.dart';
 
 import '../../domain/repo/branch_repo.dart';
 
-class BranchRepoImpl extends BranchRepo{
+class BranchRepoImpl extends BranchRepo {
   final BranchRemoteDataSource branchRemoteDataSource;
+
   BranchRepoImpl({required this.branchRemoteDataSource});
 
   @override
-  Future<Either<Failure, List<BranchEntity>>> fetchBranch() async{
+  Future<Either<Failure, List<BranchEntity>>> fetchBranch() async {
     try {
       var result = await branchRemoteDataSource.fetchBranch();
       print("${result}🤨🤨🤨🤨🤨🤨🤨🤨🤨");
       return right(result);
     } on Exception catch (e) {
-      if(e is DioException){
+      if (e is DioException) {
         return left(ServerFailure.fromDioError(e));
-      }else{
+      } else {
         return left(ServerFailure(errMessage: e.toString()));
       }
     }

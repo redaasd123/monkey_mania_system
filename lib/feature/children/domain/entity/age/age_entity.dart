@@ -1,6 +1,7 @@
-
 import 'package:hive/hive.dart';
+
 part 'age_entity.g.dart';
+
 @HiveType(typeId: 2)
 class AgeEntity {
   @HiveField(0)

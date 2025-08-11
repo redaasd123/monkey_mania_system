@@ -1,20 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-
 import 'package:monkey_app/core/utils/api_serviece.dart';
-import 'package:monkey_app/feature/bills/data/data_source/bills_remote_data_source.dart';
-import 'package:monkey_app/feature/bills/data/repos/bills_repo_impl.dart';
-import 'package:monkey_app/feature/bills/domain/repo/bills_repo.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/apply_discount_use_case.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/close_bills_use_case.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/create_bills_use_case.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/fetch_active_bills_use_case.dart';
-import 'package:monkey_app/feature/bills/domain/use_case/fetch_bills_use_case.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
-import 'package:monkey_app/feature/bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/data/data_source/bills_coffee_data_source.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/data/repos/bills_coffee_impl.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_repo.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
 import 'package:monkey_app/feature/branch/data/data_source/branch_remote_data_source.dart';
 import 'package:monkey_app/feature/branch/data/repos/branch_repos_impl.dart';
 import 'package:monkey_app/feature/branch/domain/repo/branch_repo.dart';
@@ -30,14 +21,12 @@ import 'package:monkey_app/feature/children/domain/children_use_case/update_chil
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/create_child_cubit.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/update_children_cubit.dart';
-
 import 'package:monkey_app/feature/login/data/data_source/login_remote_data_source.dart';
 import 'package:monkey_app/feature/login/data/repos/login_repo_impl.dart';
 import 'package:monkey_app/feature/login/domain/repo/login_repo.dart';
 import 'package:monkey_app/feature/login/domain/use_case/login_repo_use_case.dart';
 import 'package:monkey_app/feature/login/presentaion/manager/login_cubit/login_cubit.dart';
 import 'package:monkey_app/feature/school/data/data_source/school_local_data_source.dart';
-
 import 'package:monkey_app/feature/school/data/data_source/school_remote_data_source.dart';
 import 'package:monkey_app/feature/school/data/repos/school_repo_impl.dart';
 import 'package:monkey_app/feature/school/domain/repo/school_repo.dart';
@@ -47,8 +36,24 @@ import 'package:monkey_app/feature/school/domain/use_case/update_school_use_case
 import 'package:monkey_app/feature/school/presintation/manager/post_cubit/post_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 
+import '../../feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
+import '../../feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import '../../feature/bills/main_bills/data/data_source/bills_remote_data_source.dart';
+import '../../feature/bills/main_bills/data/repos/bills_repo_impl.dart';
+import '../../feature/bills/main_bills/domain/repo/bills_repo.dart';
+import '../../feature/bills/main_bills/domain/use_case/apply_discount_use_case.dart';
+import '../../feature/bills/main_bills/domain/use_case/close_bills_use_case.dart';
+import '../../feature/bills/main_bills/domain/use_case/create_bills_use_case.dart';
+import '../../feature/bills/main_bills/domain/use_case/fetch_active_bills_use_case.dart';
+import '../../feature/bills/main_bills/domain/use_case/fetch_bills_use_case.dart';
+import '../../feature/bills/main_bills/domain/use_case/get_one_bills_use_case.dart';
+import '../../feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
+import '../../feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
+import '../../feature/bills/main_bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
+import '../../feature/bills/main_bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
+import '../../feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
+import '../../feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
 import '../../feature/school/presintation/manager/put_cubit/put_cubit.dart';
-import '../helper/intrecptor_helper.dart';
 import 'contivity.dart';
 
 // ← تأكد من وجوده
@@ -195,10 +200,32 @@ void setUpServiceLocator() {
   );
 
   getIt.registerLazySingleton<CloseBillsUseCase>(
-        () => CloseBillsUseCase(billsRepo: getIt.get()),
+    () => CloseBillsUseCase(billsRepo: getIt.get()),
   );
-  getIt.registerFactory<CloseBillsCubit>(
-        () => CloseBillsCubit(getIt.get()),
+  getIt.registerFactory<CloseBillsCubit>(() => CloseBillsCubit(getIt.get()));
+
+  getIt.registerLazySingleton<GetOneBillUseCase>(
+    () => GetOneBillUseCase(billsRepo: getIt.get()),
+  );
+  getIt.registerFactory<GetOneBillsCubit>(() => GetOneBillsCubit(getIt.get()));
+
+  getIt.registerFactory<CoffeeBillsRepo>(
+    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt.get()),
+  );
+  getIt.registerLazySingleton<BillsCoffeeDataSource>(
+    () => BillsCoffeeDataSourceImpl(),
+  );
+  getIt.registerFactory<CoffeeBillsCubit>(
+    () => CoffeeBillsCubit(getIt.get(), getIt.get(),getIt.get()),
+  );
+  getIt.registerLazySingleton<GetOneCoffeeBillsUseCase>(
+    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<FetchBillsCoffeeUSeCase>(
+    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt.get()),
   );
 
+  getIt.registerLazySingleton<FetchActiveBillsCoffeeUSeCase>(
+    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt.get()),
+  );
 }

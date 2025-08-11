@@ -1,11 +1,11 @@
 import 'dart:math' as math;
+
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../../core/theme_color/app_colors.dart';
 import '../../../../../core/utils/app_router.dart';
 import '../../../../../core/utils/constans.dart';
 
@@ -44,10 +44,10 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     Future.delayed(const Duration(milliseconds: 4500), () {
       final accessToken = AuthHelper.getAccessToken();
-      if(accessToken!=null){
+      if (accessToken != null) {
         GoRouter.of(context).push(AppRouter.kHomeView);
-      }else{
-      if (mounted) GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
+      } else {
+        if (mounted) GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
       }
     });
   }
@@ -90,36 +90,36 @@ class _SplashViewBodyState extends State<SplashViewBody>
               // ✨ عنوان التطبيق
               _showShimmer
                   ? Shimmer.fromColors(
-                baseColor: Colors.brown, // بني فاتح
-                highlightColor: Colors.green, // بني أفتح
-                period: const Duration(milliseconds: 1200),
-                child: Text(
-                  'Monkey Mania',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.primary, // يفضل تسيبها كده علشان التيكست يكون واضح لما الشيمر ينتهي
-                  ),
-                ),
-              )
+                      baseColor: Colors.brown, // بني فاتح
+                      highlightColor: Colors.green, // بني أفتح
+                      period: const Duration(milliseconds: 1200),
+                      child: Text(
+                        'Monkey Mania',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme
+                              .primary, // يفضل تسيبها كده علشان التيكست يكون واضح لما الشيمر ينتهي
+                        ),
+                      ),
+                    )
                   : DefaultTextStyle(
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.primary,
-                ),
-                child: AnimatedTextKit(
-                  isRepeatingAnimation: false,
-                  totalRepeatCount: 1,
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      'Monkey Mania',
-                      speed: const Duration(milliseconds: 120),
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.primary,
+                      ),
+                      child: AnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TyperAnimatedText(
+                            'Monkey Mania',
+                            speed: const Duration(milliseconds: 120),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-
             ],
           ),
         ),

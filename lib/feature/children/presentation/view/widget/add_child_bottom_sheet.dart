@@ -2,15 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:monkey_app/core/funcation/show_snack_bar.dart';
-import 'package:monkey_app/feature/children/data/model/children_model.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
-import '../../../../../core/utils/langs_key.dart';
+
 import '../../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../../core/utils/constans.dart';
-import '../../../../school/data/model/school_model.dart';
+import '../../../../../core/utils/langs_key.dart';
 import '../../../../school/domain/entity/school_entity.dart';
 
 class AddChildBottomSheet extends StatefulWidget {
@@ -38,7 +36,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   List<Map<String, String>> phoneNumbers = [];
 
   final _relations = ['father', 'mother', 'sibling', 'other'];
-
 
   @override
   void initState() {
@@ -198,7 +195,12 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildField(_nameCtrl, LangKeys.name.tr(), Icons.person, LangKeys.nameRequired.tr()),
+            _buildField(
+              _nameCtrl,
+              LangKeys.name.tr(),
+              Icons.person,
+              LangKeys.nameRequired.tr(),
+            ),
             const SizedBox(height: 12),
             _buildDateField(),
             const SizedBox(height: 12),
@@ -231,7 +233,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 });
               },
               icon: const Icon(Icons.add),
-              label:  Text(LangKeys.addNumber.tr()),
+              label: Text(LangKeys.addNumber.tr()),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -246,7 +248,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   ),
                 ),
                 onPressed: _submit,
-                child:  Text(LangKeys.save.tr(), style: TextStyle(fontSize: 18)),
+                child: Text(LangKeys.save.tr(), style: TextStyle(fontSize: 18)),
               ),
             ),
           ],
@@ -259,7 +261,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     return TextFormField(
       controller: _birthDateCtrl,
       readOnly: true,
-      decoration:  InputDecoration(
+      decoration: InputDecoration(
         labelText: LangKeys.dateOfBirth.tr(),
         prefixIcon: Icon(Icons.calendar_today),
       ),
@@ -283,7 +285,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     return TextFormField(
       controller: _addrCtrl,
       readOnly: true,
-      decoration:  InputDecoration(
+      decoration: InputDecoration(
         labelText: LangKeys.address.tr(),
         prefixIcon: Icon(Icons.location_on),
       ),
@@ -300,7 +302,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           _addrCtrl.text = selected;
         }
       },
-      validator: (val) => val == null || val.trim().isEmpty ? LangKeys.nameRequired.tr() : null,
+      validator: (val) =>
+          val == null || val.trim().isEmpty ? LangKeys.nameRequired.tr() : null,
     );
   }
 
@@ -328,14 +331,14 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 Text(
+                Text(
                   LangKeys.address.tr(),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: searchCtrl,
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     prefixIcon: Icon(Icons.search),
                     hintText: LangKeys.address.tr(),
                     border: OutlineInputBorder(),
@@ -361,14 +364,14 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit_location_alt_outlined),
-                  title:  Text(LangKeys.enterAddressManually.tr()),
+                  title: Text(LangKeys.enterAddressManually.tr()),
                   onTap: () async {
                     final manualAddress = await showDialog<String>(
                       context: context,
                       builder: (context) {
                         final manualCtrl = TextEditingController();
                         return AlertDialog(
-                          title:  Text(LangKeys.enterAddressManually.tr()),
+                          title: Text(LangKeys.enterAddressManually.tr()),
                           content: TextField(
                             controller: manualCtrl,
                             decoration: const InputDecoration(
@@ -378,12 +381,12 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child:  Text(LangKeys.cansel.tr()),
+                              child: Text(LangKeys.cansel.tr()),
                             ),
                             ElevatedButton(
                               onPressed: () =>
                                   Navigator.pop(context, manualCtrl.text),
-                              child:  Text(LangKeys.ok.tr()),
+                              child: Text(LangKeys.ok.tr()),
                             ),
                           ],
                         );
@@ -432,7 +435,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           : (v) => v == null || v.trim().isEmpty ? validatorMsg : null,
     );
   }
-//: تُستخدم لإنشاء عدد من العناصر حسب عدد العناصر داخل phoneNumbers.
+
+  //: تُستخدم لإنشاء عدد من العناصر حسب عدد العناصر داخل phoneNumbers.
   List<Widget> _buildPhoneNumberFields() {
     return List.generate(phoneNumbers.length, (index) {
       return Column(
@@ -445,7 +449,9 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 child: TextFormField(
                   cursorColor: Colors.red,
                   initialValue: phoneNumbers[index]['value'],
-                  decoration:  InputDecoration(labelText: LangKeys.phoneNumber.tr()),
+                  decoration: InputDecoration(
+                    labelText: LangKeys.phoneNumber.tr(),
+                  ),
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -453,7 +459,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   ],
                   onChanged: (val) => phoneNumbers[index]['value'] = val,
                   validator: (val) {
-                    if (val == null || val.trim().isEmpty) return LangKeys.nameRequired.tr();
+                    if (val == null || val.trim().isEmpty)
+                      return LangKeys.nameRequired.tr();
                     if (val.trim().length != 11)
                       return 'يجب إدخال 11 رقمًا بالضبط';
                     return null;
@@ -472,7 +479,9 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   onChanged: (val) => setState(
                     () => phoneNumbers[index]['relationship'] = val!,
                   ),
-                  decoration:  InputDecoration(labelText: LangKeys.relation.tr()),
+                  decoration: InputDecoration(
+                    labelText: LangKeys.relation.tr(),
+                  ),
                 ),
               ),
               const SizedBox(width: 1),
@@ -485,11 +494,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   onPressed: () {
                     if (phoneNumbers.length > 1) {
                       setState(() => phoneNumbers.removeAt(index));
-                    } else {
-
-                    }
+                    } else {}
                   },
-
                 ),
               ),
             ],
@@ -501,12 +507,12 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   }
 
   String? _validateBirthDate(String? value) {
-    if (value == null || value.trim().isEmpty) return LangKeys.nameRequired.tr();
+    if (value == null || value.trim().isEmpty)
+      return LangKeys.nameRequired.tr();
     try {
       DateFormat('yyyy-MM-dd').parseStrict(value.trim());
       return null;
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 }
 
@@ -623,7 +629,9 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                                         context,
                                       ).colorScheme.primary,
                                     ),
-                                    onTap: () => Future.microtask(() => Navigator.pop(context,school))
+                                    onTap: () => Future.microtask(
+                                      () => Navigator.pop(context, school),
+                                    ),
                                   );
                                 },
                                 separatorBuilder: (_, __) =>

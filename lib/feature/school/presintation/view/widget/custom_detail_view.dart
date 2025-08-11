@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
+
 import '../../../../../core/utils/styles.dart';
-import '../../../../school/data/model/school_model.dart';
 import '../../../domain/entity/school_entity.dart';
 
 class CustomDetailSchoolCard extends StatelessWidget {

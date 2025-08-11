@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:monkey_app/core/errors/off_line_failure.dart';
-import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/update_children_use_case.dart';
 
 import '../../../../../core/param/update_children_param/update_children_param.dart';
@@ -19,7 +18,12 @@ class UpdateChildrenCubit extends Cubit<UpdateChildrenState> {
     var result = await updateChildrenUseCase.call(param);
     result.fold((failure) {
       if (state is OfflineFailure) {
-        emit(ChildrenOffLineState(errMessage: ' لم يتوفر اتصال باالانترنت وتم الحفظ مؤقتا وسيتم الارسال عندما يتوفر الاتصال بالانترنت ويستغرق هذا الامر بضع دقائق'));
+        emit(
+          ChildrenOffLineState(
+            errMessage:
+                ' لم يتوفر اتصال باالانترنت وتم الحفظ مؤقتا وسيتم الارسال عندما يتوفر الاتصال بالانترنت ويستغرق هذا الامر بضع دقائق',
+          ),
+        );
       } else {
         emit(UpdateFailureState(errMessage: failure.errMessage));
       }

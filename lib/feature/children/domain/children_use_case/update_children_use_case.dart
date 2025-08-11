@@ -5,14 +5,13 @@ import 'package:monkey_app/feature/children/domain/children_repo/children_repo.d
 
 import '../../../../core/param/update_children_param/update_children_param.dart';
 
-
-class UpdateChildrenUseCase extends MyUseCase<dynamic,UpdateChildrenParam>{
+class UpdateChildrenUseCase extends MyUseCase<dynamic, UpdateChildrenParam> {
   final ChildrenRepo childrenRepo;
 
   UpdateChildrenUseCase({required this.childrenRepo});
-  @override
-  Future<Either<Failure, dynamic>> call(UpdateChildrenParam param) async{
-    return await childrenRepo.updateChildren(param);
 
+  @override
+  Future<Either<Failure, dynamic>> call(UpdateChildrenParam param) async {
+    return await childrenRepo.updateChildren(param);
   }
 }

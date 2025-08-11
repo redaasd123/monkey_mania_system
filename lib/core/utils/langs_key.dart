@@ -34,7 +34,6 @@ class LangKeys {
   static const String nameRequired = "nameRequired";
   static const String alreadyExsists = "alreadyExists";
   static const String notFoundNote = "NotFoundNote";
-
   static const String createdSuccessfully = "created Successfully";
   static const String updatedSuccessfully = "updatedSuccessfully";
   static const String enterAddressManually = "enterAddressManually";
@@ -44,39 +43,49 @@ class LangKeys {
   static const String relation = "relation";
   static const String loginFailure = "loginFailure";
 
-
-  static const String createdBy = "Create By";
-  static const String createdAt = "Created At";
-  static const String lastUpdate = "LastUpdate";
+  // Misc
+  static const String createdBy = "createdBy";
+  static const String createdAt = "createdAt";
+  static const String lastUpdate = "lastUpdate";
   static const String age = "age";
-  static const String specialNeeds = "Special Needs?";
-  static const String systemMessage = "System Message";
-  static const String notFound = "Not Found";
-  static const String active = "Active?";
+  static const String active = "active";
+  static const String specialNeeds = "specialNeeds";
+  static const String systemMessage = "systemMessage";
+  static const String notFound = "notFound";
   static const String messageFailureOffLine = "messageFailureOffLine";
-  static const String Bills = 'Bills';
+
+  // Bills
+  static const String mainBills ='mainBills';
+  static const String coffeeBills = 'coffeeBills';
+  static const String bills = 'Bills';
+  static const String cash = 'cash';
+  static const String visa = 'visa';
+  static const String instapay = 'instapay';
+  static const String totalPrice = 'totalPrice';
+  static const String productsPrice = 'productsPrice';
+  static const String timePrice = 'timePrice';
+  static const String spentTime = 'spentTime';
+  static const String discountCoupon = 'discountCoupon';
+  static const String discountType = 'discountType';
+  static const String branch = 'branch';
+  static const String isActive = 'isActive';
+  static const String isSubscription = 'isSubscription';
+  static const String moneyUnbalance = 'moneyUnbalance';
+  static const String created = 'created';
+  static const String finished = 'finished';
+  static const String finishedBy = 'finishedBy';
+  static const String childrenCount = 'childrenCount';
+  static const String applyDiscount = 'applyDiscount';
+  static const String allBills = 'allBills';
+  static const String allActiveBills = 'allActiveBills';
+  static const String enterValue = 'enterValue';
+  static const String payment = "payment";
+
+  static const String takeAway = 'takeAway';
+  static const String tableNumber = 'tableNumber';
+  static const String billsNumber = "billsNumber";
 
 
 
-  static const cash = 'cash';
-  static const visa = 'visa';
-  static const instapay = 'instapay';
-  static const totalPrice = 'totalPrice';
-  static const productsPrice = 'productsPrice';
-  static const timePrice = 'timePrice';
-  static const spentTime = 'spentTime';
-  static const discountValue = 'discountValue';
-  static const discountType = 'discountType';
-  static const branch = 'branch';
-  static const isActive = 'isActive';
-  static const isSubscription = 'isSubscription';
-  static const moneyUnbalance = 'moneyUnbalance';
-  static const created = 'created';
-  static const finished = 'finished';
-  static const finishedBy = 'finishedBy';
-  static const childrenCount = 'ChildrenCount';
-  static const applyDiscount = 'Apply Discount';
-  static const allBills = 'All Bills';
-  static const allِActiveBills = 'All Active Bills';
 
 }

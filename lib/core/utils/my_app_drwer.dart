@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
-import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
+
 import '../../feature/home/presentation/manager/theme_Cubit.dart';
 
 class MyAppDrawer extends StatelessWidget {
@@ -72,16 +73,15 @@ class MyAppDrawer extends StatelessWidget {
 
             ExpansionTile(
               leading: Icon(Icons.receipt_long),
-              title: Text(LangKeys.Bills.tr()),
+              title: Text(LangKeys.mainBills.tr()),
               children: [
                 _buildDrawerItem(
                   onTap: () {
-                   GoRouter.of(context).push(AppRouter.kGetAllBillsView);
+                    GoRouter.of(context).push(AppRouter.kGetAllBillsView);
                   },
                   context,
-                  icon: Icons.receipt_long
-                  ,
-                  text: 'get All'
+                  icon: Icons.receipt_long,
+                  text: LangKeys.allBills.tr(),
                 ),
 
                 _buildDrawerItem(
@@ -89,15 +89,36 @@ class MyAppDrawer extends StatelessWidget {
                     GoRouter.of(context).push(AppRouter.kGetAllActiveBillsView);
                   },
                   context,
-                  icon: Icons.recent_actors
-                  ,
-                  text:'get All Active'
+                  icon: Icons.recent_actors,
+                  text: LangKeys.allActiveBills.tr(),
+                ),
+              ],
+            ),
+            ExpansionTile(
+              leading: Icon(Icons.receipt_long),
+              title: Text(LangKeys.coffeeBills.tr()),
+              children: [
+                _buildDrawerItem(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRouter.kCoffeeBills);
+                  },
+                  context,
+                  icon: Icons.receipt_long,
+                  text: LangKeys.allBills.tr(),
+                ),
+
+                _buildDrawerItem(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRouter.kActiveCoffeeBills);
+                  },
+                  context,
+                  icon: Icons.recent_actors,
+                  text: LangKeys.allActiveBills.tr(),
                 ),
               ],
             ),
 
             //
-
             _buildDrawerItem(
               onTap: () {
                 Locale newLocale = context.locale.languageCode == 'en'

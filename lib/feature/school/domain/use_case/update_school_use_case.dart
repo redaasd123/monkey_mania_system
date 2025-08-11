@@ -6,17 +6,13 @@ import '../../../../core/param/update_school_param/update_school_param.dart';
 import '../../data/model/school_model.dart';
 import '../repo/school_repo.dart';
 
-class UpdateSchoolUseCase extends MyUseCase<SchoolModel,UpdateSchoolParam>{
+class UpdateSchoolUseCase extends MyUseCase<SchoolModel, UpdateSchoolParam> {
   final SchoolRepo schoolRpo;
 
   UpdateSchoolUseCase({required this.schoolRpo});
 
   @override
-  Future<Either<Failure, SchoolModel>> call(UpdateSchoolParam param)async {
+  Future<Either<Failure, SchoolModel>> call(UpdateSchoolParam param) async {
     return await schoolRpo.updateSchool(param);
   }
-
-
-
-
 }

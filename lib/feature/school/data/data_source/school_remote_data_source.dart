@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:hive/hive.dart';
 import 'package:monkey_app/core/utils/api_serviece.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/save_data.dart';
 import 'package:monkey_app/feature/school/domain/entity/school_entity.dart';
 
 import '../../../../core/errors/failure.dart';
-import '../../../../core/helper/auth_helper.dart';
 import '../../../../core/param/create_school_param/create_school_param.dart';
 import '../../../../core/param/update_school_param/update_school_param.dart';
 import '../model/school_model.dart';

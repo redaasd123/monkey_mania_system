@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
-part 'create_children_params.g.dart';//
+
+part 'create_children_params.g.dart'; //
+
 @HiveType(typeId: 4)
 class CreateChildrenParam {
   @HiveField(0)
@@ -34,13 +36,11 @@ class CreateChildrenParam {
       "child_phone_numbers_set": phones
           .map(
             (e) => {
-          "phone_number": {"value": e['value']},
-          "relationship": e['relationship'],
-        },
-      )
+              "phone_number": {"value": e['value']},
+              "relationship": e['relationship'],
+            },
+          )
           .toList(),
     };
   }
-
-
 }

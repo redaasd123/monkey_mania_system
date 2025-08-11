@@ -1,10 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/param/update_school_param/update_school_param.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/feature/school/data/model/school_model.dart';
 import 'package:monkey_app/feature/school/presintation/manager/put_cubit/put_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/custom_detail_view.dart';
@@ -46,9 +44,9 @@ class SchoolListView extends StatelessWidget {
                       id: model.id,
                       name: data.name,
                       address: data.address,
-                      notes: data.notes
-                          ?.trim()
-                          .isEmpty ?? true ? null : data.notes,
+                      notes: data.notes?.trim().isEmpty ?? true
+                          ? null
+                          : data.notes,
                     ),
                   );
                 }
@@ -62,4 +60,3 @@ class SchoolListView extends StatelessWidget {
     );
   }
 }
-

@@ -2,22 +2,25 @@ import 'package:dio/dio.dart';
 import 'package:monkey_app/core/errors/failure.dart';
 
 import '../helper/intrecptor_helper.dart';
+
 class Api {
-  static final String _baseUrl = 'https://monkey-mania-production.up.railway.app/';
+  static final String _baseUrl =
+      'https://monkey-mania-production.up.railway.app/';
   final Dio dio;
 
   Api({required this.dio}) {
     setupInterceptors(dio); // ✅ فعلنا الإنترسبتور هنا
   }
+
   Future<dynamic> getUri(Uri uri) async {
     final response = await dio.getUri(uri);
     return response.data;
   }
 
   Future<dynamic> get({
-  required String endPoint,
-  String? token,
-    Map<String,dynamic>?queryParameters
+    required String endPoint,
+    String? token,
+    Map<String, dynamic>? queryParameters,
   }) async {
     final headers = <String, String>{
       if (token != null) 'Authorization': 'Bearer $token',
@@ -45,17 +48,13 @@ class Api {
       print('❌ API Error: $e');
       print(stackTrace);
       rethrow;
-  }}
-
-
-
-
-
+    }
+  }
 
   Future<dynamic> post({
     required String endPoint,
     required dynamic body,
-     String? token,
+    String? token,
   }) async {
     print("📦 Request Body: ${body.toString()}");
     Map<String, String> headers = {
@@ -73,22 +72,17 @@ class Api {
       print('🔴 ENDPOINT: $endPoint');
       print("🟢 Refresh Token Response: ${response.data}");
       return response;
-
     } catch (e) {
       print("❌ ERROR FROM API: $e");
       print('❌ Dio Error: $e');
       rethrow;
     }
-
   }
-
-
-
 
   Future<dynamic> put({
     required String endPoint, // ✅
     required dynamic body,
-     String? token,
+    String? token,
   }) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer $token',
@@ -109,5 +103,4 @@ class Api {
       rethrow;
     }
   }
-
 }

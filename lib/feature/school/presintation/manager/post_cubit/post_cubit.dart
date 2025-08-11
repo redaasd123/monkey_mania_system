@@ -17,7 +17,12 @@ class CreateSchoolCubit extends Cubit<CreateSchoolState> {
     var result = await postSchoolUseCase.call(param);
     result.fold((failure) {
       if (state is OfflineFailure) {
-        emit(CreateOfflineState(errMessage: ' لم يتوفر اتصال باالانترنت وتم الحفظ مؤقتا وسيتم الارسال عندما يتوفر الاتصال بالانترنت ويستغرق هذا الامر بضع دقائق'));
+        emit(
+          CreateOfflineState(
+            errMessage:
+                ' لم يتوفر اتصال باالانترنت وتم الحفظ مؤقتا وسيتم الارسال عندما يتوفر الاتصال بالانترنت ويستغرق هذا الامر بضع دقائق',
+          ),
+        );
       } else {
         emit(CreateFailureState(errMessage: failure.errMessage));
       }

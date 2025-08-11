@@ -3,15 +3,14 @@ import 'package:monkey_app/core/utils/constans.dart';
 
 import '../../domain/entity/children/children_entity.dart';
 
-abstract class ChildrenLocalDataSource{
-
- List<ChildrenEntity> fetchChildren();
+abstract class ChildrenLocalDataSource {
+  List<ChildrenEntity> fetchChildren();
 }
 
-class ChildrenLocalDataSourceImpl extends ChildrenLocalDataSource{
+class ChildrenLocalDataSourceImpl extends ChildrenLocalDataSource {
   @override
   List<ChildrenEntity> fetchChildren() {
-  final box = Hive.box<ChildrenEntity>(kChildrenBox);
-  return box.values.toList();
+    final box = Hive.box<ChildrenEntity>(kChildrenBox);
+    return box.values.toList();
   }
 }

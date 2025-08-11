@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/core/funcation/show_snack_bar.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
@@ -18,7 +17,7 @@ class PostListenerWidget extends StatelessWidget {
     return BlocListener<CreateSchoolCubit, CreateSchoolState>(
       listener: (context, state) {
         if (state is CreateLoadingState) {
-         showLoader(context);
+          showLoader(context);
         } else {
           // أي حالة غير التحميل نقفل الـ dialog
           if (Navigator.canPop(context)) Navigator.pop(context);

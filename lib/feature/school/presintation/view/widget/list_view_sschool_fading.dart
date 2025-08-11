@@ -4,8 +4,7 @@ import 'package:monkey_app/core/widget/custom_fading_widget.dart';
 import 'detail_school_fading.dart';
 
 class CustomListViewFading extends StatelessWidget {
-  const CustomListViewFading({super.key,});
-  
+  const CustomListViewFading({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +14,10 @@ class CustomListViewFading extends StatelessWidget {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
-            child: CustomFadingWidget(
-                //delay: Duration(milliseconds: index * 100),
-                child: DetailSchoolFading()),
-          
+          child: CustomFadingWidget(
+            //delay: Duration(milliseconds: index * 100),
+            child: DetailSchoolFading(),
+          ),
         );
       },
     );

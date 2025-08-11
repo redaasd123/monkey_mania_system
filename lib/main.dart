@@ -1,22 +1,23 @@
-
-
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'core/theme_color/color_them.dart';
 import 'core/utils/app_router.dart';
 import 'core/utils/main_init.dart';
 import 'core/utils/service_locator.dart';
-import 'feature/bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
-import 'feature/bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
-import 'feature/bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
-import 'feature/bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
-import 'feature/bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-import 'feature/bills/presentation/view/widget/param/fetch_bills_param.dart';
+import 'feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
+import 'feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'feature/branch/presentation/manager/branch_cubit.dart';
 import 'feature/children/presentation/manager/cubit/children_cubit.dart';
 import 'feature/home/presentation/manager/theme_Cubit.dart';
@@ -38,15 +39,27 @@ class MonkeyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+
+
+        BlocProvider( create: (context) =>
+        getIt<CoffeeBillsCubit>()
+          ..fetchBillsCoffee(FetchBillsParam(branch: ['all'])),),
+        BlocProvider(create: (context) => getIt<GetOneBillsCubit>()),
         BlocProvider(create: (context) => getIt<CloseBillsCubit>()),
         BlocProvider(
           create: (context) =>
-          getIt<FetchActiveBillsCubit>()..fetchActiveBills(FetchBillsParam(branch: ['all'])),
+              getIt<FetchActiveBillsCubit>()
+                ..fetchActiveBills(FetchBillsParam(branch: ['all'])),
         ),
         BlocProvider(create: (context) => getIt<ApplyDiscountCubit>()),
         BlocProvider(create: (context) => getIt<CreateBillsCubit>()),
-        BlocProvider(create: (context) => getIt<ChildrenCubit>()..fetchChildren()),
-        BlocProvider(create: (context) => getIt<BillsCubit>()..fetchBills(FetchBillsParam(branch: ['all']))),
+        BlocProvider(
+          create: (context) => getIt<ChildrenCubit>()..fetchChildren(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              getIt<BillsCubit>()..fetchBills(FetchBillsParam(branch: ['all'])),
+        ),
         BlocProvider(create: (context) => getIt<SchoolCubit>()..fetchSchool()),
         BlocProvider(create: (context) => getIt<CreateSchoolCubit>()),
         BlocProvider(create: (context) => getIt<UpdateSchoolCubit>()),
@@ -70,11 +83,13 @@ class MonkeyApp extends StatelessWidget {
                 localizationsDelegates: context.localizationDelegates,
 
                 builder: (context, child) {
-                                  return Directionality(
-                                    textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                                    child: child!,
-                                  );
-                                },
+                  return Directionality(
+                    textDirection: isArabic
+                        ? ui.TextDirection.rtl
+                        : ui.TextDirection.ltr,
+                    child: child!,
+                  );
+                },
               );
             },
           );

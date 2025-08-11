@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,10 +10,13 @@ import 'package:monkey_app/feature/children/domain/entity/age/age_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/phone/phone_entity.dart';
 import 'package:monkey_app/feature/school/domain/entity/school_entity.dart';
+
 import '../../main.dart';
 import 'constans.dart';
 import 'initialize_Sync_Services.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class AppInitializer {
   static Future<void> initializeApp() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +24,10 @@ class AppInitializer {
 
     _registerHiveAdapters();
     await _initHive();
-    //
-    // await Hive.deleteBoxFromDisk(kSchoolBox);
-    // await Hive.deleteBoxFromDisk(kChildrenBox);
-    // await Hive.deleteBoxFromDisk(kSaveCreateChild);
+
+    await Hive.deleteBoxFromDisk(kSchoolBox);
+    await Hive.deleteBoxFromDisk(kChildrenBox);
+    await Hive.deleteBoxFromDisk(kSaveCreateChild);
 
     await _openHiveBoxes();
 
@@ -57,8 +59,7 @@ class AppInitializer {
     await Hive.initFlutter();
   }
 
-   static Future<void> _openHiveBoxes() async {
-
+  static Future<void> _openHiveBoxes() async {
     await Hive.openBox(kAuthBox);
     await Hive.openBox<SchoolEntity>(kSchoolBox);
     await Hive.openBox<ChildrenEntity>(kChildrenBox);
@@ -66,6 +67,5 @@ class AppInitializer {
     await Hive.openBox<UpdateChildrenParam>(kSaveUpdateChild);
     await Hive.openBox<CreateSchoolParam>(kSaveCreateSchool);
     await Hive.openBox<UpdateSchoolParam>(kSaveUpdateSchool);
-
-   }
+  }
 }
