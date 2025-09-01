@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
-
-part 'create_children_params.g.dart'; //
+part 'create_children_params.g.dart';
 
 @HiveType(typeId: 4)
 class CreateChildrenParam {
@@ -9,7 +8,7 @@ class CreateChildrenParam {
   @HiveField(1)
   final String address;
   @HiveField(2)
-  final int school;
+  final int? school;
   @HiveField(3)
   final String birthDate;
   @HiveField(4)

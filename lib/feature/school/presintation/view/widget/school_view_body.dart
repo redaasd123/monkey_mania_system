@@ -2,10 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
-import 'package:monkey_app/feature/school/presintation/view/widget/reseve_data_school_action_button.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/school_list_view.dart';
 
+import '../../../../../core/widget/widget/custom_flush.dart';
+import '../../../../../core/widget/widget/custom_show_loder.dart';
 class SchoolViewBody extends StatefulWidget {
   const SchoolViewBody({super.key});
 
@@ -17,100 +19,110 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
   final searchCtrl = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SchoolCubit>().canselSearch();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        title: BlocBuilder<SchoolCubit, SchoolState>(
-          builder: (context, state) {
-            final isSearching = context.read<SchoolCubit>().isSearch;
-            return isSearching
-                ? SizedBox(
-                    height: 40,
-                    child: TextField(
-                      controller: searchCtrl,
-                      onChanged: (query) {
-                        context.read<SchoolCubit>().searchSchools(query);
-                      },
-                      style: TextStyle(
-                        color: colorScheme.onPrimary, // لون النص جوه TextField
-                      ),
-                      cursorColor: colorScheme.onPrimary,
-                      decoration: InputDecoration(
-                        hintText: LangKeys.school.tr(),
-                        hintStyle: TextStyle(
-                          color: colorScheme.onPrimary.withOpacity(0.6),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                        filled: true,
-                        fillColor: colorScheme.primary, // نفس لون AppBar
-                      ),
+    return BlocConsumer<SchoolCubit, SchoolState>(
+      listener: (context, state) {
+        /// ----------------------------
+        /// 🔹 Loading
+        /// ----------------------------
+        if (state.status == SchoolStatus.loading ||
+            state.status == SchoolStatus.updateLoading ||
+            state.status == SchoolStatus.addLoading) {
+          showLoader(context);
+          return;
+        }
+
+        /// ----------------------------
+        /// 🔹 Success
+        /// ----------------------------
+        if (state.status == SchoolStatus.success) {
+          if (Navigator.canPop(context)) hideLoader(context);
+        } else if (state.status == SchoolStatus.updateSuccess) {
+          if (Navigator.canPop(context)) hideLoader(context);
+          showGreenFlush(context, LangKeys.updatedSuccessfully.tr());
+        } else if (state.status == SchoolStatus.addSuccess) {
+          if (Navigator.canPop(context)) hideLoader(context);
+          showGreenFlush(context, LangKeys.addNote.tr());
+        }
+
+        /// ----------------------------
+        /// 🔹 Failure
+        /// ----------------------------
+        else if (state.status == SchoolStatus.failure ||
+            state.status == SchoolStatus.updateFailure ||
+            state.status == SchoolStatus.addFailure) {
+          if (Navigator.canPop(context)) hideLoader(context);
+          showRedFlush(context, state.errMessage ?? LangKeys.notFound.tr());
+        }
+
+        /// ----------------------------
+        /// 🔹 Offline
+        /// ----------------------------
+        else if (state.status == SchoolStatus.offLineState) {
+          if (Navigator.canPop(context)) hideLoader(context);
+          showRedFlush(context, LangKeys.messageFailureOffLine.tr());
+        }
+      },
+        builder: (context, state) {
+          /// 🔹 Show list when data loaded or after add/update
+          if (state.status == SchoolStatus.success ||
+              state.status == SchoolStatus.addSuccess ||
+              state.status == SchoolStatus.updateSuccess) {
+            return SchoolListView(school: state.allSchool);
+          }
+
+          /// 🔹 Show list with linear progress during create/update
+          else if (state.status == SchoolStatus.addLoading ||
+              state.status == SchoolStatus.updateLoading) {
+            return Stack(
+              children: [
+                SchoolListView(school: state.allSchool),
+                const LinearProgressIndicator(minHeight: 2),
+              ],
+            );
+          }
+
+          /// 🔹 Show list while searching
+          else if (state.status == SchoolStatus.searchLoading) {
+            return Column(
+              children: [
+                const LinearProgressIndicator(minHeight: 2),
+                Expanded(
+                  child: SchoolListView(school: state.allSchool),
+                ),
+              ],
+            );
+          }else if(state.status==SchoolStatus.noResultSearch){
+            return Center(child: Text(LangKeys.notFound,style: Styles.textStyle14,));
+          }
+
+          /// 🔹 Offline or failure
+          else if (state.status == SchoolStatus.offLineState ||
+              state.status == SchoolStatus.failure ||
+              state.status == SchoolStatus.updateFailure ||
+              state.status == SchoolStatus.addFailure) {
+            return Column(
+              children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      state.errMessage ?? LangKeys.notFound.tr(),
+                      style: const TextStyle(color: Colors.red),
                     ),
-                  )
-                : Text(
-                    LangKeys.school.tr(),
-                    style: TextStyle(color: colorScheme.onPrimary),
-                  );
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final cubit = context.read<SchoolCubit>();
-              if (cubit.isSearch) {
-                cubit.canselSearch();
-                searchCtrl.clear();
-              } else {
-                cubit.toggleSearch();
-                searchCtrl.clear();
-              }
-            },
-            icon: BlocBuilder<SchoolCubit, SchoolState>(
-              builder: (context, state) {
-                final isSearching = context.read<SchoolCubit>().isSearch;
-                return Icon(
-                  isSearching ? Icons.close : Icons.search,
-                  color: colorScheme.onPrimary,
-                  size: 28,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+                  ),
+                Expanded(
+                  child: SchoolListView(school: state.allSchool),
+                ),
+              ],
+            );
+          }
 
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<SchoolCubit, SchoolState>(
-          builder: (context, state) {
-            final cubit = context.read<SchoolCubit>();
+          /// 🔹 Default loading
+          else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        }
 
-            if (cubit.selectedSchool != null && !cubit.isSearch) {
-              cubit.fetchSchool();
-              return SchoolListView(school: [cubit.selectedSchool!]);
-            }
-
-            return SchoolListView(school: cubit.filteredSchools);
-          },
-        ),
-      ),
-
-      floatingActionButton: ReseveDataSchoolActionButton(
-        context: context,
-        colorScheme: colorScheme,
-      ),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/param/update_school_param/update_school_param.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/feature/school/presintation/manager/put_cubit/put_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/custom_detail_view.dart';
 import 'package:monkey_app/feature/school/presintation/view/widget/show_add_bottom_sheet.dart';
@@ -24,7 +23,7 @@ class SchoolListView extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         itemBuilder: (context, index) {
           // 👇 قلبنا الفهرس بحيث 0 ← أحدث عنصر
-          final model = school[school.length - 1 - index];
+          // final model = school[school.length - 1 - index];
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -33,15 +32,15 @@ class SchoolListView extends StatelessWidget {
                 final data = await schoolShowAddSchoolSheet(
                   context,
                   text: LangKeys.edit.tr(),
-                  model: model,
+                  model: school[index],
                 );
 
-                final updateCubit = context.read<UpdateSchoolCubit>();
+                final updateCubit = context.read<SchoolCubit>();
 
                 if (data != null) {
                   updateCubit.updateSchool(
                     UpdateSchoolParam(
-                      id: model.id,
+                      id: school[index].id,
                       name: data.name,
                       address: data.address,
                       notes: data.notes?.trim().isEmpty ?? true
@@ -52,7 +51,7 @@ class SchoolListView extends StatelessWidget {
                 }
               },
 
-              child: CustomDetailSchoolCard(schoolModel: model),
+              child: CustomDetailSchoolCard(schoolModel: school[index]),
             ),
           );
         },

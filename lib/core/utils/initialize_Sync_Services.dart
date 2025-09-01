@@ -25,7 +25,7 @@ Future<void> initializeSyncServices() async {
       method: HttpMethod.put,
       boxName: kSaveUpdateChild,
       endpointBuilder: (param) => 'child/${param.id}/update/',
-      toJson: (param) => param.tojson(),
+      toJson: (param) => param.toJson(),
       onSuccess: () {
         print("🔥 Update syncing finished. Calling fetchChildren...");
       },

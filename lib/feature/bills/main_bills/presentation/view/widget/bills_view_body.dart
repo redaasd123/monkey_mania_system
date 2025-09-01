@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/core/funcation/show_snack_bar.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+
 import '../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../manager/close_bills_cubit/close_bills_cubit.dart';
-import '../../manager/create_bills_cubit/create_bills_cubit.dart';
 import '../../manager/fetch_bills_cubit/bills_cubit.dart';
 import 'bills_list_view.dart';
 
@@ -18,35 +18,19 @@ class BillsViewBody extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<BillsCubit, BillsState>(
-          listener: (context, state) {
-            if (state is BillsSuccessState) {
-            } else if (state is BillsFailureState) {
-              BlocProvider.of<BillsCubit>(
-                context,
-              ).fetchBills(FetchBillsParam(branch: ['all']));
-              showRedFlush(context, state.errMessage);
-            }
-          },
-        ),
-        BlocListener<CreateBillsCubit, CreateBillsState>(
           listener: (context, state) async {
-            if (state is CreateBillsFailureState) {
+            print("🔥 Current state: $state");
+            if (state is BillsFailureState) {
               showRedFlush(context, state.errMessage);
-              await BlocProvider.of<BillsCubit>(
-                context,
-              ).fetchBills(FetchBillsParam(branch: ['all']));
-              hideLoader(context);
-            } else if (state is CreateBillsSuccessState) {
-              await BlocProvider.of<BillsCubit>(
-                context,
-              ).fetchBills(FetchBillsParam(branch: ['all']));
+            } else if (state is CreateBillsFailureState) {
+              showRedFlush(context, state.errMessage);
+            }  else if (state is CreateBillsSuccessState) {
               showGreenFlush(context, 'success');
-              hideLoader(context);
-            } else {
-              showLoader(context);
+            } else if (state is CreateBillsLoadingState) {
             }
           },
         ),
+
         BlocListener<ApplyDiscountCubit, ApplyDiscountState>(
           listener: (context, state) async {
             if (state is ApplyDiscountFailureState) {
@@ -55,11 +39,12 @@ class BillsViewBody extends StatelessWidget {
             } else if (state is ApplyDiscountSuccessState) {
               showGreenFlush(context, 'success');
               hideLoader(context);
-            } else {
+            } else if (state is ApplyDiscountLoadingState) {
               showLoader(context);
             }
           },
         ),
+
         BlocListener<CloseBillsCubit, CloseBillsState>(
           listener: (context, state) async {
             if (state is CloseBillsFailure) {
@@ -68,7 +53,7 @@ class BillsViewBody extends StatelessWidget {
             } else if (state is CloseBillsSuccess) {
               showGreenFlush(context, 'success');
               hideLoader(context);
-            } else {
+            } else if (state is CloseBillsLoading) {
               showLoader(context);
             }
           },
@@ -76,11 +61,16 @@ class BillsViewBody extends StatelessWidget {
       ],
       child: BlocBuilder<BillsCubit, BillsState>(
         builder: (context, state) {
-          if (state is BillsSuccessState) {
+          if (state is BillsLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }  else if (state is BillsSuccessState) {
             return BillsListView(bills: state.bills);
-          } else {
-            return Center(child: CircularProgressIndicator());
+          } else if (state is BillsEmptyState) {
+            return const Center(child: Text('No bills found'));
+          }else if (state is BillsFailureState) {
+            return Center(child: Text(state.errMessage));
           }
+          return const SizedBox();
         },
       ),
     );

@@ -22,8 +22,8 @@ class UpdateChildrenParamAdapter extends TypeAdapter<UpdateChildrenParam> {
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
       name: fields[0] as String,
-      address: fields[1] as String,
-      school: fields[3] as int,
+      address: fields[1] as String?,
+      school: fields[3] as int?,
       birthDate: fields[4] as String,
       notes: fields[6] as String?,
     );

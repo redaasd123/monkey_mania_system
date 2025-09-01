@@ -1,4 +1,4 @@
-import '../../data/model/get_all_bills_model.dart';
+import '../../data/model/all_bills_model/get_all_bills_model.dart';
 
 class BillsEntity {
   final int id;

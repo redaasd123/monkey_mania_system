@@ -14,6 +14,8 @@ import 'package:monkey_app/feature/children/domain/children_repo/children_repo.d
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
 import '../../domain/entity/children/children_entity.dart';
+import '../../domain/entity/children/children_page_entity.dart';
+import '../../domain/param/fetch_children_param.dart';
 import '../data_source/childern_local_data_source.dart';
 
 class ChildrenRepoImpl extends ChildrenRepo {
@@ -21,46 +23,44 @@ class ChildrenRepoImpl extends ChildrenRepo {
   final ChildrenLocalDataSource childrenLocalDataSource;
 
   ChildrenRepoImpl(
-    this.childrenLocalDataSource, {
-    required this.childrenRemoteDataSource,
-  });
+      this.childrenLocalDataSource, {
+        required this.childrenRemoteDataSource,
+      });
 
   @override
-  Future<Either<Failure, List<ChildrenEntity>>> fetchChildren() async {
+  Future<Either<Failure, ChildrenPageEntity>> fetchChildren(
+    FetchChildrenParam? param,
+  ) async {
     try {
-      final localChildren = await childrenLocalDataSource.fetchChildren();
+      final localChildren = await childrenLocalDataSource.fetchChildren(param);
 
-      if (localChildren != null && localChildren.isNotEmpty) {
-        unawaited(_fetchAndCacheFromServer()); // ← تحديث صامت في الخلفية
+      if (localChildren.children.isNotEmpty) {
+        unawaited(_fetchAndCacheFromServer(param!));
         return right(localChildren);
       }
 
-      // ✅ لو مفيش كاش من البداية
-      final result = await childrenRemoteDataSource.fetchChildren();
+      final result = await childrenRemoteDataSource.fetchChildren(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
-  Future<void> _fetchAndCacheFromServer() async {
+  Future<void> _fetchAndCacheFromServer(FetchChildrenParam param) async {
     try {
-      final freshData = await childrenRemoteDataSource.fetchChildren();
-      saveChildrenData(freshData, kChildrenBox);
-      // تقدر تبعت Signal للـ Cubit لو حبيت تحدث الشاشة
+      final freshData = await childrenRemoteDataSource.fetchChildren(param);
+      saveChildrenData(freshData.children.cast<ChildrenEntity>(), kChildrenBox);
     } catch (_) {
-      // تجاهل الأخطاء هنا لو كان تحديث خلفي
+      // تجاهل الأخطاء
     }
   }
 
   @override
-  Future<Either<Failure, dynamic>> createChildren(
-    CreateChildrenParam param,
-  ) async {
+  Future<Either<Failure, ChildrenEntity>> createChildren(
+      CreateChildrenParam param,
+      ) async {
     final box = Hive.box<CreateChildrenParam>(kSaveCreateChild);
 
     final isConnected = await checkInternet();
@@ -69,8 +69,12 @@ class ChildrenRepoImpl extends ChildrenRepo {
       try {
         var result = await childrenRemoteDataSource.createChildren(param);
 
-        final updatedList = await childrenRemoteDataSource.fetchChildren();
-        saveChildrenData(updatedList, kChildrenBox);
+        final updatedList = await childrenRemoteDataSource
+            .fetchChildren(FetchChildrenParam(pageNumber: 1));
+        saveChildrenData(
+          updatedList.children.cast<ChildrenEntity>(),
+          kChildrenBox,
+        );
         return right(result);
       } on Exception catch (e) {
         if (e is DioException) {
@@ -89,16 +93,19 @@ class ChildrenRepoImpl extends ChildrenRepo {
   }
 
   @override
-  Future<Either<Failure, dynamic>> updateChildren(
-    UpdateChildrenParam param,
-  ) async {
+  Future<Either<Failure, ChildrenEntity>> updateChildren(
+      UpdateChildrenParam param,
+      ) async {
     final box = Hive.box<UpdateChildrenParam>(kSaveUpdateChild);
     final isConnected = await checkInternet();
     if (isConnected) {
       try {
         var result = await childrenRemoteDataSource.updateChildren(param);
-        final updatedList = await childrenRemoteDataSource.fetchChildren();
-        saveChildrenData(updatedList, kChildrenBox);
+        final updatedList = await childrenRemoteDataSource.fetchChildren(FetchChildrenParam());
+        saveChildrenData(
+          updatedList.children.cast<ChildrenEntity>(),
+          kChildrenBox,
+        );
         return right(result);
       } on Exception catch (e) {
         if (e is DioException) {

@@ -1,8 +1,13 @@
-
-import '../../domain/entity/Bills_entity.dart';
+import '../../../domain/entity/Bills_entity.dart';
 
 class GetAllBillsModel extends BillsEntity {
-  GetAllBillsModel({
+
+
+  GetAllBillsModel(
+ {
+    int? count,
+    String? next,
+    String? previous,
     required int id,
     String? cash,
     String? instapay,
@@ -56,7 +61,11 @@ class GetAllBillsModel extends BillsEntity {
 
   factory GetAllBillsModel.fromJson(Map<String, dynamic> json) {
     return GetAllBillsModel(
+
       id: json['id'],
+      count: json['count'],
+      next: json['next'],
+      previous: json['previous'],
       cash: json['cash'],
       instapay: json['instapay'],
       visa: json['visa'],

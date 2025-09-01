@@ -6,6 +6,8 @@ import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 import '../../feature/home/presentation/manager/theme_Cubit.dart';
 
@@ -77,7 +79,7 @@ class MyAppDrawer extends StatelessWidget {
               children: [
                 _buildDrawerItem(
                   onTap: () {
-                    GoRouter.of(context).push(AppRouter.kGetAllBillsView);
+                        GoRouter.of(context).push(AppRouter.kGetAllBillsView);
                   },
                   context,
                   icon: Icons.receipt_long,

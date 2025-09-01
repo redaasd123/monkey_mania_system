@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:monkey_app/core/errors/failure.dart';
 
 import '../../domain/entity/Bills_entity.dart';
+import '../../domain/entity/bills_page_entity.dart';
 import '../../domain/entity/get_one_bills_entity.dart';
 import '../../domain/repo/bills_repo.dart';
 import '../../presentation/view/widget/apply_discount_param.dart';
@@ -17,7 +18,7 @@ class BillsRepoImpl extends BillsRepo {
   BillsRepoImpl({required this.billsRemoteDataSource});
 
   @override
-  Future<Either<Failure, List<BillsEntity>>> fetchBills(
+  Future<Either<Failure, BillsPageEntity>> fetchBills(
     FetchBillsParam param,
   ) async {
     try {
@@ -25,6 +26,9 @@ class BillsRepoImpl extends BillsRepo {
       return right(result);
     } on Exception catch (e) {
       if (e is DioException) {
+        // if(e.response?.statusCode==404){
+        //   return right([]);
+        // }
         print('❌ DioException: ${e.message}');
         print('❌ API Error: $e');
         return left(ServerFailure.fromDioError(e));

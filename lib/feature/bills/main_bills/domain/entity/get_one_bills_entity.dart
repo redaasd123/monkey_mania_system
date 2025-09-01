@@ -1,21 +1,19 @@
-
-
 class GetOneBillsEntity {
   final num? id;
-  final String? cash;
-  final String? instapay;
-  final String? visa;
-  final dynamic timePrice;
-  final String? productsPrice;
-  final dynamic totalPrice;
-  final String? discountValue;
+  final double? cash;
+  final double? instapay;
+  final double? visa;
+  final double? timePrice;
+  final double? productsPrice;
+  final double? totalPrice;
+  final double? discountValue;
   final String? discountType;
   final String? branch;
   final num? spentTime;
   final num? childrenCount;
   final List<ChildrenEntity>? children;
-  final String? hourPrice;
-  final String? halfHourPrice;
+  final double? hourPrice;
+  final double? halfHourPrice;
   final double? moneyUnbalance;
   final DateTime? finished;
   final DateTime? created;

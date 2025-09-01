@@ -4,11 +4,13 @@ import 'package:monkey_app/feature/children/domain/entity/children/children_enti
 
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
+import '../entity/children/children_page_entity.dart';
+import '../param/fetch_children_param.dart';
 
 abstract class ChildrenRepo {
-  Future<Either<Failure, List<ChildrenEntity>>> fetchChildren();
+  Future<Either<Failure, ChildrenPageEntity>> fetchChildren(FetchChildrenParam? param);
 
-  Future<Either<Failure, dynamic>> createChildren(CreateChildrenParam param);
+  Future<Either<Failure, ChildrenEntity>> createChildren(CreateChildrenParam param);
 
-  Future<Either<Failure, dynamic>> updateChildren(UpdateChildrenParam param);
+  Future<Either<Failure, ChildrenEntity>> updateChildren(UpdateChildrenParam param);
 }

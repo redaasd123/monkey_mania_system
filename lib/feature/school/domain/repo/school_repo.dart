@@ -7,9 +7,9 @@ import '../../data/model/school_model.dart';
 import '../entity/school_entity.dart';
 
 abstract class SchoolRepo {
-  Future<Either<Failure, List<SchoolEntity>>> fetchSchools();
+  Future<Either<Failure, List<SchoolEntity>>> fetchSchools(String query);
 
-  Future<Either<Failure, SchoolModel>> createSchool(CreateSchoolParam param);
+  Future<Either<Failure, SchoolEntity>> createSchool(CreateSchoolParam param);
 
-  Future<Either<Failure, SchoolModel>> updateSchool(UpdateSchoolParam param);
+  Future<Either<Failure, SchoolEntity>> updateSchool(UpdateSchoolParam param);
 }

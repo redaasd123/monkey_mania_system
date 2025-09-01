@@ -1,45 +1,100 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/feature/children/presentation/view/widget/children_listener_state.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/core/widget/widget/custom_flush.dart';
+import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 
-import '../../../../../core/funcation/show_snack_bar.dart';
 import '../../manager/cubit/children_cubit.dart';
+import '../../manager/cubit/children_state.dart';
 import 'children_list_view.dart';
 
 class ChildrenBlocBuilderListView extends StatelessWidget {
-  const ChildrenBlocBuilderListView({
-    super.key,
-    required ChildrenListenerState child,
-  });
+  const ChildrenBlocBuilderListView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ChildrenCubit, ChildrenState>(
-        builder: (context, state) {
-          print("🔥 STATE: ${state.runtimeType}");
-          print('🎯 BlocBuilder Rebuilt!');
-          if (state is ChildrenSelectedState) {
-            return ChildrenListView(children: [state.selectChildren]);
+      body: BlocConsumer<ChildrenCubit, ChildrenState>(
+        listener: (context, state) {
+          switch (state.status) {
+          // ---------------- Loading ----------------
+            case ChildrenStatus.addLoading:
+            case ChildrenStatus.updateLoading:
+              showLoader(context);
+              break;
+
+          // ---------------- Success ----------------
+            case ChildrenStatus.addSuccess:
+              hideLoader(context);
+              showGreenFlush(context, LangKeys.createdSuccessfully);
+              break;
+            case ChildrenStatus.updateSuccess:
+              hideLoader(context);
+              showGreenFlush(context, LangKeys.updatedSuccessfully);
+              break;
+            case ChildrenStatus.success:
+              if (Navigator.canPop(context)) hideLoader(context);
+              break;
+
+          // ---------------- Failure ----------------
+            case ChildrenStatus.failure:
+            case ChildrenStatus.addFailure:
+            case ChildrenStatus.updateFailure:
+              hideLoader(context);
+              showRedFlush(context, state.errMessage ?? LangKeys.notFound);
+              break;
+
+          // ---------------- Offline ----------------
+            case ChildrenStatus.offLineState:
+              hideLoader(context);
+              showRedFlush(
+                  context, state.errMessage ?? LangKeys.messageFailureOffLine);
+              break;
+
+          // ---------------- No Data ----------------
+            case ChildrenStatus.empty:
+              hideLoader(context);
+              break;
+
+            default:
+              break;
           }
-          if (state is ChildrenSuccessState) {
-            return ChildrenListView(children: state.children);
-          } else if (state is ChildrenFailureState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              showSnackBar(context, state.errMessage);
-            });
-            return const Center(child: Text('حدث خطأ أثناء تحميل البيانات'));
-          } else if (state is ChildrenLoadingState) {
-            return CircularProgressIndicator();
-            // return Skeletonizer(
-            //   enabled: true,
-            //   child: ListView.builder(
-            //     itemCount: 5,
-            //     itemBuilder: (context, index) => const DetailSchoolFading(),
-            //   ),
-            // );
-          } else {
-            return SizedBox();
+        },
+        builder: (context, state) {
+
+
+          switch (state.status) {
+            case ChildrenStatus.loading:
+            case ChildrenStatus.searchLoading:
+            case ChildrenStatus.addLoading:
+            case ChildrenStatus.updateLoading:
+
+              return Stack(
+                children: [
+                  ChildrenListView(children: state.allChildren),
+                  const LinearProgressIndicator(minHeight: 2),
+                ],
+              );
+
+            case ChildrenStatus.success:
+            case ChildrenStatus.addSuccess:
+            case ChildrenStatus.updateSuccess:
+              return ChildrenListView(children: state.allChildren);
+
+            case ChildrenStatus.empty:
+              return const Center(child: Text(LangKeys.notFound));
+
+            case ChildrenStatus.failure:
+            case ChildrenStatus.addFailure:
+            case ChildrenStatus.updateFailure:
+            return Expanded(child: ChildrenListView(children: state.allChildren));
+
+            case ChildrenStatus.offLineState:
+              return ChildrenListView(children: state.allChildren);
+
+            default:
+              return const Center(child: CircularProgressIndicator());
           }
         },
       ),

@@ -8,7 +8,6 @@ import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../../../core/utils/styles.dart';
 import '../../../manager/get_one_bills_cubit.dart';
 
-
 class ShowDetailBills extends StatefulWidget {
   const ShowDetailBills({super.key, required this.id});
 
@@ -21,7 +20,7 @@ class ShowDetailBills extends StatefulWidget {
 class _ShowDetailBillsState extends State<ShowDetailBills> {
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     BlocProvider.of<GetOneBillsCubit>(context).getOneBills(widget.id);
   }
 
@@ -83,7 +82,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                     if (billsEntity.children != null &&
                         billsEntity.children!.isNotEmpty)
                       ...billsEntity.children!.map(
-                        (child) => Card(
+                            (child) => Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -113,7 +112,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                                 if (child.phoneNumbers != null &&
                                     child.phoneNumbers!.isNotEmpty)
                                   ...child.phoneNumbers!.map(
-                                    (phone) => Padding(
+                                        (phone) => Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 6,
                                       ),
@@ -130,9 +129,9 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                                                   LangKeys.notFound.tr(),
                                               style: Styles.textStyle14
                                                   .copyWith(
-                                                    color:
-                                                        colorScheme.onSurface,
-                                                  ),
+                                                color:
+                                                colorScheme.onSurface,
+                                              ),
                                             ),
                                           ),
                                           const SizedBox(width: 10),
@@ -145,16 +144,16 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                                               color: colorScheme.primary
                                                   .withOpacity(0.1),
                                               borderRadius:
-                                                  BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                             ),
                                             child: Text(
                                               phone.relationship ??
                                                   LangKeys.notFound.tr(),
                                               style: Styles.textStyle14
                                                   .copyWith(
-                                                    color: colorScheme.primary,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
+                                                color: colorScheme.primary,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -176,27 +175,22 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
 
                     const SizedBox(height: 24),
 
-
-
+                    /// 💵 المدفوعات والأسعار
                     _buildBillRow(
                       context,
                       LangKeys.cash.tr(),
-                      billsEntity.cash,
+                      billsEntity.cash?.toString(),
                     ),
                     _buildBillRow(
                       context,
                       LangKeys.visa.tr(),
-                      billsEntity.visa,
+                      billsEntity.visa?.toString(),
                     ),
                     _buildBillRow(
                       context,
                       LangKeys.instapay.tr(),
-                      billsEntity.instapay,
+                      billsEntity.instapay?.toString(),
                     ),
-
-                    const SizedBox(height: 16),
-
-                    /// 💵 أسعار
                     _buildBillRow(
                       context,
                       LangKeys.totalPrice.tr(),
@@ -205,7 +199,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                     _buildBillRow(
                       context,
                       LangKeys.productsPrice.tr(),
-                      billsEntity.productsPrice,
+                      billsEntity.productsPrice?.toString(),
                     ),
                     _buildBillRow(
                       context,
@@ -217,14 +211,18 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                       LangKeys.spentTime.tr(),
                       billsEntity.spentTime?.toString(),
                     ),
+                    _buildBillRow(
+                      context,
+                      LangKeys.moneyUnbalance.tr(),
+                      billsEntity.moneyUnbalance?.toString(),
+                    ),
 
                     const SizedBox(height: 16),
 
-                    /// 💸 خصومات
                     _buildBillRow(
                       context,
                       LangKeys.discountCoupon.tr(),
-                      billsEntity.discountValue,
+                      billsEntity.discountValue?.toString(), // إذا كانت double?
                     ),
                     _buildBillRow(
                       context,
@@ -249,11 +247,6 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                       context,
                       LangKeys.isSubscription.tr(),
                       billsEntity.isSubscription?.toString(),
-                    ),
-                    _buildBillRow(
-                      context,
-                      LangKeys.moneyUnbalance.tr(),
-                      billsEntity.moneyUnbalance?.toString(),
                     ),
 
                     const SizedBox(height: 16),
@@ -290,13 +283,12 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
     );
   }
-
 
   Widget _buildBillRow(BuildContext context, String label, String? value) {
     final colorScheme = Theme.of(context).colorScheme;

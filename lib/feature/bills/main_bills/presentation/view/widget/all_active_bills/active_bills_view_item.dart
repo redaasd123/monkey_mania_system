@@ -55,20 +55,18 @@ class ActiveBillsViewItem extends StatelessWidget {
                   context: context,
                   icon: Icons.phone,
                   label: LangKeys.phoneNumber.tr(),
-                  text:
-                      bills.children?[0].phoneNumbers
-                          ?.map((e) => e.phoneNumber)
-                          .join(',') ??
-                      bills.children?[1].phoneNumbers
-                          ?.map((e) => e.phoneNumber)
-                          .join(',') ??
-                      [],
-
+                  text: bills.children != null && bills.children!.isNotEmpty
+                      ? bills.children!
+                      .expand((child) => child.phoneNumbers ?? [])
+                      .map((e) => e.phoneNumber)
+                      .join(', ')
+                      : "", // ✅ نص فاضي بدل [] عشان ميبقاش فيه Error
                   style: Styles.textStyle16.copyWith(
                     fontStyle: FontStyle.italic,
                     color: colorScheme.onSurface.withOpacity(0.8),
                   ),
                 ),
+
                 const SizedBox(height: 16),
                 _buildInfo(
                   context: context,
@@ -101,11 +99,42 @@ class ActiveBillsViewItem extends StatelessWidget {
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Spacer(),
                     ElevatedButton(
                       onPressed: ApplyDiscountonPressed,
-                      child: Text(LangKeys.applyDiscount.tr()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: Text(
+                        LangKeys.applyDiscount.tr(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: closeOnPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: const Text(
+                        'إغلاق الفاتورة',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -113,14 +142,7 @@ class ActiveBillsViewItem extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          top: 10,
-          right: 20,
-          child: IconButton(
-            onPressed: closeOnPressed,
-            icon: Icon(Icons.close, color: Colors.red),
-          ),
-        ),
+
       ],
     );
   }

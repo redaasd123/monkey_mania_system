@@ -10,7 +10,7 @@ import '../../../../core/param/update_school_param/update_school_param.dart';
 import '../model/school_model.dart';
 
 abstract class SchoolRemoteDataSource {
-  Future<List<SchoolEntity>> fetchSchools();
+  Future<List<SchoolEntity>> fetchSchools(String query);
 
   Future<SchoolModel> createSchool(CreateSchoolParam param);
 
@@ -23,8 +23,11 @@ class SchoolRemoteDataSourceImpl extends SchoolRemoteDataSource {
   SchoolRemoteDataSourceImpl({required this.api});
 
   @override
-  Future<List<SchoolEntity>> fetchSchools() async {
-    List<dynamic> data = await api.get(endPoint: 'school/all/');
+  Future<List<SchoolEntity>> fetchSchools(String query) async {
+    List<dynamic> data = await api.get(
+      endPoint: 'school/all/',
+      queryParameters: {"search": query},
+    );
     List<SchoolEntity> school = [];
     for (var item in data) {
       school.add(SchoolModel.fromJson(item));

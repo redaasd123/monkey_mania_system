@@ -2,20 +2,6 @@ import 'package:monkey_app/feature/children/domain/entity/age/age_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/phone/phone_entity.dart';
 
-/// id : 1
-/// name : "احمد ابراهيم ابو سريع"
-/// birth_date : "2024-08-30"
-/// age : {"years":0,"months":9,"days":27}
-/// notes : "special needs"
-/// address : "new_damietta el qawas super market"
-/// is_active : false
-/// special_needs : true
-/// created : "2025-02-21T20:48:13.070885+02:00"
-/// updated : "2025-06-27T19:01:44.382737+03:00"
-/// created_by : 1
-/// school : 1
-/// child_phone_numbers_set : [{"phone_number":"92399978912","relationship":"other"},{"phone_number":"12995990912","relationship":"sibling"}]
-
 class ChildrenModel extends ChildrenEntity {
   ChildrenModel({
     this.schoolName,
@@ -137,7 +123,9 @@ class ChildrenModel extends ChildrenEntity {
     map['created'] = created;
     map['updated'] = updated;
     map['created_by'] = createdBy;
-    map['school_id'] = school;
+    if (school != null && school != 0) {
+      map['school'] = school;
+    }
     if (childPhoneNumbersSet != null) {
       map['child_phone_numbers_set'] = childPhoneNumbersSet
           ?.map((v) => v.toJson())

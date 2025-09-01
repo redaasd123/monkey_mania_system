@@ -19,7 +19,7 @@ class CreateChildrenParamAdapter extends TypeAdapter<CreateChildrenParam> {
     return CreateChildrenParam(
       name: fields[0] as String,
       address: fields[1] as String,
-      school: fields[2] as int,
+      school: fields[2] as int?,
       birthDate: fields[3] as String,
       notes: fields[4] as String?,
       phones: (fields[5] as List)

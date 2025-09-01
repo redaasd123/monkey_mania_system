@@ -1,9 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 
 import '../../../../../../../core/utils/app_router.dart';
@@ -107,7 +105,9 @@ class _AllActiveListViewState extends State<AllActiveListView> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
-                                        color: Theme.of(context).colorScheme.primary,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 16),

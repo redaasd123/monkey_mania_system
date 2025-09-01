@@ -51,7 +51,7 @@ class BillsCoffeeModel {
 BillsCoffeeModel copyWith({  int? id,
   num? billNumber,
   num? tableNumber,
-  dynamic? totalPrice,
+  dynamic totalPrice,
   bool? takeAway,
   num? bill,
   List<Products>? products,

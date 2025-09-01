@@ -1,11 +1,28 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:monkey_app/core/utils/api_serviece.dart';
+import 'package:monkey_app/core/utils/contivity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/data_source/bills_coffee_data_source.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/repos/bills_coffee_impl.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_repo.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/data/data_source/bills_remote_data_source.dart';
+import 'package:monkey_app/feature/bills/main_bills/data/repos/bills_repo_impl.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/repo/bills_repo.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/apply_discount_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/close_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/create_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/fetch_active_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/fetch_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/get_one_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
 import 'package:monkey_app/feature/branch/data/data_source/branch_remote_data_source.dart';
 import 'package:monkey_app/feature/branch/data/repos/branch_repos_impl.dart';
 import 'package:monkey_app/feature/branch/domain/repo/branch_repo.dart';
@@ -19,8 +36,7 @@ import 'package:monkey_app/feature/children/domain/children_use_case/create_chil
 import 'package:monkey_app/feature/children/domain/children_use_case/fetch_children_use_case.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/update_children_use_case.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
-import 'package:monkey_app/feature/children/presentation/manager/cubit/create_child_cubit.dart';
-import 'package:monkey_app/feature/children/presentation/manager/cubit/update_children_cubit.dart';
+/* ───────── Features Imports ───────── */
 import 'package:monkey_app/feature/login/data/data_source/login_remote_data_source.dart';
 import 'package:monkey_app/feature/login/data/repos/login_repo_impl.dart';
 import 'package:monkey_app/feature/login/domain/repo/login_repo.dart';
@@ -33,199 +49,119 @@ import 'package:monkey_app/feature/school/domain/repo/school_repo.dart';
 import 'package:monkey_app/feature/school/domain/use_case/fetch_school_use_case.dart';
 import 'package:monkey_app/feature/school/domain/use_case/post_school_use_case.dart';
 import 'package:monkey_app/feature/school/domain/use_case/update_school_use_case.dart';
-import 'package:monkey_app/feature/school/presintation/manager/post_cubit/post_cubit.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
-
-import '../../feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
-import '../../feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
-import '../../feature/bills/main_bills/data/data_source/bills_remote_data_source.dart';
-import '../../feature/bills/main_bills/data/repos/bills_repo_impl.dart';
-import '../../feature/bills/main_bills/domain/repo/bills_repo.dart';
-import '../../feature/bills/main_bills/domain/use_case/apply_discount_use_case.dart';
-import '../../feature/bills/main_bills/domain/use_case/close_bills_use_case.dart';
-import '../../feature/bills/main_bills/domain/use_case/create_bills_use_case.dart';
-import '../../feature/bills/main_bills/domain/use_case/fetch_active_bills_use_case.dart';
-import '../../feature/bills/main_bills/domain/use_case/fetch_bills_use_case.dart';
-import '../../feature/bills/main_bills/domain/use_case/get_one_bills_use_case.dart';
-import '../../feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
-import '../../feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
-import '../../feature/bills/main_bills/presentation/manager/create_bills_cubit/create_bills_cubit.dart';
-import '../../feature/bills/main_bills/presentation/manager/ferch_activ_bills/fetch_active_bills_cubit.dart';
-import '../../feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-import '../../feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
-import '../../feature/school/presintation/manager/put_cubit/put_cubit.dart';
-import 'contivity.dart';
-
-// ← تأكد من وجوده
 
 final getIt = GetIt.instance;
 
 void setUpServiceLocator() {
+  /* ───────── Core ───────── */
   final dio = Dio();
-
-  // 2️⃣ فعّل الـ Interceptors عليها
-  // setupInterceptors(dio); // ✅ مهم جداً
-
-  /// 3️⃣ سجلها في GetIt
   getIt.registerLazySingleton<Dio>(() => dio);
-
-  // 4️⃣ سجل الـ Api بعدين باستخدام نفس Dio اللي عليه Interceptor
-  getIt.registerLazySingleton<Api>(() => Api(dio: getIt<Dio>()));
+  getIt.registerLazySingleton<Api>(() => Api(dio: getIt()));
+  getIt.registerLazySingleton(() => ConnectivityService());
 
   /* ───────── Login Layer ───────── */
   getIt.registerLazySingleton<LoginRemoteDataSource>(
     () => LoginRemoteDataSourceImpl(getIt<Api>()),
   );
-
   getIt.registerLazySingleton<LoginRepo>(
     () => LoginRepoImpl(loginRemoteDataSource: getIt()),
   );
-
-  getIt.registerFactory<LoginRepoUseCase>(
-    () => LoginRepoUseCase(loginRepo: getIt()),
-  );
-
-  getIt.registerFactory<LoginCubit>(
-    () => LoginCubit(getIt<LoginRepoUseCase>()),
-  );
+  getIt.registerFactory(() => LoginRepoUseCase(loginRepo: getIt()));
+  getIt.registerFactory(() => LoginCubit(getIt()));
 
   /* ───────── School Layer ───────── */
-
-  getIt.registerLazySingleton<SchoolRepo>(
-    () => SchoolRepoImpl(getIt.get(), schoolRemoteDataSource: getIt.get()),
+  getIt.registerLazySingleton<SchoolRemoteDataSource>(
+    () => SchoolRemoteDataSourceImpl(api: getIt()),
   );
-
   getIt.registerLazySingleton<SchoolLocalDataSource>(
     () => SchoolLocalDataSourceImpl(),
   );
-  getIt.registerLazySingleton<FetchSchoolUseCase>(
-    () => FetchSchoolUseCase(schoolRpo: getIt()),
+  getIt.registerLazySingleton<SchoolRepo>(
+    () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton(() => FetchSchoolUseCase(schoolRpo: getIt()));
+  getIt.registerLazySingleton(() => UpdateSchoolUseCase(schoolRpo: getIt()));
+  getIt.registerLazySingleton(() => PostSchoolUseCase(schoolRepo: getIt()));
+  getIt.registerFactory(() => SchoolCubit(getIt(), getIt(), getIt()));
 
-  getIt.registerLazySingleton<UpdateSchoolUseCase>(
-    () => UpdateSchoolUseCase(schoolRpo: getIt()),
-  );
-  getIt.registerLazySingleton<PostSchoolUseCase>(
-    () => PostSchoolUseCase(schoolRepo: getIt.get()),
-  );
-
-  getIt.registerLazySingleton<SchoolRemoteDataSource>(
-    () => SchoolRemoteDataSourceImpl(api: getIt.get()),
-  );
-  getIt.registerLazySingleton<SchoolCubit>(
-    () => SchoolCubit(getIt<FetchSchoolUseCase>()),
-  );
-  getIt.registerLazySingleton<CreateSchoolCubit>(
-    () => CreateSchoolCubit(getIt<PostSchoolUseCase>()),
-  );
-  getIt.registerLazySingleton<UpdateSchoolCubit>(
-    () => UpdateSchoolCubit(updateSchoolUseCase: getIt.get()),
-  );
-
-  /* ───────── children Layer ───────── */
-  getIt.registerLazySingleton<ChildrenRepo>(
-    () => ChildrenRepoImpl(getIt.get(), childrenRemoteDataSource: getIt.get()),
-  );
-
-  getIt.registerLazySingleton<ChildrenLocalDataSource>(
-    () => ChildrenLocalDataSourceImpl(),
-  );
-
-  getIt.registerLazySingleton<FetchChildrenUseCase>(
-    () => FetchChildrenUseCase(childrenRepo: getIt.get()),
-  );
-
+  /* ───────── Children Layer ───────── */
   getIt.registerLazySingleton<ChildrenRemoteDataSource>(
     () => ChildrenRemoteDataSourceImpl(),
   );
-  getIt.registerFactory<ChildrenCubit>(
-    () => ChildrenCubit(getIt<FetchChildrenUseCase>()),
+  getIt.registerLazySingleton<ChildrenLocalDataSource>(
+    () => ChildrenLocalDataSourceImpl(),
   );
-
-  getIt.registerLazySingleton<CreateChildUseCase>(
-    () => CreateChildUseCase(childrenRepo: getIt.get()),
+  getIt.registerLazySingleton<ChildrenRepo>(
+    () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
   );
-  getIt.registerFactory<CreateChildCubit>(
-    () => CreateChildCubit(getIt<CreateChildUseCase>()),
+  getIt.registerLazySingleton(
+    () => FetchChildrenUseCase(childrenRepo: getIt()),
   );
-  getIt.registerLazySingleton<UpdateChildrenUseCase>(
-    () => UpdateChildrenUseCase(childrenRepo: getIt.get()),
+  getIt.registerLazySingleton(() => CreateChildUseCase(childrenRepo: getIt()));
+  getIt.registerLazySingleton(
+    () => UpdateChildrenUseCase(childrenRepo: getIt()),
   );
-  getIt.registerFactory<UpdateChildrenCubit>(
-    () => UpdateChildrenCubit(
-      updateChildrenUseCase: getIt<UpdateChildrenUseCase>(),
+  getIt.registerFactory(
+    () => ChildrenCubit(
+      fetchChildrenUseCase: getIt(),
+      createChildUseCase: getIt(),
+      updateChildrenUseCase: getIt(),
     ),
   );
-  getIt.registerLazySingleton<BranchRepo>(
-    () => BranchRepoImpl(branchRemoteDataSource: getIt.get()),
-  );
-  getIt.registerLazySingleton<BranchUseCase>(
-    () => BranchUseCase(branchRepo: getIt.get()),
-  );
+
+  /* ───────── Branch Layer ───────── */
   getIt.registerLazySingleton<BranchRemoteDataSource>(
     () => BranchRemoteDataSourceImpl(),
   );
+  getIt.registerLazySingleton<BranchRepo>(
+    () => BranchRepoImpl(branchRemoteDataSource: getIt()),
+  );
+  getIt.registerLazySingleton(() => BranchUseCase(branchRepo: getIt()));
+  getIt.registerFactory(() => BranchCubit(getIt()));
 
-  getIt.registerFactory<BranchCubit>(() => BranchCubit(getIt.get()));
-  getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
-
+  /* ───────── Main Bills Layer ───────── */
   getIt.registerLazySingleton<BillsRemoteDataSource>(
     () => BillsRemoteDataSourceImpl(),
   );
-
   getIt.registerLazySingleton<BillsRepo>(
-    () => BillsRepoImpl(billsRemoteDataSource: getIt.get()),
+    () => BillsRepoImpl(billsRemoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton(() => BillsUseCase(billsRepo: getIt()));
+  getIt.registerLazySingleton(() => CreateBillsUseCase(billsRepo: getIt()));
+  getIt.registerLazySingleton(() => ApplyDiscountUseCase(billsRepo: getIt()));
+  getIt.registerLazySingleton(
+    () => FetchActiveBillsUseCase(billsRepo: getIt()),
+  );
+  getIt.registerLazySingleton(() => CloseBillsUseCase(billsRepo: getIt()));
+  getIt.registerLazySingleton(() => GetOneBillUseCase(billsRepo: getIt()));
+  getIt.registerFactory(
+    () => BillsCubit(getIt(), getIt(), getIt(), getIt.get()),
+  );
+  getIt.registerFactory(() => ApplyDiscountCubit(getIt()));
+  getIt.registerFactory(() => CloseBillsCubit(getIt()));
+  getIt.registerFactory(() => GetOneBillsCubit(getIt()));
 
-  getIt.registerLazySingleton<BillsUseCase>(
-    () => BillsUseCase(billsRepo: getIt.get()),
-  );
-
-  getIt.registerFactory<BillsCubit>(() => BillsCubit(getIt<BillsUseCase>()));
-  getIt.registerLazySingleton<CreateBillsUseCase>(
-    () => CreateBillsUseCase(billsRepo: getIt.get()),
-  );
-  getIt.registerFactory<CreateBillsCubit>(() => CreateBillsCubit(getIt.get()));
-  getIt.registerLazySingleton<ApplyDiscountUseCase>(
-    () => ApplyDiscountUseCase(billsRepo: getIt.get()),
-  );
-  getIt.registerLazySingleton<ApplyDiscountCubit>(
-    () => ApplyDiscountCubit(getIt.get()),
-  );
-  getIt.registerLazySingleton<FetchActiveBillsUseCase>(
-    () => FetchActiveBillsUseCase(billsRepo: getIt.get()),
-  );
-  getIt.registerFactory<FetchActiveBillsCubit>(
-    () => FetchActiveBillsCubit(getIt.get()),
-  );
-
-  getIt.registerLazySingleton<CloseBillsUseCase>(
-    () => CloseBillsUseCase(billsRepo: getIt.get()),
-  );
-  getIt.registerFactory<CloseBillsCubit>(() => CloseBillsCubit(getIt.get()));
-
-  getIt.registerLazySingleton<GetOneBillUseCase>(
-    () => GetOneBillUseCase(billsRepo: getIt.get()),
-  );
-  getIt.registerFactory<GetOneBillsCubit>(() => GetOneBillsCubit(getIt.get()));
-
-  getIt.registerFactory<CoffeeBillsRepo>(
-    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt.get()),
-  );
+  /* ───────── Coffee Bills Layer ───────── */
   getIt.registerLazySingleton<BillsCoffeeDataSource>(
     () => BillsCoffeeDataSourceImpl(),
   );
-  getIt.registerFactory<CoffeeBillsCubit>(
-    () => CoffeeBillsCubit(getIt.get(), getIt.get(),getIt.get()),
+  getIt.registerLazySingleton<CoffeeBillsRepo>(
+    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
   );
-  getIt.registerLazySingleton<GetOneCoffeeBillsUseCase>(
-    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt.get()),
+  getIt.registerLazySingleton(
+    () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
   );
-  getIt.registerLazySingleton<FetchBillsCoffeeUSeCase>(
-    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt.get()),
+  getIt.registerLazySingleton(
+    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
   );
-
-  getIt.registerLazySingleton<FetchActiveBillsCoffeeUSeCase>(
-    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt.get()),
+  getIt.registerLazySingleton(
+    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+  );
+  getIt.registerFactory(
+    () => CoffeeBillsCubit(getIt(), getIt(), getIt(), getIt()),
   );
 }

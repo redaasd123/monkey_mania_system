@@ -1,5 +1,6 @@
-class GetOneBiilsModel {
-  GetOneBiilsModel({
+// get_one_bills_model.dart
+class GetOneBillsModel {
+  GetOneBillsModel({
     this.id,
     this.cash,
     this.instapay,
@@ -30,21 +31,21 @@ class GetOneBiilsModel {
     this.branchId,
   });
 
-  GetOneBiilsModel.fromJson(dynamic json) {
+  GetOneBillsModel.fromJson(dynamic json) {
     id = json['id'];
-    cash = json['cash'];
-    instapay = json['instapay'];
-    visa = json['visa'];
+    cash = json['cash']?.toString();
+    instapay = json['instapay']?.toString();
+    visa = json['visa']?.toString();
     isSubscription = json['is_subscription'];
     timePrice = json['time_price'];
-    productsPrice = json['products_price'];
+    productsPrice = json['products_price']?.toString();
     if (json['children'] != null) {
       children = [];
       json['children'].forEach((v) {
         children?.add(Children.fromJson(v));
       });
     }
-    discountValue = json['discount_value'];
+    discountValue = json['discount_value']?.toString();
     discountType = json['discount_type'];
     branch = json['branch'];
     if (json['product_bills_set'] != null) {
@@ -55,8 +56,8 @@ class GetOneBiilsModel {
     }
     isActive = json['is_active'];
     isAllowedAge = json['is_allowed_age'];
-    hourPrice = json['hour_price'];
-    halfHourPrice = json['half_hour_price'];
+    hourPrice = json['hour_price']?.toString();
+    halfHourPrice = json['half_hour_price']?.toString();
     totalPrice = json['total_price'];
     spentTime = json['spent_time'];
     childrenCount = json['children_count'];
@@ -76,7 +77,7 @@ class GetOneBiilsModel {
   String? instapay;
   String? visa;
   bool? isSubscription;
-  double? timePrice;
+  dynamic? timePrice;
   String? productsPrice;
   List<Children>? children;
   String? discountValue;
@@ -87,7 +88,7 @@ class GetOneBiilsModel {
   bool? isAllowedAge;
   String? hourPrice;
   String? halfHourPrice;
-  double? totalPrice;
+  dynamic? totalPrice;
   num? spentTime;
   num? childrenCount;
   num? moneyUnbalance;
@@ -99,66 +100,6 @@ class GetOneBiilsModel {
   num? createdById;
   num? finishedById;
   num? branchId;
-
-  GetOneBiilsModel copyWith({
-    num? id,
-    String? cash,
-    String? instapay,
-    String? visa,
-    bool? isSubscription,
-    double? timePrice,
-    String? productsPrice,
-    List<Children>? children,
-    String? discountValue,
-    dynamic discountType,
-    String? branch,
-    List<dynamic>? productBillsSet,
-    bool? isActive,
-    bool? isAllowedAge,
-    String? hourPrice,
-    String? halfHourPrice,
-    double? totalPrice,
-    num? spentTime,
-    num? childrenCount,
-    num? moneyUnbalance,
-    String? finished,
-    String? created,
-    String? updated,
-    String? createdBy,
-    String? finishedBy,
-    num? createdById,
-    num? finishedById,
-    num? branchId,
-  }) => GetOneBiilsModel(
-    id: id ?? this.id,
-    cash: cash ?? this.cash,
-    instapay: instapay ?? this.instapay,
-    visa: visa ?? this.visa,
-    isSubscription: isSubscription ?? this.isSubscription,
-    timePrice: timePrice ?? this.timePrice,
-    productsPrice: productsPrice ?? this.productsPrice,
-    children: children ?? this.children,
-    discountValue: discountValue ?? this.discountValue,
-    discountType: discountType ?? this.discountType,
-    branch: branch ?? this.branch,
-    productBillsSet: productBillsSet ?? this.productBillsSet,
-    isActive: isActive ?? this.isActive,
-    isAllowedAge: isAllowedAge ?? this.isAllowedAge,
-    hourPrice: hourPrice ?? this.hourPrice,
-    halfHourPrice: halfHourPrice ?? this.halfHourPrice,
-    totalPrice: totalPrice ?? this.totalPrice,
-    spentTime: spentTime ?? this.spentTime,
-    childrenCount: childrenCount ?? this.childrenCount,
-    moneyUnbalance: moneyUnbalance ?? this.moneyUnbalance,
-    finished: finished ?? this.finished,
-    created: created ?? this.created,
-    updated: updated ?? this.updated,
-    createdBy: createdBy ?? this.createdBy,
-    finishedBy: finishedBy ?? this.finishedBy,
-    createdById: createdById ?? this.createdById,
-    finishedById: finishedById ?? this.finishedById,
-    branchId: branchId ?? this.branchId,
-  );
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -176,9 +117,7 @@ class GetOneBiilsModel {
     map['discount_type'] = discountType;
     map['branch'] = branch;
     if (productBillsSet != null) {
-      map['product_bills_set'] = productBillsSet
-          ?.map((v) => v.toJson())
-          .toList();
+      map['product_bills_set'] = productBillsSet;
     }
     map['is_active'] = isActive;
     map['is_allowed_age'] = isAllowedAge;
@@ -200,10 +139,6 @@ class GetOneBiilsModel {
   }
 }
 
-/// id : 11
-/// name : "midel"
-/// phone_numbers : [{"phone_number":"12121212121","relationship":"father"}]
-
 class Children {
   Children({this.id, this.name, this.phoneNumbers});
 
@@ -222,16 +157,6 @@ class Children {
   String? name;
   List<PhoneNumbers>? phoneNumbers;
 
-  Children copyWith({
-    num? id,
-    String? name,
-    List<PhoneNumbers>? phoneNumbers,
-  }) => Children(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    phoneNumbers: phoneNumbers ?? this.phoneNumbers,
-  );
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -243,25 +168,16 @@ class Children {
   }
 }
 
-/// phone_number : "12121212121"
-/// relationship : "father"
-
 class PhoneNumbers {
   PhoneNumbers({this.phoneNumber, this.relationship});
 
   PhoneNumbers.fromJson(dynamic json) {
-    phoneNumber = json['phone_number'];
+    phoneNumber = json['phone_number']?.toString();
     relationship = json['relationship'];
   }
 
   String? phoneNumber;
   String? relationship;
-
-  PhoneNumbers copyWith({String? phoneNumber, String? relationship}) =>
-      PhoneNumbers(
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        relationship: relationship ?? this.relationship,
-      );
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -270,3 +186,4 @@ class PhoneNumbers {
     return map;
   }
 }
+

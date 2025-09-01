@@ -7,11 +7,11 @@ class UpdateChildrenParam {
   @HiveField(0)
   final String name;
   @HiveField(1)
-  final String address;
+  final String? address;
   @HiveField(2)
   final int id;
   @HiveField(3)
-  final int school;
+  final int? school;
   @HiveField(4)
   final String birthDate;
   @HiveField(5)
@@ -29,21 +29,27 @@ class UpdateChildrenParam {
     this.notes,
   });
 
-  Map<String, dynamic> tojson() {
-    return {
+  Map<String, dynamic> toJson() {
+    final map = {
       "name": name,
-      "school": school is int ? school : int.tryParse(school.toString()) ?? 0,
       "birth_date": birthDate,
       "address": address,
-      "notes": notes, //nullableZ
+      "notes": notes,
       "child_phone_numbers_set": phoneNumber
           .map(
             (e) => {
-              "phone_number": {"value": e['value']},
-              "relationship": e['relationship'],
-            },
-          )
+          "phone_number": {"value": e['value']},
+          "relationship": e['relationship'],
+        },
+      )
           .toList(),
     };
+
+    if (school != null && school != 0) {
+      map['school'] = school is int ? school : int.tryParse(school.toString());
+    }
+
+    return map;
   }
+
 }

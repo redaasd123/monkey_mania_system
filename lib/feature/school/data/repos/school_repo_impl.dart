@@ -27,14 +27,14 @@ class SchoolRepoImpl implements SchoolRepo {
   });
 
   @override
-  Future<Either<Failure, List<SchoolEntity>>> fetchSchools() async {
+  Future<Either<Failure, List<SchoolEntity>>> fetchSchools(String? query) async {
     try {
       final box = await schoolLocalDataSource.fetchSchools();
       if (box != null && box.isNotEmpty) {
         unawaited(_fetchAndCacheFromServer());
         return right(box);
       }
-      final schools = await schoolRemoteDataSource.fetchSchools();
+      final schools = await schoolRemoteDataSource.fetchSchools(query??'');
       return Right(schools);
     } on DioException catch (e) {
       return Left(ServerFailure.fromDioError(e));
@@ -47,7 +47,7 @@ class SchoolRepoImpl implements SchoolRepo {
 
   Future<void> _fetchAndCacheFromServer() async {
     try {
-      final data = await schoolRemoteDataSource.fetchSchools();
+      final data = await schoolRemoteDataSource.fetchSchools('');
       saveSchoolData(data, kSchoolBox);
       // تقدر تبعت Signal للـ Cubit لو حبيت تحدث الشاشة
     } catch (_) {
@@ -56,7 +56,7 @@ class SchoolRepoImpl implements SchoolRepo {
   }
 
   @override
-  Future<Either<Failure, SchoolModel>> createSchool(
+  Future<Either<Failure, SchoolEntity>> createSchool(
     CreateSchoolParam param,
   ) async {
     final isConnected = await checkInternet();
@@ -67,7 +67,7 @@ class SchoolRepoImpl implements SchoolRepo {
       try {
         var result = await schoolRemoteDataSource.createSchool(param);
         print('✅ school CREATED SUCCESSFULLY');
-        final list = await schoolRemoteDataSource.fetchSchools();
+        final list = await schoolRemoteDataSource.fetchSchools('');
         saveSchoolData(list, kSchoolBox);
         return right(result);
       } on DioException catch (e) {
@@ -95,7 +95,7 @@ class SchoolRepoImpl implements SchoolRepo {
   }
 
   @override
-  Future<Either<Failure, SchoolModel>> updateSchool(
+  Future<Either<Failure, SchoolEntity>> updateSchool(
     UpdateSchoolParam param,
   ) async {
     final isConnected = await checkInternet();
@@ -106,7 +106,7 @@ class SchoolRepoImpl implements SchoolRepo {
       try {
         var result = await schoolRemoteDataSource.updateSchool(param);
         print('✅ school CREATED SUCCESSFULLY');
-        final list = await schoolRemoteDataSource.fetchSchools();
+        final list = await schoolRemoteDataSource.fetchSchools('');
         saveSchoolData(list, kSchoolBox);
         return right(result);
       } on DioException catch (e) {

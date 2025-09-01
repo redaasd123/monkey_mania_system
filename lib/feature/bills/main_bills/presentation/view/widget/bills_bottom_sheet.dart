@@ -2,14 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
+
 import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
+import '../../../../../children/domain/param/fetch_children_param.dart';
+import '../../../../../children/presentation/manager/cubit/children_state.dart';
 import 'new_children_field.dart';
 
 class BillsBottomSheet extends StatefulWidget {
@@ -209,7 +211,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                 });
               },
               icon: const Icon(Icons.add),
-              label: const Text("Add Child"),
+              label: Text(LangKeys.addChild.tr()),
             ),
 
             const SizedBox(height: 24),
@@ -324,7 +326,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // عنوان الطفل + زر حذف الطفل بالكامل
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -383,13 +384,11 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
 
               const SizedBox(height: 8),
 
-              // أرقام الهواتف
               ...List.generate(phones.length, (phoneIndex) {
                 return Column(
                   children: [
                     Row(
                       children: [
-                        // رقم الهاتف
                         Expanded(
                           flex: 6,
                           child: TextFormField(
@@ -431,8 +430,8 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                                 phones[phoneIndex]['relationship'] = val!;
                               });
                             },
-                            decoration: const InputDecoration(
-                              labelText: 'العلاقة',
+                            decoration:  InputDecoration(
+                              labelText: LangKeys.relationShip.tr(),
                             ),
                           ),
                         ),
@@ -516,12 +515,12 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
       onTap: () async {
         final cubit = BlocProvider.of<ChildrenCubit>(context);
         if (!hasFetched) {
-          await cubit.fetchChildren();
+          await cubit.fetchChildren(FetchChildrenParam());
           hasFetched = true;
         }
 
         final state = cubit.state;
-        if (state is ChildrenSuccessState) {
+        if (state.status==ChildrenStatus.success) {
           final result = await showModalBottomSheet<List<ChildrenEntity>>(
             context: context,
             isScrollControlled: true,
@@ -537,7 +536,7 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                 maxChildSize: 0.9,
                 builder: (context, scrollController) {
                   List<ChildrenEntity> filteredChildren = List.from(
-                    state.children,
+                    state.allChildren,
                   );
                   final TextEditingController searchCtrl =
                       TextEditingController();
@@ -575,7 +574,7 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                               ),
                               onChanged: (query) {
                                 setState(() {
-                                  filteredChildren = state.children
+                                  filteredChildren = state.allChildren
                                       .where(
                                         (children) => (children.name ?? '')
                                             .toLowerCase()

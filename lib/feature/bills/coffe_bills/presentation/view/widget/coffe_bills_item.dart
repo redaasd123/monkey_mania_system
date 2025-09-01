@@ -72,6 +72,7 @@ class CoffeeBillsItem extends StatelessWidget {
                     color: colorScheme.onSurface.withOpacity(0.8),
                   ),
                 ),
+
               ],
             ),
           ),
