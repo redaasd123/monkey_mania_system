@@ -12,7 +12,7 @@ import '../entity/get_one_bills_entity.dart';
 abstract class BillsRepo {
   Future<Either<Failure, BillsPageEntity>> fetchBills(FetchBillsParam param);
 
-  Future<Either<Failure, dynamic>> createBills(CreateBillsParam param);
+  Future<Either<Failure, BillsEntity>> createBills(CreateBillsParam param);
 
   Future<Either<Failure, dynamic>> applyDiscount(ApplyDiscountParams param);
 

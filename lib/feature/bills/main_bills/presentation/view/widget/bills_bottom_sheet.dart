@@ -277,7 +277,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
           );
 
           if (selectBranch != null) {
-            _branchCtrl.text = selectBranch.name ?? '';
+            _branchCtrl.text = selectBranch.product ?? '';
             _selectedBranchId =
                 selectBranch.id; // احفظ الـ ID لاستخدامه في param
             print("🟢 Selected Branch ID: $_selectedBranchId");

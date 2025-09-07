@@ -8,8 +8,13 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_re
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_all_layers_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_one.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_tow.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/data_source/bills_remote_data_source.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/repos/bills_repo_impl.dart';
 import 'package:monkey_app/feature/bills/main_bills/domain/repo/bills_repo.dart';
@@ -62,23 +67,23 @@ void setUpServiceLocator() {
 
   /* ───────── Login Layer ───────── */
   getIt.registerLazySingleton<LoginRemoteDataSource>(
-    () => LoginRemoteDataSourceImpl(getIt<Api>()),
+        () => LoginRemoteDataSourceImpl(getIt<Api>()),
   );
   getIt.registerLazySingleton<LoginRepo>(
-    () => LoginRepoImpl(loginRemoteDataSource: getIt()),
+        () => LoginRepoImpl(loginRemoteDataSource: getIt()),
   );
   getIt.registerFactory(() => LoginRepoUseCase(loginRepo: getIt()));
   getIt.registerFactory(() => LoginCubit(getIt()));
 
   /* ───────── School Layer ───────── */
   getIt.registerLazySingleton<SchoolRemoteDataSource>(
-    () => SchoolRemoteDataSourceImpl(api: getIt()),
+        () => SchoolRemoteDataSourceImpl(api: getIt()),
   );
   getIt.registerLazySingleton<SchoolLocalDataSource>(
-    () => SchoolLocalDataSourceImpl(),
+        () => SchoolLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<SchoolRepo>(
-    () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
+        () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => FetchSchoolUseCase(schoolRpo: getIt()));
   getIt.registerLazySingleton(() => UpdateSchoolUseCase(schoolRpo: getIt()));
@@ -87,56 +92,57 @@ void setUpServiceLocator() {
 
   /* ───────── Children Layer ───────── */
   getIt.registerLazySingleton<ChildrenRemoteDataSource>(
-    () => ChildrenRemoteDataSourceImpl(),
+        () => ChildrenRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenLocalDataSource>(
-    () => ChildrenLocalDataSourceImpl(),
+        () => ChildrenLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenRepo>(
-    () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
+        () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchChildrenUseCase(childrenRepo: getIt()),
+        () => FetchChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerLazySingleton(() => CreateChildUseCase(childrenRepo: getIt()));
   getIt.registerLazySingleton(
-    () => UpdateChildrenUseCase(childrenRepo: getIt()),
+        () => UpdateChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerFactory(
-    () => ChildrenCubit(
-      fetchChildrenUseCase: getIt(),
-      createChildUseCase: getIt(),
-      updateChildrenUseCase: getIt(),
-    ),
+        () =>
+        ChildrenCubit(
+          fetchChildrenUseCase: getIt(),
+          createChildUseCase: getIt(),
+          updateChildrenUseCase: getIt(),
+        ),
   );
 
   /* ───────── Branch Layer ───────── */
   getIt.registerLazySingleton<BranchRemoteDataSource>(
-    () => BranchRemoteDataSourceImpl(),
+        () => BranchRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BranchRepo>(
-    () => BranchRepoImpl(branchRemoteDataSource: getIt()),
+        () => BranchRepoImpl(branchRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BranchUseCase(branchRepo: getIt()));
   getIt.registerFactory(() => BranchCubit(getIt()));
 
   /* ───────── Main Bills Layer ───────── */
   getIt.registerLazySingleton<BillsRemoteDataSource>(
-    () => BillsRemoteDataSourceImpl(),
+        () => BillsRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BillsRepo>(
-    () => BillsRepoImpl(billsRemoteDataSource: getIt()),
+        () => BillsRepoImpl(billsRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => CreateBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => ApplyDiscountUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(
-    () => FetchActiveBillsUseCase(billsRepo: getIt()),
+        () => FetchActiveBillsUseCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(() => CloseBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => GetOneBillUseCase(billsRepo: getIt()));
   getIt.registerFactory(
-    () => BillsCubit(getIt(), getIt(), getIt(), getIt.get()),
+        () => BillsCubit(getIt(), getIt(), getIt(), getIt.get()),
   );
   getIt.registerFactory(() => ApplyDiscountCubit(getIt()));
   getIt.registerFactory(() => CloseBillsCubit(getIt()));
@@ -144,24 +150,37 @@ void setUpServiceLocator() {
 
   /* ───────── Coffee Bills Layer ───────── */
   getIt.registerLazySingleton<BillsCoffeeDataSource>(
-    () => BillsCoffeeDataSourceImpl(),
+        () => BillsCoffeeDataSourceImpl(),
   );
   getIt.registerLazySingleton<CoffeeBillsRepo>(
-    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
+        () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
   );
   getIt.registerLazySingleton(
-    () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
+        () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
+        () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
+  getIt.registerLazySingleton<GetLayerOneUseCase>(() =>
+      GetLayerOneUseCase(billsRepo: getIt.get()));
+  getIt.registerLazySingleton<GetLayerTowUseCase>(() =>
+      GetLayerTowUseCase(billsRepo: getIt.get()));
   getIt.registerFactory(
-    () => CoffeeBillsCubit(getIt(), getIt(), getIt(), getIt()),
+        () => CoffeeBillsCubit(getIt(), getIt(), getIt()),
+  );
+  getIt.registerLazySingleton<GetAllLayersUseCase>(() =>
+      GetAllLayersUseCase(coffeeBillsRepo: getIt.get()));
+  getIt.registerFactory(
+        () => LayersCubit(getIt(), getIt(),getIt(),),
+  );
+
+  getIt.registerFactory(
+        () => GetOneBillsCoffeeCubit(getIt(),),
   );
 }

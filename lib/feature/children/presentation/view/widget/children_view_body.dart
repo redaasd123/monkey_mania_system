@@ -20,7 +20,6 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: ChildrenBlocBuilderListView(),
       floatingActionButton: ReseveDataChildrenActionButton(context),

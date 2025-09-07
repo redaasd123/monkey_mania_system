@@ -1,164 +1,241 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_entity.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills_coffee_entity.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/param/create_bills_coffee_param.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_one.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_tow.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+
+import '../../../domain/entity/get_one_bills_coffee_entity.dart';
+import '../../../param/create_bills_coffee_param.dart';
 
 part 'coffee_bills_state.dart';
 
-class CoffeeBillsCubit extends Cubit<CoffeeBillsState> {
+class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
   CoffeeBillsCubit(
     this.fetchBillsCoffeeUSeCase,
     this.fetchActiveBillsCoffeeUSeCase,
-    this.getOneCoffeeBillsUseCase,
     this.createBillsCoffeeUSeCase,
-  ) : super(CoffeeBillsInitial());
+
+  ) : super((BillsCoffeeState()));
   final FetchBillsCoffeeUSeCase fetchBillsCoffeeUSeCase;
   final FetchActiveBillsCoffeeUSeCase fetchActiveBillsCoffeeUSeCase;
-  final GetOneCoffeeBillsUseCase getOneCoffeeBillsUseCase;
   final CreateBillsCoffeeUSeCase createBillsCoffeeUSeCase;
 
-  int currentPage = 1;
-  bool hasMore = true;
-  bool isLoading = false;
-  List<BillsCoffeeEntity> allBills = [];
-
-  bool isSearching = false;
-
-  String searchQuery = '';
 
 
+  Future<void> fetchBillsCoffee(FetchBillsParam param) async {
+    if (state.isLoading || !state.hasMore) return;
 
+    final pageNumber = param.page ?? state.currentPage;
 
-Future<void> fetchBillsCoffee(FetchBillsParam param) async {
-    if (isLoading || !hasMore) return;
-
-    isLoading = true;
-    final page = currentPage;
-
-    if (page == 1) emit(CoffeeBillsLoadingState());
+    emit(
+      state.copyWith(
+        isLoading: true,
+        status: pageNumber == 1 ? CoffeeBillsStatus.loading : state.status,
+      ),
+    );
 
     final result = await fetchBillsCoffeeUSeCase.call(param);
 
     result.fold(
-          (failure) {
-        isLoading = false;
-        emit(CoffeeBillsFailureState(errMessage: failure.errMessage));
+      (failure) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            status: CoffeeBillsStatus.failure,
+            errorMessage: failure.errMessage,
+          ),
+        );
       },
-          (billsPage) {
-        isLoading = false;
-
-        if (page == 1) allBills.clear();
-
-        allBills.addAll(billsPage.billsCoffeeEntity);
-
-        hasMore = billsPage.nextPage != null;
-        if (hasMore) currentPage = page + 1;
-
-        if (allBills.isEmpty) {
-          emit(BillsEmptyState());
-        } else {
-          emit(CoffeeBillsSuccessState(bills: List.from(allBills))); // 👈 مهم عشان Flutter يعمل rebuild
+      (billsPage) {
+        if (billsPage.billsCoffeeEntity.isEmpty && pageNumber == 1) {
+          emit(
+            state.copyWith(
+              isLoading: false,
+              bills: [],
+              status: CoffeeBillsStatus.empty,
+              hasMore: false,
+            ),
+          );
+          return;
         }
+
+        dynamic updatedBills = pageNumber == 1
+            ? billsPage.billsCoffeeEntity
+            : [...state.bills, ...billsPage.billsCoffeeEntity];
+
+        final more = billsPage.nextPage != null;
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            bills: updatedBills,
+            hasMore: more,
+            currentPage: more ? pageNumber + 1 : pageNumber,
+            status: CoffeeBillsStatus.success,
+          ),
+        );
       },
     );
   }
 
-
-
   Future<void> fetchActiveBillsCoffee(FetchBillsParam param) async {
-    isLoading = true;
+    if (state.isLoading) return;
 
-    if (currentPage == 1) {
-      emit(isSearching ? ActiveBillsSearchLoading() : ActiveCoffeeBillsLoadingState());
-    }
+    emit(
+      state.copyWith(isLoading: true, status: CoffeeBillsStatus.activeLoading),
+    );
 
     final result = await fetchActiveBillsCoffeeUSeCase.call(param);
 
     result.fold(
-          (failure) {
-        isLoading = false;
-        emit(ActiveCoffeeBillsFailureState(errMessage: failure.errMessage));
+      (failure) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            status: CoffeeBillsStatus.activeFailure,
+            errorMessage: failure.errMessage,
+          ),
+        );
       },
-          (bills) {
-        isLoading = false;
-
-        if (bills.isEmpty && currentPage == 1) {
-          allBills.clear();
-          emit(BillsEmptyState());
+      (bills) {
+        if (bills.isEmpty) {
+          emit(
+            state.copyWith(isLoading: false, status: CoffeeBillsStatus.empty),
+          );
           return;
         }
 
-        if (currentPage == 1) allBills.clear();
-        allBills.addAll(bills);
-
-        hasMore = bills.isNotEmpty; // أو حسب API لو فيه nextPage
-        if (hasMore) currentPage++;
-
-        emit(ActiveCoffeeBillsSuccessState(bills: allBills));
+        emit(
+          state.copyWith(
+            bills: bills,
+            status: CoffeeBillsStatus.activeSuccess,
+            isLoading: false,
+          ),
+        );
       },
     );
   }
 
-  Future<void> getOneBillsCoffee(int id) async {
-    emit(GetOneBillsCoffeeLoadingState());
-    var result = await getOneCoffeeBillsUseCase.call(id);
-    result.fold(
-      (failure) {
-        emit(GetOneBillsCoffeeFailureState(errMessage: failure.errMessage));
-      },
-      (bills) {
-        emit(GetOneBillsCoffeeSuccessState(bills: bills));
-      },
-    );
-  }
+  //
 
   Future<void> createBillsCoffeeCubit(CreateBillsPCoffeeParam param) async {
-    emit(CreateBillsCoffeeLoadingState());
+    emit(state.copyWith(status: CoffeeBillsStatus.createLoading));
     var result = await createBillsCoffeeUSeCase.call(param);
     result.fold(
-      (failure) =>
-          emit(CreateBillsCoffeeFailureState(errMessage: failure.errMessage)),
-      (success) => emit(CreateBillsCoffeeSuccessState()),
+      (failure) => emit(
+        state.copyWith(
+          status: CoffeeBillsStatus.createFailure,
+          errorMessage: failure.errMessage,
+        ),
+      ),
+      (success) =>
+          emit(state.copyWith(status: CoffeeBillsStatus.createSuccess)),
     );
   }
 
   void toggleSearch() {
-    isSearching = !isSearching;
-    if (!isSearching) {
-      searchQuery = '';
-      currentPage = 1;
-      hasMore = true;
-      fetchBillsCoffee(FetchBillsParam(page: 1));
+    if (state.isSearching) {
+      emit(state.copyWith(isSearching: false, searchQuery: ''));
+    } else {
+      emit(state.copyWith(isSearching: true));
     }
   }
 
   void searchBills(String query) {
-    searchQuery = query;
-    currentPage = 1;
-    hasMore = true;
-    allBills.clear(); // امسح القائمة القديمة
-    isLoading = false; // reset
-    emit(CoffeeBillsLoadingState()); // عرض لودينج أثناء البحث
-    fetchBillsCoffee(FetchBillsParam(query: query, page: currentPage));
+    final trimmedQuery = query.trim();
+
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: '',
+          isSearching: false,
+          currentPage: 1,
+          hasMore: true,
+          status: CoffeeBillsStatus.loading,
+        ),
+      );
+      fetchBillsCoffee(FetchBillsParam(page: 1, query: null));
+      return;
+    }
+
+    if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
+      emit(
+        state.copyWith(
+          searchQuery: trimmedQuery,
+          isSearching: true,
+          bills: [],
+          currentPage: 1,
+          hasMore: true,
+          status: CoffeeBillsStatus.searchLoading,
+        ),
+      );
+      fetchBillsCoffee(FetchBillsParam(page: 1, query: trimmedQuery));
+    }
   }
 
   void searchActiveBills(String query) {
-    searchQuery = query;
-    currentPage = 1;
-    hasMore = true;
-    allBills.clear();
-    isLoading = false;
-    emit(ActiveBillsSearchLoading()); // لودينج البحث
-    fetchActiveBillsCoffee(FetchBillsParam(query: query, page: currentPage));
+    final trimmedQuery = query.trim();
+
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: '',
+          isSearching: false,
+          currentPage: 1,
+          hasMore: true,
+          status: CoffeeBillsStatus.activeLoading,
+        ),
+      );
+      fetchActiveBillsCoffee(FetchBillsParam(page: 1, query: null));
+      return;
+    }
+
+    if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
+      emit(
+        state.copyWith(
+          searchQuery: trimmedQuery,
+          isSearching: true,
+          bills: [],
+          currentPage: 1,
+          hasMore: true,
+          status: CoffeeBillsStatus.searchLoading,
+        ),
+      );
+      fetchActiveBillsCoffee(FetchBillsParam(page: 1, query: trimmedQuery));
+    }
   }
 
+  Future<void> onRefresh() async {
+    emit(
+      state.copyWith(
+        searchQuery: '',
+        status: CoffeeBillsStatus.loading,
+        currentPage: 1,
+        hasMore: true,
+        bills: [],
+      ),
+    );
+
+    await fetchBillsCoffee(FetchBillsParam(page: 1));
+  }
+
+  Future<void> onRefreshActive() async {
+    emit(
+      state.copyWith(
+        searchQuery: '',
+        status: CoffeeBillsStatus.loading,
+        currentPage: 1,
+        hasMore: true,
+        bills: [],
+      ),
+    );
+
+    await fetchActiveBillsCoffee(FetchBillsParam(page: 1));
+  }
 
 }
-

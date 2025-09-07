@@ -1,133 +1,80 @@
-part of 'coffee_bills_cubit.dart';
+ part of 'coffee_bills_cubit.dart';
 
-@immutable
-sealed class CoffeeBillsState extends Equatable {
-  const CoffeeBillsState();
-}
 
-final class CoffeeBillsInitial extends CoffeeBillsState {
-  const CoffeeBillsInitial();
 
-  @override
-  List<Object?> get props => [];
-}
 
-final class CoffeeBillsLoadingState extends CoffeeBillsState {
-  const CoffeeBillsLoadingState();
+ enum CoffeeBillsStatus {
+   initial,
+   loading,
+   success,
+   failure,
+   empty,
+   createLoading,
+   createSuccess,
+   createFailure,
+   activeLoading,
+   activeSuccess,
+   activeFailure,
+   searchLoading,
 
-  @override
-  List<Object?> get props => [];
-}
 
-final class CoffeeBillsFailureState extends CoffeeBillsState {
-  final String errMessage;
 
-  const CoffeeBillsFailureState({required this.errMessage});
+ }
 
-  @override
-  List<Object?> get props => [errMessage];
-}
+ class BillsCoffeeState extends Equatable {
+   final CoffeeBillsStatus status;
+   final List<BillsCoffeeEntity> bills;
+   final String? errorMessage;
+   final bool isSearching;
+   final String searchQuery;
+   final int currentPage;
+   final bool hasMore;
+   final bool isLoading;
 
-final class CoffeeBillsSuccessState extends CoffeeBillsState {
-  final List<BillsCoffeeEntity> bills;
+   const BillsCoffeeState({
+     this.status = CoffeeBillsStatus.initial,
+     this.bills = const [], // ✅統 واحد
+     this.errorMessage,
+     this.isSearching = false,
+     this.searchQuery = '',
+     this.currentPage = 1,
+     this.hasMore = true,
+     this.isLoading = false,
+   });
 
-  const CoffeeBillsSuccessState({required this.bills});
+   BillsCoffeeState copyWith({
+     GetOneBillsCoffeeEntity? getOneBills,
+     CoffeeBillsStatus? status,
+     List<BillsCoffeeEntity>? bills,
+     String? errorMessage,
+     bool? isSearching,
+     String? searchQuery,
+     int? currentPage,
+     bool? hasMore,
+     bool? isLoading,
+   }) {
+     return BillsCoffeeState(
+       status: status ?? this.status,
+       bills: bills ?? this.bills,
+       errorMessage: errorMessage ?? this.errorMessage,
+       isSearching: isSearching ?? this.isSearching,
+       searchQuery: searchQuery ?? this.searchQuery,
+       currentPage: currentPage ?? this.currentPage,
+       hasMore: hasMore ?? this.hasMore,
+       isLoading: isLoading ?? this.isLoading,
+     );
+   }
 
-  @override
-  List<Object?> get props => [bills];
-}
+   @override
+   List<Object?> get props =>
+       [status, bills, errorMessage, isSearching, searchQuery, currentPage, hasMore, isLoading,
+       ];
+ }
 
-final class ActiveCoffeeBillsInitial extends CoffeeBillsState {
-  const ActiveCoffeeBillsInitial();
 
-  @override
-  List<Object?> get props => [];
-}
 
-final class ActiveCoffeeBillsLoadingState extends CoffeeBillsState {
-  const ActiveCoffeeBillsLoadingState();
 
-  @override
-  List<Object?> get props => [];
-}
 
-final class ActiveCoffeeBillsFailureState extends CoffeeBillsState {
-  final String errMessage;
 
-  const ActiveCoffeeBillsFailureState({required this.errMessage});
 
-  @override
-  List<Object?> get props => [errMessage];
-}
 
-final class ActiveCoffeeBillsSuccessState extends CoffeeBillsState {
-  final List<BillsCoffeeEntity> bills;
-
-  const ActiveCoffeeBillsSuccessState({required this.bills});
-
-  @override
-  List<Object?> get props => [bills];
-}
-
-final class GetOneBillsInitial extends CoffeeBillsState {
-  const GetOneBillsInitial();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class GetOneBillsCoffeeLoadingState extends CoffeeBillsState {
-  const GetOneBillsCoffeeLoadingState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class GetOneBillsCoffeeFailureState extends CoffeeBillsState {
-  final String errMessage;
-
-  const GetOneBillsCoffeeFailureState({required this.errMessage});
-
-  @override
-  List<Object?> get props => [errMessage];
-}
-
-final class GetOneBillsCoffeeSuccessState extends CoffeeBillsState {
-  final GetOneBillsCoffeeEntity bills;
-
-  const GetOneBillsCoffeeSuccessState({required this.bills});
-
-  @override
-  List<Object?> get props => [bills];
-}
-
-final class CreateBillsCoffeeFailureState extends CoffeeBillsState {
-  final String errMessage;
-
-  const CreateBillsCoffeeFailureState({required this.errMessage});
-
-  @override
-  List<Object?> get props => [errMessage];
-}
-
-final class CreateBillsCoffeeSuccessState extends CoffeeBillsState {
-  const CreateBillsCoffeeSuccessState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class CreateBillsCoffeeLoadingState extends CoffeeBillsState {
-  const CreateBillsCoffeeLoadingState();
-  @override
-  List<Object?> get props => [];
-}
-final class BillsEmptyState extends CoffeeBillsState{
-  @override
-  List<Object?> get props => [];
-}
-final class ActiveBillsSearchLoading extends CoffeeBillsState{
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
-}

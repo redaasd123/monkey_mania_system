@@ -1,16 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
-import 'package:monkey_app/feature/bills/main_bills/domain/use_case/close_bills_use_case.dart';
 
 import '../../../domain/entity/Bills_entity.dart';
-import '../../../domain/use_case/apply_discount_use_case.dart';
 import '../../../domain/use_case/create_bills_use_case.dart';
 import '../../../domain/use_case/fetch_active_bills_use_case.dart';
 import '../../../domain/use_case/fetch_bills_use_case.dart';
 import '../../../domain/use_case/get_one_bills_use_case.dart';
-import '../../view/widget/apply_discount_param.dart';
-import '../../view/widget/param/close_bills_param.dart';
 import '../../view/widget/param/create_bills_param.dart';
 import '../../view/widget/param/fetch_bills_param.dart';
 
@@ -22,112 +17,221 @@ class BillsCubit extends Cubit<BillsState> {
   final BillsUseCase billsUseCase;
   final GetOneBillUseCase getOneBillUseCase;
 
-
-  BillsCubit(
-    this.createBillsUseCase,
-    this.fetchActiveBillsUseCase,
-    this.billsUseCase,
-    this.getOneBillUseCase,
-
-  ) : super(BillsInitial());
-
-  // 🔹 المتغيرات المشتركة
-  int currentPage = 1;
-  bool isLoading = false;
-  bool hasMore = true;
-  bool isSearching = false;
-  String searchQuery = '';
-  List<BillsEntity> allBills = [];
+  BillsCubit(this.createBillsUseCase,
+      this.fetchActiveBillsUseCase,
+      this.billsUseCase,
+      this.getOneBillUseCase,) : super(BillsState());
 
   // 🔹 إنشاء فاتورة
 
   // 🔹 جلب فواتير Active
   Future<void> fetchActiveBills(FetchBillsParam param) async {
-    if (isLoading) return;
-    isLoading = true;
-    emit(FetchActiveBillsLoadingState());
+    if (state.isLoading) return;
+
+    emit(state.copyWith(isLoading: true, status: BillsStatus.activeLoading));
+
     final result = await fetchActiveBillsUseCase.call(param);
+
     result.fold(
-      (failure) {
-        isLoading = false;
-        emit(FetchActiveBillsFailureState(errMessage: failure.errMessage));
+          (failure) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            status: BillsStatus.activeFailure,
+            errorMessage: failure.errMessage,
+          ),
+        );
       },
-      (bills) {
-        isLoading = false;
+          (bills) {
         if (bills.isEmpty) {
-          allBills.clear();
-          emit(BillsEmptyState());
+          emit(state.copyWith(isLoading: false, status: BillsStatus.empty));
           return;
         }
-        allBills = bills;
-        emit(FetchActiveBillsSuccessState(bills: bills));
+
+        emit(
+          state.copyWith(
+            bills: bills, // هنا استبدلت الداتا كلها
+            status: BillsStatus.activeSuccess,
+            isLoading: false,
+          ),
+        );
       },
     );
   }
 
   // 🔹 جلب الفواتير مع Pagination
   Future<void> fetchBills(FetchBillsParam param) async {
-    if (isLoading || !hasMore) return;
+    if (state.isLoading || !state.hasMore) return;
 
-    isLoading = true;
-    final page = currentPage;
+    final pageNumber = param.page ?? state.currentPage;
 
-    if (page == 1) emit(BillsLoadingState());
+    emit(
+      state.copyWith(
+        isLoading: true,
+        status: pageNumber == 1 ? BillsStatus.loading : state.status,
+      ),
+    );
 
     final result = await billsUseCase.call(param);
+
     result.fold(
-      (failure) {
-        isLoading = false;
-        emit(BillsFailureState(errMessage: failure.errMessage));
+          (failure) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            status: BillsStatus.failure,
+            errorMessage: failure.errMessage,
+          ),
+        );
       },
-      (billsPage) {
-        isLoading = false;
-        if (billsPage.bills.isEmpty && page == 1) {
-          emit(BillsEmptyState());
+          (billsPage) {
+        if (billsPage.bills.isEmpty && pageNumber == 1) {
+          emit(
+            state.copyWith(
+              isLoading: false,
+              bills: [],
+              status: BillsStatus.empty,
+              hasMore: false,
+            ),
+          );
           return;
         }
 
-        if (page == 1) allBills.clear();
-        allBills.addAll(billsPage.bills);
+        final updatedBills = pageNumber == 1
+            ? billsPage.bills
+            : [...state.bills, ...billsPage.bills];
 
-        hasMore = billsPage.nextPage != null;
-        if (hasMore) currentPage = page + 1;
+        final more = billsPage.nextPage != null;
 
-        emit(BillsSuccessState(bills: List.from(allBills)));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            bills: updatedBills,
+            hasMore: more,
+            currentPage: more ? pageNumber + 1 : pageNumber,
+            status: BillsStatus.success,
+          ),
+        );
       },
     );
   }
 
   Future<void> createBills(CreateBillsParam param) async {
-    emit(CreateBillsLoadingState());
+    emit(state.copyWith(status: BillsStatus.createLoading));
     final result = await createBillsUseCase.call(param);
     result.fold((failure) {
       print("🔥 EMIT CreateBillsFailureState: ${failure.errMessage}");
 
       emit(
-        CreateBillsFailureState(
-          errMessage: failure.errMessage,
-          bills: allBills,
+        state.copyWith(
+          status: BillsStatus.createFailure,
+          errorMessage: failure.errMessage,
+          bills: state.bills,
         ),
       );
-    }, (_) => emit(CreateBillsSuccessState()));
+    }, (bills) {
+      final updateBills = List<BillsEntity>.from(state.bills)..insert(0, bills);
+      emit(state.copyWith(status: BillsStatus.createSuccess,bills: updateBills));
+    });
   }
 
-
   void toggleSearch() {
-    isSearching = !isSearching;
-    if (!isSearching) {
-      searchQuery = '';
-      currentPage = 1;
-      hasMore = true;
-      fetchBills(FetchBillsParam(page: 1));
+    if (state.isSearching) {
+      emit(state.copyWith(isSearching: false, searchQuery: ''));
+    } else {
+      emit(state.copyWith(isSearching: true));
     }
   }
 
   void searchBills(String query) {
-    searchQuery = query;
-    currentPage = 1;
-    hasMore = true;
-    fetchBills(FetchBillsParam(query: query, page: 1));
+    final trimmedQuery = query.trim();
+
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: '',
+          isSearching: false,
+          currentPage: 1,
+          hasMore: true,
+          status: BillsStatus.loading,
+        ),
+      );
+      fetchBills(FetchBillsParam(page: 1, query: null));
+      return;
+    }
+
+    if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
+      emit(
+        state.copyWith(
+          searchQuery: trimmedQuery,
+          isSearching: true,
+          bills: [],
+          currentPage: 1,
+          hasMore: true,
+          status: BillsStatus.searchLoading,
+        ),
+      );
+      fetchBills(FetchBillsParam(page: 1, query: trimmedQuery));
+    }
+  }
+
+  void searchActiveBills(String query) {
+    final trimmedQuery = query.trim();
+
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: '',
+          isSearching: false,
+          currentPage: 1,
+          hasMore: true,
+          status: BillsStatus.activeLoading,
+        ),
+      );
+      fetchActiveBills(FetchBillsParam(page: 1, query: null));
+      return;
+    }
+
+    if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
+      emit(
+        state.copyWith(
+          searchQuery: trimmedQuery,
+          isSearching: true,
+          bills: [],
+          currentPage: 1,
+          hasMore: true,
+          status: BillsStatus.searchLoading,
+        ),
+      );
+      fetchActiveBills(FetchBillsParam(page: 1, query: trimmedQuery));
+    }
+  }
+
+  Future<void> onRefresh() async {
+    emit(
+      state.copyWith(
+        searchQuery: '',
+        status: BillsStatus.loading,
+        currentPage: 1,
+        hasMore: true,
+        bills: [],
+      ),
+    );
+
+    await fetchBills(FetchBillsParam(page: 1));
+  }
+
+  Future<void> onRefreshActiveBills() async {
+    emit(
+      state.copyWith(
+        searchQuery: '',
+        status: BillsStatus.loading,
+        currentPage: 1,
+        hasMore: true,
+        bills: [],
+      ),
+    );
+
+    await fetchActiveBills(FetchBillsParam(page: 1));
   }
 }

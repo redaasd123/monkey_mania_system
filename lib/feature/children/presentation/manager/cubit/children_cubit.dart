@@ -96,25 +96,28 @@ class ChildrenCubit extends Cubit<ChildrenState> {
     final trimmedQuery = query.trim();
 
     if (trimmedQuery.isEmpty) {
-      // لو المستخدم مسح كل حاجة، رجع البيانات الأصلية
-      emit(state.copyWith(
-        searchQuery: "",
-        status: ChildrenStatus.success,
-        currentPage: 1,
-        hasMore: true,
-      ));
+      emit(
+        state.copyWith(
+          searchQuery: "",
+          status: ChildrenStatus.success,
+          currentPage: 1,
+          hasMore: true,
+        ),
+      );
       fetchChildren(FetchChildrenParam(pageNumber: 1));
       return;
     }
 
     if (trimmedQuery.length >= 2) {
-      emit(state.copyWith(
-        searchQuery: trimmedQuery,
-        isSearching: true,
-        status: ChildrenStatus.searchLoading,
-        currentPage: 1,
-        hasMore: true,
-      ));
+      emit(
+        state.copyWith(
+          searchQuery: trimmedQuery,
+          isSearching: true,
+          status: ChildrenStatus.searchLoading,
+          currentPage: 1,
+          hasMore: true,
+        ),
+      );
       fetchChildren(FetchChildrenParam(query: trimmedQuery, pageNumber: 1));
     }
   }
@@ -145,9 +148,8 @@ class ChildrenCubit extends Cubit<ChildrenState> {
         }
       },
       (success) {
-        final updateList = List<ChildrenEntity>.from(
-          state.allChildren,
-        )..insert(0, success);
+        final updateList = List<ChildrenEntity>.from(state.allChildren)
+          ..insert(0, success);
         emit(
           state.copyWith(
             status: ChildrenStatus.addSuccess,
@@ -184,8 +186,8 @@ class ChildrenCubit extends Cubit<ChildrenState> {
         }
       },
       (success) {
-        final updateList = List<ChildrenEntity>.from(state.allChildren)..insert(
-            0, success);
+        final updateList = List<ChildrenEntity>.from(state.allChildren)
+          ..insert(0, success);
         emit(
           state.copyWith(
             status: ChildrenStatus.updateSuccess,
@@ -196,5 +198,3 @@ class ChildrenCubit extends Cubit<ChildrenState> {
     );
   }
 }
-
-

@@ -40,7 +40,7 @@ class BillsRepoImpl extends BillsRepo {
   }
 
   @override
-  Future<Either<Failure, dynamic>> createBills(CreateBillsParam param) async {
+  Future<Either<Failure, BillsEntity>> createBills(CreateBillsParam param) async {
     try {
       var result = await billsRemoteDataSource.createBills(param);
       return right(result);

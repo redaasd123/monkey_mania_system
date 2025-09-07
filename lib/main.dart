@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
 import 'package:monkey_app/feature/children/domain/param/fetch_children_param.dart';
 
 import 'core/theme_color/color_them.dart';
@@ -10,6 +12,7 @@ import 'core/utils/app_router.dart';
 import 'core/utils/main_init.dart';
 import 'core/utils/service_locator.dart';
 import 'feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import 'feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
 import 'feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
 import 'feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
 import 'feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
@@ -33,11 +36,7 @@ class MonkeyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              getIt<CoffeeBillsCubit>()..fetchBillsCoffee(FetchBillsParam()),
-        ),
-        BlocProvider(create: (context) => getIt<GetOneBillsCubit>()),
+        BlocProvider(create: (context) => getIt<BillsCubit>()),
         BlocProvider(create: (context) => getIt<CloseBillsCubit>()),
         BlocProvider(create: (context) => getIt<ApplyDiscountCubit>()),
         BlocProvider(

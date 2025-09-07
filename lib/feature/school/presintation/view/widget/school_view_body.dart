@@ -73,6 +73,7 @@ class _SchoolViewBodyState extends State<SchoolViewBody> {
 
           /// 🔹 Show list with linear progress during create/update
           else if (state.status == SchoolStatus.addLoading ||
+              state.status==SchoolStatus.loading||
               state.status == SchoolStatus.updateLoading) {
             return Stack(
               children: [

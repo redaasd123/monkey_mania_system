@@ -4,55 +4,57 @@ class FetchBillsParam {
   final DateTime? endDate;
   final int? page;
   final String? query;
+  final String? layer1;
+  final String? layer2;
 
-  FetchBillsParam({this.page = 1, this.branch, this.startDate, this.endDate,this.query});
-  FetchBillsParam copyWith({
-    List<dynamic>? branch,
-    DateTime? startDate,
-    DateTime? endDate,
-    int? page,
-    String? query,
-  }) {
-    return FetchBillsParam(
-      branch: branch ?? this.branch,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      page: page ?? this.page,
-      query: query ?? this.query,
-    );
-  }
-  Map<String, dynamic> toQueryParams() {
-    final Map<String, dynamic> queryParams = {};
+  FetchBillsParam({
+    this.layer2,
+    this.layer1 ,
+    this.page = 1,
+    this.branch,
+    this.startDate,
+    this.endDate,
+    this.query,
+  });
 
-    if (startDate != null) {
-      queryParams["start_date"] = startDate!.toIso8601String().split("T").first;
-    }
+  /// يحول كل البيانات إلى query string جاهز للـ URL بنفس اسم الدالة
+  String toQueryParams() {
+    List<String> parts = [];
 
-    if (endDate != null) {
-      queryParams["end_date"] = endDate!.toIso8601String().split("T").first;
-    }
-
-    // if (branch != null && branch!.isNotEmpty) {
-    //   queryParams["branch_id"] = branch!.map((id) => id.toString()).toList();
-    // } else {
-    //   queryParams["branch_id"] = ["all"];
-    // }
-
+    // Branch
     if (branch != null && branch!.isNotEmpty) {
-      queryParams["branch_id"] = branch!.map((id)=>id.toString()).toList();
-    } else {
-      queryParams["branch_id"] = "all";
+      parts.addAll(branch!.map((id) => "branch_id=$id"));
+     }
+      else {
+      parts.add("branch_id=all");
     }
 
+    // Page
     if (page != null) {
-      queryParams["page"] = page!;
-    }
-    if(query!=null){
-      queryParams['search'] = query;
+      parts.add("page=$page");
     }
 
-    return queryParams;
+    // Start date
+    if (startDate != null) {
+      parts.add("start_date=${startDate!.toIso8601String().split('T').first}");
+    }
+
+    // End date
+    if (endDate != null) {
+      parts.add("end_date=${endDate!.toIso8601String().split('T').first}");
+    }
+
+    // Search query
+    if (query != null && query!.isNotEmpty) {
+      parts.add("search=${query!}");
+    }
+    if(layer1!=null){
+      parts.add('layer1=${layer1}');
+    }
+    if(layer2!=null){
+      parts.add('layer2=${layer2}');
+    }
+
+    return parts.join("&");
   }
 }
-
-

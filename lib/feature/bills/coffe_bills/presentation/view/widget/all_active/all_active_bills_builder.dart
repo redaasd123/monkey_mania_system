@@ -1,41 +1,65 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_bills_coffee_list_view.dart';
+
+import '../../../manager/coffee_bills/coffee_bills_cubit.dart';
+import 'all_active_bills_coffee_list_view.dart';
 
 class ActiveCoffeeListViewBuilder extends StatelessWidget {
   const ActiveCoffeeListViewBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CoffeeBillsCubit, CoffeeBillsState>(
-      builder: (context, state) {
-        if (state is ActiveCoffeeBillsSuccessState) {
-          return AllActiveBillsCoffeeListView(bills: state.bills);
-        }else if (state is BillsEmptyState){
-          return Text('data');
-        }else if( state is ActiveBillsSearchLoading){
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is ActiveCoffeeBillsFailureState) {
-          return Center(child: Text("❌ ${state.errMessage}"));
-        }
-        if (state is ActiveCoffeeBillsLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return const SizedBox.shrink(); // Initial state
-      },
+    return BlocConsumer<CoffeeBillsCubit, BillsCoffeeState>(
       listener: (context, state) {
-        if (state is ActiveCoffeeBillsFailureState) {
-          showRedFlush(context, state.errMessage);
+        // ---------------- Failure ----------------
+        if (state.status == CoffeeBillsStatus.activeFailure) {
+          showRedFlush(context, state.errorMessage ?? "حدث خطأ");
         }
+        // ---------------- Success ----------------
 
-        else if (state is ActiveCoffeeBillsSuccessState) {
-        }else if (state is ActiveCoffeeBillsLoadingState){
+        // ---------------- Loading ----------------
+
+      },
+      builder: (context, state) {
+        switch (state.status) {
+          case CoffeeBillsStatus.activeLoading:
+            return Stack(
+              children: [
+                Center(child: const CircularProgressIndicator()),
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: LinearProgressIndicator(minHeight: 3),
+                ),
+              ],
+            );
+          case CoffeeBillsStatus.searchLoading:
+            return Stack(
+              children: [
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: LinearProgressIndicator(minHeight: 3),
+                ),
+              ],
+            );
+
+
+
+          case CoffeeBillsStatus.activeSuccess:
+            if (state.bills.isEmpty) {
+              return const Center(child: Text("لا توجد بيانات"));
+            }
+            return AllActiveBillsCoffeeListView(bills: state.bills);
+
+          case CoffeeBillsStatus.activeFailure:
+            return Center(child: Text("❌ ${state.errorMessage ?? 'حدث خطأ'}"));
+
+          case CoffeeBillsStatus.empty:
+            return const Center(child: Text("لا توجد بيانات"));
+
+          default:
+            return const SizedBox.shrink();
         }
       },
     );

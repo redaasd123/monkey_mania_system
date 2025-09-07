@@ -46,7 +46,7 @@ class AuthHelper {
 
       await Api(dio: Dio()).post(
         endPoint: 'token/blacklist/',
-        body: {"refresh": refresh},
+        body: {"refresh.dart": refresh},
         token: access,
       );
     } catch (e, st) {
@@ -62,22 +62,22 @@ class AuthHelper {
 
     try {
       final response = await getIt<Api>().post(
-        endPoint: "token/refresh/",
-        body: {'refresh': refreshToken},
+        endPoint: "token/refresh.dart/",
+        body: {'refresh.dart': refreshToken},
         token: null,
       );
 
       final data = response.data;
-      if (data == null || data['access'] == null || data['refresh'] == null) {
+      if (data == null || data['access'] == null || data['refresh.dart'] == null) {
         return null;
       }
 
       await _authBox.put(AuthKeys.accessToken, data['access']);
-      await _authBox.put(AuthKeys.refreshToken, data['refresh']);
+      await _authBox.put(AuthKeys.refreshToken, data['refresh.dart']);
 
       return data['access'];
     } catch (e, st) {
-      debugPrint("❌ Failed to refresh token: $e\n$st");
+      debugPrint("❌ Failed to refresh.dart token: $e\n$st");
       return null;
     }
   }

@@ -16,10 +16,8 @@ class LoginViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) async {
-        // أغلق أى حوار لو كان مفتوحًا
+      listener: (context,state) async {
         hideLoader(context);
-
         if (state is LoginLoadingState) {
           showLoader(context);
         } else if (state is LoginSuccessState) {
@@ -31,40 +29,11 @@ class LoginViewBody extends StatelessWidget {
         } else if (state is LoginFailureState) {
           showRedFlush(
             context,
-            LangKeys.loginFailure.tr(),
-          ); // أو أي دالة بتظهر رسالة خطأ
+            state.errMessage,
+          );
         }
       },
       child: const LoginPageItem(),
     );
   }
 }
-
-// return BlocProvider(
-//       create: (_) => getIt<LoginCubit>(),
-//       child: BlocListener<LoginCubit, LoginState>(
-//         listener: (context, state) {
-//           if (state is LoginLoading) {
-//             // إظهار لودينج
-//             showDialog(
-//               context: context,
-//               barrierDismissible: false,
-//               builder: (_) => const Center(child: CircularProgressIndicator()),
-//             );
-//           } else if (state is LoginSuccess) {
-//             Navigator.of(context).pop(); // إغلاق اللودينج
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               const SnackBar(content: Text('تم تسجيل الدخول بنجاح')),
-//             );
-//             // انتقل لصفحة تانية (لو عندك مثلا HomeView)
-//             // GoRouter.of(context).pushReplacement('/school');
-//           } else if (state is LoginFailure) {
-//             Navigator.of(context).pop(); // إغلاق اللودينج
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(content: Text(state.errMessage)),
-//             );
-//           }
-//         },
-//         child: const LoginViewBody(),
-//       ),
-//     );

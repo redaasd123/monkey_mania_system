@@ -9,8 +9,7 @@ Future<void> showBranchBottomSheet(
   BuildContext context, {
   required void Function(FetchBillsParam) onSelected,
 }) async {
-  final cubit = BlocProvider.of<BranchCubit>(context);
-  cubit.fetchBranch();
+  BlocProvider.of<BranchCubit>(context).fetchBranch();
 
   final data = await showModalBottomSheet(
     context: context,

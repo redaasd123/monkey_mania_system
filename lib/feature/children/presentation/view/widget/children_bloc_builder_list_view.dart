@@ -70,12 +70,15 @@ class ChildrenBlocBuilderListView extends StatelessWidget {
             case ChildrenStatus.addLoading:
             case ChildrenStatus.updateLoading:
 
-              return Stack(
-                children: [
-                  ChildrenListView(children: state.allChildren),
-                  const LinearProgressIndicator(minHeight: 2),
-                ],
-              );
+            return Stack(
+              children: [
+                ChildrenListView(children: state.allChildren),
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: LinearProgressIndicator(minHeight: 3),
+                ),
+              ],
+            );
 
             case ChildrenStatus.success:
             case ChildrenStatus.addSuccess:

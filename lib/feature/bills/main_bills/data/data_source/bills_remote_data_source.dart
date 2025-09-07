@@ -19,7 +19,7 @@ abstract class BillsRemoteDataSource {
 
   Future<List<BillsEntity>> fetchActiveBills(FetchBillsParam param);
 
-  Future<dynamic> createBills(CreateBillsParam param);
+  Future<BillsEntity> createBills(CreateBillsParam param);
 
   Future<dynamic> closeBills(CloseBillsParam param);
 
@@ -28,9 +28,9 @@ abstract class BillsRemoteDataSource {
 class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   @override
   Future<BillsPageEntity> fetchBills(FetchBillsParam param) async {
+    final url = 'bill/all?${param.toQueryParams()}';
     var result = await getIt.get<Api>().get(
-      endPoint: 'bill/all',
-      queryParameters: param.toQueryParams(),
+      endPoint: url,
     );
     print('✅ API Response Received');
 
@@ -53,7 +53,7 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
 
   @override
-  Future<dynamic> createBills(CreateBillsParam param) async {
+  Future<BillsEntity> createBills(CreateBillsParam param) async {
     var result = await getIt.get<Api>().post(
       endPoint: 'bill/create/',
       body: param.toJson(),
@@ -84,11 +84,9 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
     //   baseUrl,
     // ).replace(path: endpoint, queryParameters: queryParams);
     // print('🌐 Full Request URL: $fullUrl');
-
+    final url = 'bill/active/all?${param.toQueryParams()}';
     var result = await getIt.get<Api>().get(
-      endPoint: 'bill/active/all',
-      queryParameters: param.toQueryParams(),
-    );
+      endPoint: url,);
 
     List<BillsEntity> bills = [];
     for (var item in result) {

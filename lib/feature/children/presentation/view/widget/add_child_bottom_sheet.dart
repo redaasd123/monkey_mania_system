@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/core/funcation/show_snack_bar.dart';
-import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 
@@ -72,7 +70,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     _schoolCtrl.dispose();
     super.dispose();
   }
-//flutter pub run build_runner build --delete-conflicting-outputs
+
+  //flutter pub run build_runner build --delete-conflicting-outputs
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // if (_selectedSchoolId == null) {
@@ -303,7 +302,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           _addrCtrl.text = selected;
         }
       },
-
     );
   }
 
@@ -546,7 +544,7 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
         }
 
         final state = cubit.state;
-        if (state.status==SchoolStatus.success) {
+        if (state.status == SchoolStatus.success) {
           final selectedSchool = await showModalBottomSheet<SchoolEntity>(
             context: context,
             isScrollControlled: true,
@@ -561,7 +559,9 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                 minChildSize: 0.4,
                 maxChildSize: 0.9,
                 builder: (context, scrollController) {
-                  List<SchoolEntity> filteredSchools = List.from(state.allSchool);
+                  List<SchoolEntity> filteredSchools = List.from(
+                    state.allSchool,
+                  );
                   final TextEditingController searchCtrl =
                       TextEditingController();
 

@@ -60,7 +60,6 @@ class _ChildrenViewState extends State<ChildrenView> {
                 IconButton(
                   icon: BlocBuilder<ChildrenCubit, ChildrenState>(
                     builder: (context, state) {
-                      final cubit = context.read<ChildrenCubit>();
                       return Icon(state.isSearching ? Icons.close : Icons.search);
                     },
                   ),

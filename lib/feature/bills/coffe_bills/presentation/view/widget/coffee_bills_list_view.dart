@@ -10,8 +10,8 @@ import '../../../../../children/presentation/view/widget/children_list_view.dart
 import '../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 class CoffeeBillsListView extends StatefulWidget {
-  const CoffeeBillsListView({super.key,});
-
+  const CoffeeBillsListView({super.key, required this.bills,});
+final List<BillsCoffeeEntity> bills;
 
   @override
   State<CoffeeBillsListView> createState() => _CoffeeBillsListViewState();
@@ -33,13 +33,14 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
 
   void scrollListener() {
     final cubit = BlocProvider.of<CoffeeBillsCubit>(context);
+    final state = cubit.state;
     if (!scrollController.hasClients) return;
 
     final maxScroll = scrollController.position.maxScrollExtent;
     final currentScroll = scrollController.position.pixels;
 
-    if (currentScroll >= 0.8 * maxScroll && cubit.hasMore && !cubit.isLoading) {
-      cubit.fetchBillsCoffee(FetchBillsParam(page: cubit.currentPage));
+    if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
+      cubit.fetchBillsCoffee(FetchBillsParam(page: state.currentPage));
     }
   }
 
@@ -54,26 +55,27 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CoffeeBillsCubit, CoffeeBillsState>(
+    return BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
       builder: (context, state) {
-        final cubit = BlocProvider.of<CoffeeBillsCubit>(context);
-        final bills = cubit.allBills;
-
-        return ListView.builder(
-          controller: scrollController,
-          itemCount: bills.length ,
-          itemBuilder: (context, index) {
-            final modal = bills[index];
-            return GestureDetector(
-              onTap: () {
-                GoRouter.of(context).push(
-                  AppRouter.kShowDetailCoffeeBills,
-                  extra: modal.id,
-                );
-              },
-              child: CoffeeBillsItem(billsCoffeeEntity: modal),
-            );
-          },
+        final bills = state.bills;
+        return RefreshIndicator(
+          onRefresh: ()=>BlocProvider.of<CoffeeBillsCubit>(context).onRefresh(),
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: bills.length ,
+            itemBuilder: (context, index) {
+              final modal = bills[index];
+              return GestureDetector(
+                onTap: () {
+                  GoRouter.of(context).push(
+                    AppRouter.kShowDetailCoffeeBills,
+                    extra: modal.id,
+                  );
+                },
+                child: CoffeeBillsItem(billsCoffeeEntity: modal),
+              );
+            },
+          ),
         );
       },
     );
