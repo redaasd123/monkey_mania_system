@@ -1,12 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_entity.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_one.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_tow.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 import '../../../domain/entity/get_one_bills_coffee_entity.dart';
@@ -19,13 +16,10 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     this.fetchBillsCoffeeUSeCase,
     this.fetchActiveBillsCoffeeUSeCase,
     this.createBillsCoffeeUSeCase,
-
   ) : super((BillsCoffeeState()));
   final FetchBillsCoffeeUSeCase fetchBillsCoffeeUSeCase;
   final FetchActiveBillsCoffeeUSeCase fetchActiveBillsCoffeeUSeCase;
   final CreateBillsCoffeeUSeCase createBillsCoffeeUSeCase;
-
-
 
   Future<void> fetchBillsCoffee(FetchBillsParam param) async {
     if (state.isLoading || !state.hasMore) return;
@@ -133,8 +127,16 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           errorMessage: failure.errMessage,
         ),
       ),
-      (success) =>
-          emit(state.copyWith(status: CoffeeBillsStatus.createSuccess)),
+      (bill) {
+        final updated = List<BillsCoffeeEntity>.from(state.bills)
+          ..insert(0, bill);
+        emit(
+          state.copyWith(
+            status: CoffeeBillsStatus.createSuccess,
+            bills: updated,
+          ),
+        );
+      },
     );
   }
 
@@ -237,5 +239,4 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
 
     await fetchActiveBillsCoffee(FetchBillsParam(page: 1));
   }
-
 }

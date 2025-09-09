@@ -21,19 +21,27 @@ class CreateBillsPCoffeeParam {
   }
 }
 
+
+
 class Products {
   final String productType;
-  final int productId;
+  final num productId;
   final int quantity;
-  final String notes;
+  final String? notes;
 
   Map<String, dynamic> toJson() {
-    return {
+    final map = {
       'product_type': productType,
       'product_id': productId,
       'quantity': quantity,
-      'notes': notes,
     };
+
+    // ✅ ضيف المفتاح فقط لو فيه قيمة
+    if (notes != null && notes!.isNotEmpty) {
+      map['notes'] = notes!; // ✅ استخدم ! عشان تقول للـ compiler انها مش null
+    }
+
+    return map;
   }
 
   Products({
@@ -43,3 +51,4 @@ class Products {
     required this.notes,
   });
 }
+

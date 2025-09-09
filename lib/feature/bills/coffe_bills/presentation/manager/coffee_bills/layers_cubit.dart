@@ -41,6 +41,7 @@ class LayersCubit extends Cubit<LayersState> {
             cashedLayerOne: category,
             status: LayersStatus.getLayerOneSuccess,
             layer1: category,
+
           ),
         );
       },
@@ -114,7 +115,6 @@ class LayersCubit extends Cubit<LayersState> {
         state.copyWith(
           status: LayersStatus.cashedLayerOne,
           layer1: state.cashedLayerOne,
-          // ❌ متشيلش الاختيارات
           selectedLayer1: state.selectedLayer1,
           selectedLayer2: state.selectedLayer2,
         ),

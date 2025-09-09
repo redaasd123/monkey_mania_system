@@ -20,7 +20,7 @@ abstract class CoffeeBillsRepo {
 
   Future<Either<Failure, GetOneBillsCoffeeEntity>> getOneCoffeeBills(int id);
 
-  Future<Either<Failure, Unit>> createCoffeeBills(
+  Future<Either<Failure, BillsCoffeeEntity>> createCoffeeBills(
     CreateBillsPCoffeeParam param,
   );
 
