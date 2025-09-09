@@ -74,7 +74,7 @@ class GetAllLayersModel {
   String? product;
   String? branch;
   num? warningUnits;
-  num? availableUnits;
+  double? availableUnits;
   dynamic warningMessage;
   num? soldUnits;
   dynamic? price;
@@ -93,7 +93,7 @@ GetAllLayersModel copyWith({  num? id,
   String? product,
   String? branch,
   num? warningUnits,
-  num? availableUnits,
+  dynamic? availableUnits,
   dynamic warningMessage,
   num? soldUnits,
   dynamic? price,

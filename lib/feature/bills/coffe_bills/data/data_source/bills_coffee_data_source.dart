@@ -22,7 +22,7 @@ abstract class BillsCoffeeDataSource {
 
   Future<GetOneBillsCoffeeEntity> getOneBillsCoffee(int id);
 
-  Future<Unit> createBillsCoffee(CreateBillsPCoffeeParam param);
+  Future<BillsCoffeeEntity> createBillsCoffee(CreateBillsPCoffeeParam param);
 
   Future<List<LayersEntity>> getLayerOne(FetchBillsParam param);
 
@@ -78,13 +78,14 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<Unit> createBillsCoffee(CreateBillsPCoffeeParam param) async {
-    var result = await getIt.get<Api>().put(
+  Future<BillsCoffeeEntity> createBillsCoffee(CreateBillsPCoffeeParam param) async {
+    final response = await getIt.get<Api>().post(
       endPoint: 'product_bill/create/',
       body: param.toJson(),
     );
-    return result;
+    return BillsCoffeeModel.fromJson(response.data).toEntity();
   }
+
 
   @override
   Future<List<LayersEntity>> getLayerOne(FetchBillsParam param) async {

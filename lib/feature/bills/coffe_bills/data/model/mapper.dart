@@ -60,6 +60,7 @@ extension GetLayers on LayersModel {
 extension GetAllLayers on GetAllLayersModel {
   GetAllLayerEntity toEntity() {
     return GetAllLayerEntity(
+      id: id ?? 1,
       layer1: layer1 ?? "",
       layer2: layer2 ?? "",
       layer3: layer3 ?? "",
@@ -69,22 +70,3 @@ extension GetAllLayers on GetAllLayersModel {
     );
   }
 }
-
-
-
-//
-// LayerEntity mapFromLayersEntity(LayersEntity e) {
-//   return LayerEntity(name: e.name);
-// }
-//
-// LayerEntity mapFromGetAllLayerEntity(GetAllLayerEntity e) {
-//   return LayerEntity(
-//     name: e.product ?? '',       // UI يعرض اسم المنتج
-//     layer1: e.layer1,
-//     layer2: e.layer2,
-//     layer3: e.layer3,
-//     product: e.product,
-//     availableUnits: e.availableUnits,
-//     price: e.price,
-//   );
-// }

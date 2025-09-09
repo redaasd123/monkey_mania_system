@@ -75,7 +75,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
   }
 
   @override
-  Future<Either<Failure, Unit>> createCoffeeBills(
+  Future<Either<Failure, BillsCoffeeEntity>> createCoffeeBills(
     CreateBillsPCoffeeParam param,
   ) async {
     try {

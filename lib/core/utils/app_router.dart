@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/order_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/coffe_bills_view.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/show_detail_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_coffee_bills_view.dart';
@@ -61,7 +63,6 @@ abstract class AppRouter {
         },
       ),
 
-
       GoRoute(
         path: kCoffeeBills,
         builder: (context, state) => const CoffeeBillsView(),
@@ -69,14 +70,20 @@ abstract class AppRouter {
       GoRoute(
         path: kCreateCoffeeBillsView,
         builder: (context, state) {
-          return BlocProvider(
-            create: (context) =>
-            getIt<LayersCubit>()..getLayerOne(FetchBillsParam(branch: [1])),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context)=>getIt<CoffeeBillsCubit>()),
+              BlocProvider(
+                create: (context) =>
+                    getIt<LayersCubit>()
+                      ..getLayerOne(FetchBillsParam(branch: [1])),
+              ),
+            ],
+
             child: const CreateBillsView(),
           );
         },
       ),
-
 
       GoRoute(
         path: kActiveCoffeeBills,

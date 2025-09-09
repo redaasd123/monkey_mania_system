@@ -121,7 +121,6 @@ class CoffeeBillsBuilder extends StatelessWidget {
         switch (state.status) {
           // ---------------- Loading ----------------
           case CoffeeBillsStatus.loading:
-          case CoffeeBillsStatus.createLoading:
           case CoffeeBillsStatus.activeLoading:
             return Stack(
               children: [
@@ -142,6 +141,7 @@ class CoffeeBillsBuilder extends StatelessWidget {
             );
 
           // ---------------- Success ----------------
+          case CoffeeBillsStatus.createSuccess:
           case CoffeeBillsStatus.success:
           case CoffeeBillsStatus.activeSuccess:
             if (state.bills.isEmpty) {

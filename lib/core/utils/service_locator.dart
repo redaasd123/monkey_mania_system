@@ -14,6 +14,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_t
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/order_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/data_source/bills_remote_data_source.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/repos/bills_repo_impl.dart';
@@ -183,4 +184,5 @@ void setUpServiceLocator() {
   getIt.registerFactory(
         () => GetOneBillsCoffeeCubit(getIt(),),
   );
+  getIt.registerLazySingleton<OrdersCubit>(()=>OrdersCubit());
 }
