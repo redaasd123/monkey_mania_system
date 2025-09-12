@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffee_bills_list_view.dart';
 
 import '../../../../../../../core/widget/widget/custom_flush.dart';
 import '../../../../../../../core/widget/widget/custom_show_loder.dart';
-
 import '../../../manager/coffee_bills/order_cubit.dart';
 import 'layer1&2_grid_view.dart';
 import 'layer3_section.dart';
@@ -65,6 +65,7 @@ class _CreateBillsViewState extends State<CreateBillsView> {
         }
 
         return Scaffold(
+          appBar: CustomAppBar(title: 'Menue'),
           backgroundColor: Color(0xC8000000),
           body: Form(
             key: _formKey,
@@ -81,9 +82,10 @@ class _CreateBillsViewState extends State<CreateBillsView> {
                               state.status == LayersStatus.cashedLayerOne ||
                               state.status == LayersStatus.getLayerTowSuccess ||
                               state.status == LayersStatus.cashedLayerTow) {
-                            final category = (state.status ==
-                                LayersStatus.getLayerTowSuccess ||
-                                state.status == LayersStatus.cashedLayerTow)
+                            final category =
+                                (state.status ==
+                                        LayersStatus.getLayerTowSuccess ||
+                                    state.status == LayersStatus.cashedLayerTow)
                                 ? state.layer2
                                 : state.layer1;
 
@@ -110,7 +112,7 @@ class _CreateBillsViewState extends State<CreateBillsView> {
                               },
                             );
                           } else if (state.status ==
-                              LayersStatus.getLayerOneLoading ||
+                                  LayersStatus.getLayerOneLoading ||
                               state.status == LayersStatus.getLayerTowLoading ||
                               state.status == LayersStatus.layer3Loading) {
                             return const Center(
@@ -120,9 +122,7 @@ class _CreateBillsViewState extends State<CreateBillsView> {
                               ),
                             );
                           } else {
-                            return Center(
-                              child: Text(state.errMessage ?? ''),
-                            );
+                            return Center(child: Text(state.errMessage ?? ''));
                           }
                         },
                       ),
@@ -138,55 +138,96 @@ class _CreateBillsViewState extends State<CreateBillsView> {
   }
 }
 
-
-
-
-
-
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool showCart;
+  final bool showBack;
 
-  const CustomAppBar({super.key, required this.title, this.showCart = true});
+  const CustomAppBar({super.key, required this.title, this.showBack = true});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFE8D8F1), Color(0xFFE8D8F1)], // درجات الأزرق
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Container(
+      height: preferredSize.height,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF5E6831), // بنفسجي غامق
+            Color(0xFF7D609A), // بنفسجي فاتح
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(40),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
+        ],
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (showBack)
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                )
+              else
+                const SizedBox(width: 40),
+
+              Expanded(
+                child: Center(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.rubikPuddles(
+                      color: Colors.black,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+              ),
+
+              // مربع ديكور
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.restaurant_menu,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+            ],
           ),
         ),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w900,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        if (showCart)
-          IconButton(
-            icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
-      ],
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(110);
 }

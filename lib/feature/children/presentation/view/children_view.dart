@@ -5,6 +5,7 @@ import 'package:monkey_app/feature/children/presentation/manager/cubit/children_
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_state.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/children_view_body.dart';
 
+import '../../../../core/utils/constans.dart';
 import '../../../../core/utils/langs_key.dart';
 
 class ChildrenView extends StatefulWidget {
@@ -20,7 +21,15 @@ class _ChildrenViewState extends State<ChildrenView> {
     final colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<ChildrenCubit, ChildrenState>(
       builder: (context, state) {
-        return Scaffold(
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(kFlowers),
+            ),
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: colorScheme.primary,
               foregroundColor: colorScheme.onPrimary,
@@ -29,38 +38,43 @@ class _ChildrenViewState extends State<ChildrenView> {
                   final cubit = context.read<ChildrenCubit>();
                   return state.isSearching
                       ? TextField(
-                    autofocus: true,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    cursorColor: colorScheme.onPrimary,
-                    decoration: InputDecoration(
-                      hintText: LangKeys.children.tr(),
-                      hintStyle: TextStyle(
-                        color: colorScheme.onPrimary.withOpacity(0.6),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      filled: true,
-                      fillColor: colorScheme.primary,
-                    ),
-                    onChanged: (val){
-                      cubit.searchChildren(val);
-                    },
-                  )
+                          autofocus: true,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                          cursorColor: colorScheme.onPrimary,
+                          decoration: InputDecoration(
+                            hintText: LangKeys.children.tr(),
+                            hintStyle: TextStyle(
+                              color: colorScheme.onPrimary.withOpacity(0.6),
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                            filled: true,
+                            fillColor: colorScheme.primary,
+                          ),
+                          onChanged: (val) {
+                            cubit.searchChildren(val);
+                          },
+                        )
                       : Text(
-                    LangKeys.children.tr(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  );
+                          LangKeys.children.tr(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        );
                 },
               ),
               actions: [
                 IconButton(
                   icon: BlocBuilder<ChildrenCubit, ChildrenState>(
                     builder: (context, state) {
-                      return Icon(state.isSearching ? Icons.close : Icons.search);
+                      return Icon(
+                        state.isSearching ? Icons.close : Icons.search,
+                      );
                     },
                   ),
                   onPressed: () {
@@ -69,10 +83,10 @@ class _ChildrenViewState extends State<ChildrenView> {
                     });
                   },
                 ),
-
               ],
             ),
-          body: const ChildrenViewBody(),
+            body: const ChildrenViewBody(),
+          ),
         );
       },
     );

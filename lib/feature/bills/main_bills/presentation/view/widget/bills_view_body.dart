@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
@@ -25,135 +26,144 @@ class _BillsViewBodyState extends State<BillsViewBody> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        title: BlocBuilder<BillsCubit, BillsState>(
-          builder: (context, state) {
-            final cubit = context.read<BillsCubit>();
-            return state.isSearching
-                ? TextField(
-                    autofocus: true,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    cursorColor: colorScheme.onPrimary,
-                    decoration: InputDecoration(
-                      hintText: LangKeys.school.tr(),
-                      hintStyle: TextStyle(
-                        color: colorScheme.onPrimary.withOpacity(0.6),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      filled: true,
-                      fillColor: colorScheme.primary,
-                    ),
-                    onChanged: (val) {
-
-                        cubit.searchBills(val);
-
-                    },
-                  )
-                : Text(
-                    LangKeys.bills.tr(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  );
-          },
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(kFly), // صورتك هنا
+          fit: BoxFit.cover, // تملى الشاشة كلها
         ),
-        actions: [
-          IconButton(
-            icon: BlocBuilder<BillsCubit, BillsState>(
-              builder: (context, state) {
-                return Icon(state.isSearching ? Icons.close : Icons.search);
-              },
-            ),
-            onPressed: () {
-              setState(() {
-                context.read<BillsCubit>().toggleSearch();
-              });
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
+          title: BlocBuilder<BillsCubit, BillsState>(
+            builder: (context, state) {
+              final cubit = context.read<BillsCubit>();
+              return state.isSearching
+                  ? TextField(
+                      autofocus: true,
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      cursorColor: colorScheme.onPrimary,
+                      decoration: InputDecoration(
+                        hintText: LangKeys.school.tr(),
+                        hintStyle: TextStyle(
+                          color: colorScheme.onPrimary.withOpacity(0.6),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        filled: true,
+                        fillColor: colorScheme.primary,
+                      ),
+                      onChanged: (val) {
+
+                          cubit.searchBills(val);
+
+                      },
+                    )
+                  : Text(
+                      LangKeys.bills.tr(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    );
             },
           ),
-          PopupMenuButton<String>(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[900]!.withOpacity(0.95)
-                : Colors.white.withOpacity(0.95),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            elevation: 10,
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],  // بنفسجي → أزرق
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+          actions: [
+            IconButton(
+              icon: BlocBuilder<BillsCubit, BillsState>(
+                builder: (context, state) {
+                  return Icon(state.isSearching ? Icons.close : Icons.search);
+                },
               ),
-              child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
+              onPressed: () {
+                setState(() {
+                  context.read<BillsCubit>().toggleSearch();
+                });
+              },
             ),
-            onSelected: (value) {
-              if (value == 'branch') {
-                showBranchBottomSheet(
-                  context,
-                  onSelected: (param) {
-                    context.read<BillsCubit>().fetchBills(param);
-                    print('${param.branch}');
-                  },
-                );
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem<String>(
-                value: 'branch',
-                child: Row(
-                  children: [
-                    Icon(Icons.store_mall_directory,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Branch',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+            PopupMenuButton<String>(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[900]!.withOpacity(0.95)
+                  : Colors.white.withOpacity(0.95),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              elevation: 10,
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],  // بنفسجي → أزرق
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
+                child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
               ),
-            ],
-          )
-        ],
-      ),
+              onSelected: (value) {
+                if (value == 'branch') {
+                  showBranchBottomSheet(
+                    context,
+                    onSelected: (param) {
+                      context.read<BillsCubit>().fetchBills(param);
+                      print('${param.branch}');
+                    },
+                  );
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem<String>(
+                  value: 'branch',
+                  child: Row(
+                    children: [
+                      Icon(Icons.store_mall_directory,
+                          color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Branch',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
 
-      body: const AllBillsBlocConsumer(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: colorScheme.primary,
-        child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () async {
-          final data = await showBillsBottomSheet(context, LangKeys.bills.tr());
-          if (data != null) {
-            context.read<BillsCubit>().createBills(
-              CreateBillsParam(
-                discount: data.discount,
-                childrenId: data.childrenId,
-                newChildren: data.newChildren,
-                branch: data.branch,
-              ),
-            );
-          }
-        },
+        body: const AllBillsBlocConsumer(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: colorScheme.primary,
+          child: const Icon(Icons.add, color: Colors.white),
+          onPressed: () async {
+            final data = await showBillsBottomSheet(context, LangKeys.bills.tr());
+            if (data != null) {
+              context.read<BillsCubit>().createBills(
+                CreateBillsParam(
+                  discount: data.discount,
+                  childrenId: data.childrenId,
+                  newChildren: data.newChildren,
+                  branch: data.branch,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -16,12 +16,16 @@ class MyAppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            //0xED7C2B46
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
             colors: [Color(0xFFF4EDF6), Color(0xF9F4E8EF)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+          ),
+          image: DecorationImage(
+            image: AssetImage(kSea), // حط الصورة بتاعتك هنا
+            fit: BoxFit.cover,
+            opacity: 0.70, // درجة الشفافية عشان النصوص تفضل واضحة
           ),
         ),
         child: Column(
@@ -45,9 +49,9 @@ class MyAppDrawer extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],
                       ),
                     ),
@@ -197,13 +201,12 @@ class MyAppDrawer extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildDrawerItem(
-    BuildContext context, {
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-  }) {
+      BuildContext context, {
+        required IconData icon,
+        required String text,
+        required VoidCallback onTap,
+      }) {
     return ListTile(
       leading: Container(
         decoration: BoxDecoration(
@@ -211,14 +214,15 @@ class MyAppDrawer extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(8),
-        child: Icon(icon, color: Color(0xFF745385), size: 22),
+        child: Icon(icon, color: Color(0xFF510D73), size: 24), // أغمق
       ),
       title: Text(
         text,
-        style: GoogleFonts.cairo(
-          color: Color(0xFF745385),
-          fontSize: 16,
+        style: GoogleFonts.playfairDisplay( // خط فخم
+          color: Color(0xFF510D73),
+          fontSize: 18,
           fontWeight: FontWeight.w700,
+          letterSpacing: 1.1,
         ),
       ),
       onTap: onTap,
@@ -229,19 +233,21 @@ class MyAppDrawer extends StatelessWidget {
     return Theme(
       data: ThemeData().copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
-        collapsedIconColor: Colors.white70,
+        collapsedIconColor: Colors.black54,
         iconColor: Colors.amber,
-        leading: const Icon(Icons.folder_open, color: Color(0xFF745385)),
+        leading: const Icon(Icons.folder_open, color: Color(0xFF510D73)),
         title: Text(
           title,
-          style: GoogleFonts.cairo(
-            color: Color(0xFF745385),
-            fontSize: 16,
+          style: GoogleFonts.playfairDisplay(
+            color: Color(0xFF510D73),
+            fontSize: 18,
             fontWeight: FontWeight.w700,
+
           ),
         ),
         children: items,
       ),
     );
   }
+
 }
