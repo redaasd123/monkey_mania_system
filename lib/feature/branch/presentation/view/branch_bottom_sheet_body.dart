@@ -13,45 +13,76 @@ class BranchBottomSheetBody extends StatefulWidget {
 }
 
 class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
-  DateTime? endDate;
   DateTime? startDate;
+  DateTime? endDate;
   final List<int> selectIndex = [];
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+
     return BlocBuilder<BranchCubit, BranchState>(
       builder: (context, state) {
         if (state is BranchSuccessState) {
           final branches = state.branch;
+
           return StatefulBuilder(
             builder: (context, setState) {
-              return ConstrainedBox(
+              return Container(
                 constraints: BoxConstraints(
-                  maxHeight:
-                      MediaQuery.of(context).size.height *
-                      0.8, // أقصى ارتفاع 80% من الشاشة
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListView.separated(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [color.background, color.primary.withOpacity(0.1)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 12,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Handle صغير أعلى البوتوم شيت
+                      Container(
+                        width: 50,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // عنوان
+                      Text(
+                        'اختيار الفروع',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: color.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // قائمة الفروع
+                      Flexible(
+                        child: ListView.separated(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: branches.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final isSelected = selectIndex.contains(index);
-                            return ListTile(
-                              title: Text(branches[index].name ?? ''),
-                              trailing: isSelected
-                                  ? const Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                    )
-                                  : const Icon(Icons.circle_outlined),
+                            return InkWell(
                               onTap: () {
                                 setState(() {
                                   if (isSelected) {
@@ -61,123 +92,127 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                   }
                                 });
                               },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  gradient: LinearGradient(
+                                    colors: isSelected
+                                        ? [Colors.greenAccent, Colors.green]
+                                        : [Colors.grey.shade200, Colors.grey.shade300],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        branches[index].name ?? '',
+                                        style: TextStyle(
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                          color: isSelected ? Colors.white : Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      isSelected ? Icons.check_circle : Icons.circle_outlined,
+                                      color: isSelected ? Colors.white : Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             );
                           },
-                          separatorBuilder: (context, index) => const Divider(),
                         ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: startDate == null
-                                ? 'تاريخ البداية'
-                                : 'تاريخ البداية: ${startDate!.toLocal().toString().split(' ')[0]}',
-                            suffixIcon: const Icon(Icons.date_range),
-                          ),
-                          onTap: () async {
-                            final picked = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
+                      ),
 
-                            if (picked != null) {
-                              setState(() => startDate = picked);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: endDate == null
-                                ? 'تاريخ النهاية'
-                                : 'تاريخ النهاية: ${endDate!.toLocal().toString().split(' ')[0]}',
-                            suffixIcon: const Icon(Icons.date_range),
-                          ),
-                          onTap: () async {
-                            final picked = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
+                      const SizedBox(height: 12),
 
-                            if (picked != null) {
-                              setState(() => endDate = picked);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
+                      // حقول التواريخ
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildDateField(
+                              context: context,
+                              label: 'تاريخ البداية',
+                              selectedDate: startDate,
+                              onDatePicked: (date) => setState(() => startDate = date),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildDateField(
+                              context: context,
+                              label: 'تاريخ النهاية',
+                              selectedDate: endDate,
+                              onDatePicked: (date) => setState(() => endDate = date),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // زر تم
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 6,
                             backgroundColor: color.primary,
                           ),
-                          onPressed: () async {
-                            final selectBranch = selectIndex
-                                .map((b) => branches[b].id)
-                                .toList();
-                            if (selectBranch.isEmpty) {
-                              showRedFlush(
-                                context,
-                                'من فضلك اختر فرع علي الاقل',
-                              );
-                              return;
-                            }
-                            if (startDate != null && endDate != null) {
-                              if (endDate!.isBefore(startDate!)) {
-                                showRedFlush(
-                                  context,
-                                  'تاريخ النهاية يجب أن يكون بعد تاريخ البداية',
-                                );
-                                return;
-                              }
-                            }
-                            final bool bothDatesSelected =
-                                startDate != null && endDate != null;
-                            final bool onlyOneDateSelected =
-                                (startDate != null && endDate == null) ||
-                                (startDate == null && endDate != null);
+                          onPressed: () {
+                            final selectedBranch = selectIndex.map((i) => branches[i].id).toList();
 
-                            if (onlyOneDateSelected) {
-                              showRedFlush(
-                                context,
-                                'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين',
-                              );
+                            if (selectedBranch.isEmpty) {
+                              showRedFlush(context, 'من فضلك اختر فرع على الأقل');
                               return;
                             }
 
-                            if (bothDatesSelected &&
+                            if ((startDate != null && endDate == null) ||
+                                (startDate == null && endDate != null)) {
+                              showRedFlush(context, 'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين');
+                              return;
+                            }
+
+                            if (startDate != null &&
+                                endDate != null &&
                                 endDate!.isBefore(startDate!)) {
-                              showRedFlush(
-                                context,
-                                'تاريخ النهاية يجب أن يكون بعد تاريخ البداية',
-                              );
+                              showRedFlush(context, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية');
                               return;
                             }
-                            print('🧩 Selected Branch IDs: $selectBranch');
-                            print('📅 Start Date: $startDate');
-                            print('📅 End Date: $endDate');
 
                             final param = FetchBillsParam(
-                              branch: selectBranch,
+                              branch: selectedBranch,
                               startDate: startDate,
                               endDate: endDate,
                             );
-                            print('🛰 Sending Param: $param');
+
                             Navigator.pop(context, param);
                           },
                           child: Text(
                             'تم',
                             style: Styles.textStyle20.copyWith(
                               color: color.onPrimary,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
               );
@@ -189,6 +224,84 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
           return const Center(child: SizedBox());
         }
       },
+    );
+  }
+
+  Widget _buildDateField({
+    required BuildContext context,
+    required String label,
+    required DateTime? selectedDate,
+    required Function(DateTime) onDatePicked,
+  }) {
+    final color = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: () async {
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate ?? DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+          builder: (context, child) => Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: color.primary,
+                onPrimary: Colors.white,
+                onSurface: Colors.black87,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(foregroundColor: color.primary),
+              ),
+            ),
+            child: child!,
+          ),
+        );
+
+        if (picked != null) onDatePicked(picked);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [color.primary.withOpacity(0.8), color.primary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.date_range, color: Colors.white),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                selectedDate != null
+                    ? '${selectedDate.toLocal().toString().split(' ')[0]}'
+                    : label,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

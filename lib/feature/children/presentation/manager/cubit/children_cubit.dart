@@ -186,8 +186,13 @@ class ChildrenCubit extends Cubit<ChildrenState> {
         }
       },
       (success) {
-        final updateList = List<ChildrenEntity>.from(state.allChildren)
-          ..insert(0, success);
+        final updateList = List<ChildrenEntity>.from(state.allChildren);
+        final index = updateList.indexWhere((child)=>child.id==success.id);
+        if(index!=-1){
+          updateList[index]=success;
+        }else{
+          updateList..insert(0, success);
+        }
         emit(
           state.copyWith(
             status: ChildrenStatus.updateSuccess,

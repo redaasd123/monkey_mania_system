@@ -81,8 +81,13 @@ class SchoolCubit extends Cubit<SchoolState> {
         }
       },
       (success) {
-        final updatedList = List<SchoolEntity>.from(state.allSchool)
-          ..insert(0, success);
+        final updatedList = List<SchoolEntity>.from(state.allSchool);
+        final index = updatedList.indexWhere((school)=>school.id==success.id);
+        if(index!=-1){
+          updatedList[index]=success;
+        }else{
+          updatedList..insert(0, success);
+        }
         emit(
           state.copyWith(
             status: SchoolStatus.updateSuccess,

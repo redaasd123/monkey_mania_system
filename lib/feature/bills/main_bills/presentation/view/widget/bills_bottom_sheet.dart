@@ -17,7 +17,6 @@ import 'new_children_field.dart';
 class BillsBottomSheet extends StatefulWidget {
   final String title;
   final ChildrenEntity? childrenEntity;
-
   const BillsBottomSheet({super.key, required this.title, this.childrenEntity});
 
   @override
@@ -254,35 +253,97 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
           print("✅ BranchSuccessState found");
           final selectBranch = await showModalBottomSheet(
             context: context,
+            backgroundColor: Colors.transparent,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             isScrollControlled: true,
             builder: (context) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.branch.length,
-                itemBuilder: (context, index) {
-                  final branch = state.branch[index];
-                  return ListTile(
-                    title: Text(branch.name ?? ''),
-                    onTap: () {
-                      print("Tapped!");
-                      Navigator.pop(context, branch);
-                    },
-                  );
-                },
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF745385),
+                      Color(0xFF745385),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 5,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      Text(
+                        "اختر الفرع",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: state.branch.length,
+                          itemBuilder: (context, index) {
+                            final branch = state.branch[index];
+                            return Card(
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(16),
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.purple.shade100,
+                                  child: const Icon(Icons.store, color: Color(0xFF745385),),
+                                ),
+                                title: Text(
+                                  branch.name ?? 'فرع بدون اسم',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                trailing: const Icon(Icons.arrow_forward_ios,
+                                    color: Color(0xFF745385),),
+                                onTap: () {
+                                  print("Tapped!");
+                                  Navigator.pop(context, branch);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
           );
 
           if (selectBranch != null) {
-            _branchCtrl.text = selectBranch.product ?? '';
-            _selectedBranchId =
-                selectBranch.id; // احفظ الـ ID لاستخدامه في param
+            _branchCtrl.text = selectBranch.name ?? 'savana';
+            _selectedBranchId = selectBranch.id; // احفظ الـ ID لاستخدامه في param
             print("🟢 Selected Branch ID: $_selectedBranchId");
           }
         }
+
       },
     );
   }
@@ -520,124 +581,182 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
         }
 
         final state = cubit.state;
-        if (state.status==ChildrenStatus.success) {
+        if (state.status == ChildrenStatus.success) {
           final result = await showModalBottomSheet<List<ChildrenEntity>>(
             context: context,
             isScrollControlled: true,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Colors.transparent,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             builder: (_) {
               return DraggableScrollableSheet(
                 expand: false,
-                initialChildSize: 0.6,
+                initialChildSize: 0.7,
                 minChildSize: 0.4,
-                maxChildSize: 0.9,
+                maxChildSize: 0.95,
                 builder: (context, scrollController) {
-                  List<ChildrenEntity> filteredChildren = List.from(
-                    state.allChildren,
-                  );
-                  final TextEditingController searchCtrl =
-                      TextEditingController();
+                  List<ChildrenEntity> filteredChildren = List.from(state.allChildren);
+                  final TextEditingController searchCtrl = TextEditingController();
                   List<ChildrenEntity> selectedChildren = [];
+
                   return StatefulBuilder(
                     builder: (context, setState) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            // 🔍 حقل البحث
-                            TextField(
-                              controller: searchCtrl,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              decoration: InputDecoration(
-                                hintText: LangKeys.children.tr(),
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    width: 2,
-                                  ),
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF745385),
+                              Color(0xFF745385),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(24)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              // 🔘 Drag Handle
+                              Container(
+                                width: 50,
+                                height: 5,
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              onChanged: (query) {
-                                setState(() {
-                                  filteredChildren = state.allChildren
-                                      .where(
-                                        (children) => (children.name ?? '')
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()),
-                                      )
-                                      .toList();
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: ListView.separated(
-                                controller: scrollController,
-                                itemCount: filteredChildren.length,
-                                itemBuilder: (context, index) {
-                                  final child = filteredChildren[index];
-                                  final isSelected = selectedChildren.any(
-                                    (e) => e.id == child.id,
-                                  );
-                                  return ListTile(
-                                    title: Text(
-                                      child.name ?? 'لا يوجد اسم',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
-                                    trailing: isSelected
-                                        ? const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
-                                          )
-                                        : const Icon(Icons.circle_outlined),
-                                    leading: Icon(
-                                      Icons.child_care_sharp,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        if (isSelected) {
-                                          selectedChildren.removeWhere(
-                                            (e) => e.id == child.id,
-                                          );
-                                        } else {
-                                          selectedChildren.add(child);
-                                        }
-                                      });
-                                    },
-                                  );
-                                },
 
-                                separatorBuilder: (_, __) =>
-                                    const Divider(height: 1),
+                              // 📝 العنوان
+                              Text(
+                                "اختر الأطفال",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context, selectedChildren);
-                              },
-                              child: Text('تأكيد الاختيار'),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+
+                              // 🔍 البحث
+                              TextField(
+                                controller: searchCtrl,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white.withOpacity(0.15),
+                                  hintText: "ابحث عن طفل...",
+                                  hintStyle: const TextStyle(color: Colors.white70),
+                                  prefixIcon:
+                                  const Icon(Icons.search, color: Colors.white70),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                onChanged: (query) {
+                                  setState(() {
+                                    filteredChildren = state.allChildren
+                                        .where(
+                                          (children) => (children.name ?? '')
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase()),
+                                    )
+                                        .toList();
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 16),
+
+                              // 📋 القائمة
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: scrollController,
+                                  itemCount: filteredChildren.length,
+                                  itemBuilder: (context, index) {
+                                    final child = filteredChildren[index];
+                                    final isSelected = selectedChildren.any(
+                                          (e) => e.id == child.id,
+                                    );
+
+                                    return Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 4),
+                                      child: ListTile(
+                                        contentPadding: const EdgeInsets.all(12),
+                                        leading: CircleAvatar(
+                                          backgroundColor: isSelected
+                                              ? Colors.green
+                                              : Colors.purple.shade200,
+                                          child: const Icon(Icons.child_care,
+                                              color: Colors.white),
+                                        ),
+                                        title: Text(
+                                          child.name ?? 'لا يوجد اسم',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Icon(
+                                          isSelected
+                                              ? Icons.check_circle
+                                              : Icons.circle_outlined,
+                                          color:
+                                          isSelected ? Colors.green : Colors.grey,
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            if (isSelected) {
+                                              selectedChildren.removeWhere(
+                                                      (e) => e.id == child.id);
+                                            } else {
+                                              selectedChildren.add(child);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              // ✅ زر التأكيد
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    backgroundColor: Color(0xFFF4EDF6),
+                                    foregroundColor: Colors.white,
+                                    elevation: 6,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context, selectedChildren);
+                                  },
+                                  child: const Text(
+                                    'تأكيد الاختيار',
+                                    style: TextStyle(
+                                      color: Colors.black,
+
+                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -655,6 +774,7 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
             widget._childCtrl.text = names;
           }
         }
+
       },
 
       readOnly: true,

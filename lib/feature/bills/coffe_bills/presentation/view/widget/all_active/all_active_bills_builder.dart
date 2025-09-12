@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 
@@ -27,7 +28,12 @@ class ActiveCoffeeListViewBuilder extends StatelessWidget {
           case CoffeeBillsStatus.activeLoading:
             return Stack(
               children: [
-                Center(child: const CircularProgressIndicator()),
+                Center(
+                  child: SpinKitFadingCircle(
+                    color: Colors.blue, // غير اللون زي ما تحب
+                    size: 60,
+                  ),
+                ),
                 const Align(
                   alignment: Alignment.topCenter,
                   child: LinearProgressIndicator(minHeight: 3),

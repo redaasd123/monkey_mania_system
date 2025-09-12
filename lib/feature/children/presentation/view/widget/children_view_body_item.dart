@@ -16,119 +16,118 @@ class ChildrenViewBodyItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      color: colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfo(
-              icon: Icons.school,
-              label: LangKeys.name.tr(),
-              text: childrenEntity.name ?? 'لا يوجد اسم',
-              style: Styles.textStyle20.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      // <<<<< هنا شيلنا الـ color
+      child: Ink(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), // نفس radius الكارت
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.surface,
+              colorScheme.primary.withOpacity(0.08),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child:Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+// الاسم
+              Row(
+                children: [
+                  Icon(Icons.person, size: 18, color: colorScheme.primary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      childrenEntity.name ?? "لا يوجد اسم",
+                      style: Styles.textStyle14.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              context: context,
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              icon: Icons.location_on_outlined,
-              label: LangKeys.address.tr(),
-              text: childrenEntity.address ?? 'لا يوجد عنوان',
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.9),
-              ),
-              context: context,
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              icon: Icons.phone,
-              label: LangKeys.phoneNumber.tr(),
-              text: childrenEntity.childPhoneNumbersSet?.isNotEmpty == true
-                  ? childrenEntity.childPhoneNumbersSet!.first.phoneNumber ??
-                  'لا يوجد رقم'
-                  : 'لا يوجد رقم',
-              style: Styles.textStyle16.copyWith(
-                fontStyle: FontStyle.italic,
-                color: colorScheme.onSurface.withOpacity(0.7),
-              ),
-              context: context,
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 4),
 
-            // 👇 Row الأزرار (تفاصيل + تعديل)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
+// العنوان
+              Row(
+                children: [
+                  Icon(Icons.location_on, size: 16, color: colorScheme.secondary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      childrenEntity.address ?? "لا يوجد عنوان",
+                      style: Styles.textStyle12.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+
+// رقم الهاتف
+              Row(
+                children: [
+                  Icon(Icons.phone, size: 16, color: colorScheme.tertiary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      childrenEntity.childPhoneNumbersSet?.isNotEmpty == true
+                          ? childrenEntity.childPhoneNumbersSet!.first.phoneNumber ?? "لا يوجد رقم"
+                          : "لا يوجد رقم",
+                      style: Styles.textStyle12.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 6),
+
+// أيقونة التفاصيل جوّه الكارت
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
                     GoRouter.of(context).push(
                       AppRouter.kShowDetailChildren,
                       extra: childrenEntity,
                     );
                   },
-
-                  icon: const Icon(Icons.edit),
-                  label: Text("تعديل", style: Styles.textStyle14),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: colorScheme.primary,
-                    side: BorderSide(color: colorScheme.primary, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.visibility, size: 16, color: colorScheme.primary),
+                      const SizedBox(width: 4),
+                      Text(
+                        "عرض",
+                        style: Styles.textStyle12.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfo({
-    required IconData icon,
-    required String label,
-    required String text,
-    required TextStyle style,
-    required BuildContext context,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 22, color: colorScheme.primary),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: Styles.textStyle14.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.primary.withOpacity(0.8),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                text,
-                style: style,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
+
   }
 }
+
+
+

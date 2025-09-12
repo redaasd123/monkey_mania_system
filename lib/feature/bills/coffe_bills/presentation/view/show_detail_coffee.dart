@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
-import '../manager/coffee_bills/coffee_bills_cubit.dart';
 
 class ShowDetailCoffee extends StatefulWidget {
   const ShowDetailCoffee({super.key, required this.id});
@@ -19,47 +17,58 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
     super.initState();
     context.read<GetOneBillsCoffeeCubit>().getOneBillsCoffee(widget.id);
   }
-//  @override
-//   void initState() {
-//     super.initState();
-//     final cubit = context.read<CoffeeBillsCubit>();
-//     if (cubit.state.getOneBills == null ||
-//         cubit.state.getOneBills?.id != widget.id) {
-//       cubit.getOneBillsCoffee(widget.id);
-//     }
-//   }
+
   Widget _buildInfoTile(IconData icon, String label, String value) {
+    final theme = Theme.of(context);
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: Icon(icon, color: Colors.brown),
-        title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(value, style: const TextStyle(fontSize: 14)),
+        leading: Icon(icon, color: theme.colorScheme.primary),
+        title: Text(
+          label,
+          style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          value,
+          style: theme.textTheme.bodyMedium,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.brown[50],
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         title: const Text("تفاصيل الفاتورة"),
-        backgroundColor: Colors.brown[400],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withOpacity(0.7),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: BlocBuilder<GetOneBillsCoffeeCubit, GetOneBillsCoffeeState>(
         builder: (context, state) {
-          // حالة التحميل
           if (state.status == GetOneBillsCoffeeStatus.getOneLoading) {
             return const Center(child: CircularProgressIndicator());
-          }
-
-          // حالة النجاح
-          else if (state.status == GetOneBillsCoffeeStatus.getOneSuccess) {
+          } else if (state.status == GetOneBillsCoffeeStatus.getOneSuccess) {
             final bill = state.getOneBills;
             if (bill == null) {
               return const Center(child: Text("لا توجد فاتورة"));
             }
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -75,7 +84,9 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                   _buildInfoTile(Icons.perm_identity, "معرّف المستخدم", bill.createdById.toString()),
 
                   const SizedBox(height: 20),
-                  const Text("🛒 المنتجات", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text("🛒 المنتجات",
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+
                   ...(bill.products ?? []).map((product) {
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -85,12 +96,12 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                         padding: const EdgeInsets.all(12),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.brown.withOpacity(0.1),
-                            child: const Icon(Icons.local_cafe, color: Colors.brown),
+                            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                            child: Icon(Icons.local_cafe, color: theme.colorScheme.primary),
                           ),
                           title: Text(
                             product.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,19 +109,21 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                               const SizedBox(height: 6),
                               Text(
                                 "سعر الوحدة: ${product.unitPrice} | الكمية: ${product.quantity}",
-                                style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                style: theme.textTheme.bodySmall,
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 "الإجمالي: ${product.totalPrice}",
-                                style: const TextStyle(
-                                    fontSize: 13, color: Colors.green, fontWeight: FontWeight.w500),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(height: 4),
                               if (product.notes != null && product.notes!.isNotEmpty)
                                 Text(
                                   "ملاحظات: ${product.notes}",
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
                                 ),
                             ],
                           ),
@@ -120,7 +133,8 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                   }).toList(),
 
                   const SizedBox(height: 20),
-                  const Text("🔄 المنتجات المرتجعة", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text("🔄 المنتجات المرتجعة",
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   if ((bill.returnedProducts ?? []).isEmpty)
                     const Padding(
                       padding: EdgeInsets.all(8.0),
@@ -131,7 +145,7 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         child: ListTile(
-                          leading: const Icon(Icons.undo, color: Colors.red),
+                          leading: Icon(Icons.undo, color: theme.colorScheme.error),
                           title: Text(item.toString()),
                         ),
                       );
@@ -139,15 +153,9 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
                 ],
               ),
             );
-          }
-
-          // حالة الفشل
-          else if (state.status == GetOneBillsCoffeeStatus.getOneFailure) {
+          } else if (state.status == GetOneBillsCoffeeStatus.getOneFailure) {
             return Center(child: Text("خطأ: ${state.errMessage ?? 'حدث خطأ'}"));
-          }
-
-          // الحالة الافتراضية
-          else {
+          } else {
             return const SizedBox();
           }
         },
@@ -155,8 +163,3 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
     );
   }
 }
-
-
-
-
-

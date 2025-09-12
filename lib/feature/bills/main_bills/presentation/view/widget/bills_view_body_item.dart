@@ -2,133 +2,141 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/utils/langs_key.dart';
-import '../../../../../../core/utils/styles.dart';
 import '../../../domain/entity/Bills_entity.dart';
 
 class BillsViewBodyItem extends StatelessWidget {
   const BillsViewBodyItem({
     super.key,
     required this.bills,
-    required this.ApplyDiscountonPressed,
-    required this.closeOnPressed,
+    required this.onDiscount,
+    required this.onClose,
   });
 
-  final void Function() closeOnPressed;
-  final void Function() ApplyDiscountonPressed;
   final BillsEntity bills;
+  final VoidCallback onDiscount;
+  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.surface,
+              colorScheme.primary.withOpacity(0.05),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfo(
-              context: context,
-              icon: Icons.person,
-              label: LangKeys.name.tr(),
-              text: (bills.children != null && bills.children!.isNotEmpty)
-                  ? bills.children!.first.name
-                  : LangKeys.notFound.tr(),
-              style: Styles.textStyle20.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
-              ),
+            // 👤 صورة الطفل
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: colorScheme.primary.withOpacity(0.15),
+              child: Icon(Icons.person, color: colorScheme.primary, size: 26),
             ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.phone,
-              label: LangKeys.phoneNumber.tr(),
-              text: (bills.children != null && bills.children!.isNotEmpty)
-                  ? bills.children!.first.phoneNumbers
-                            ?.map((e) => e.phoneNumber)
-                            .join(',') ??
-                        LangKeys.notFound.tr()
-                  : LangKeys.notFound.tr(),
+            const SizedBox(width: 12),
 
-              style: Styles.textStyle16.copyWith(
-                fontStyle: FontStyle.italic,
-                color: colorScheme.onSurface.withOpacity(0.8),
+            // 📋 معلومات الفاتورة
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // اسم الطفل
+                  Text(
+                    (bills.children != null && bills.children!.isNotEmpty)
+                        ? bills.children!.first.name ?? LangKeys.notFound.tr()
+                        : LangKeys.notFound.tr(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 3),
+
+                  // أرقام التليفونات
+                  Text(
+                    (bills.children != null && bills.children!.isNotEmpty)
+                        ? bills.children!.first.phoneNumbers
+                        ?.map((e) => e.phoneNumber)
+                        .join(', ') ??
+                        LangKeys.notFound.tr()
+                        : LangKeys.notFound.tr(),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 6),
+
+                  // سعر + عدد أطفال
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          "${bills.totalPrice ?? 0} ${LangKeys.totalPrice.tr()}",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.primary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          "${bills.childrenCount ?? 0} ${LangKeys.childrenCount.tr()}",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.primary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.timelapse_outlined,
-              label: LangKeys.spentTime.tr(),
-              text: bills.spentTime?.toString() ?? LangKeys.notFound.tr(),
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
+
+            // 🎯 أزرار الأكشن (عرض ثابت علشان مفيش Overflow)
+            SizedBox(
+              width: 50,
+              child: Column(
+                children: [
+                  _buildActionButton(
+                    icon: Icons.local_offer_outlined,
+                    color: colorScheme.primary,
+                    onTap: onDiscount,
+                    tooltip: LangKeys.applyDiscount.tr(),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildActionButton(
+                    icon: Icons.close,
+                    color: Colors.red,
+                    onTap: onClose,
+                    tooltip: "إغلاق",
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.monetization_on_outlined,
-              label: LangKeys.totalPrice.tr(),
-              text: bills.totalPrice.toString() ?? LangKeys.notFound,
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfo(
-              context: context,
-              icon: Icons.child_care,
-              label: LangKeys.childrenCount.tr(),
-              text: bills.childrenCount?.toString() ?? LangKeys.notFound.tr(),
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.8),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: ApplyDiscountonPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: Text(
-                    LangKeys.applyDiscount.tr(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: closeOnPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: const Text(
-                    'إغلاق الفاتورة',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
@@ -136,42 +144,23 @@ class BillsViewBodyItem extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo({
+  Widget _buildActionButton({
     required IconData icon,
-    required String label,
-    required dynamic text,
-    required TextStyle style,
-    required BuildContext context,
+    required Color color,
+    required VoidCallback onTap,
+    required String tooltip,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 22, color: colorScheme.primary),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: Styles.textStyle14.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.primary.withOpacity(0.8),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                text,
-                style: style,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(30),
+        child: CircleAvatar(
+          radius: 18,
+          backgroundColor: color.withOpacity(0.15),
+          child: Icon(icon, size: 18, color: color),
         ),
-      ],
+      ),
     );
   }
 }

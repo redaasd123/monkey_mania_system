@@ -19,7 +19,7 @@ class LoginModel {
     final user = json['user'] ?? {};
 
     return LoginModel(
-      reFresh: json['refresh.dart'] ?? '',
+      reFresh: json['refresh'] ?? '',
       access: json['access'] ?? '',
       role: user['role'] ?? '',
       id: user['id'] ?? 0,

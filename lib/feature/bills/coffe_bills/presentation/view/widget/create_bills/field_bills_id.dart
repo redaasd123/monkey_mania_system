@@ -62,100 +62,166 @@ class _TextFieldBillsIDState extends State<TextFieldBillsID> {
         }
 
         final state = cubit.state;
-        if (state.status == BillsStatus.activeSuccess) {
-          final selectedBills = await showModalBottomSheet<BillsEntity>(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            builder: (_) {
-              return DraggableScrollableSheet(
-                expand: false,
-                initialChildSize: 0.6,
-                minChildSize: 0.4,
-                maxChildSize: 0.9,
-                builder: (context, scrollController) {
-                  List<BillsEntity> filteredSchools = List.from(state.bills);
-                  final TextEditingController searchCtrl =
-                      TextEditingController();
-                  return StatefulBuilder(
-                    builder: (context, setState) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            // 🔍 البحث
-                            TextField(
-                              controller: searchCtrl,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              decoration: InputDecoration(
-                                hintText: LangKeys.search.tr(),
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+        final selectedBills = await showModalBottomSheet<BillsEntity>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent, // نستخدم Container داخلي للثيم
+          builder: (_) {
+            return DraggableScrollableSheet(
+              expand: false,
+              initialChildSize: 0.6,
+              minChildSize: 0.4,
+              maxChildSize: 0.9,
+              builder: (context, scrollController) {
+                List<BillsEntity> filteredSchools = List.from(state.bills);
+                final TextEditingController searchCtrl = TextEditingController();
+                final colorScheme = Theme.of(context).colorScheme;
+
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, -6),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          // 🔹 Handle
+                          Container(
+                            width: 50,
+                            height: 5,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: colorScheme.onSurface.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+
+                          // 🔹 بحث
+                          TextField(
+                            controller: searchCtrl,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            decoration: InputDecoration(
+                              hintText: LangKeys.search.tr(),
+                              prefixIcon: const Icon(Icons.search),
+                              filled: true,
+                              fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
                               ),
-                              onChanged: (query) {
-                                setState(() {
-                                  filteredSchools = state.bills
-                                      .where(
-                                        (bills) =>
-                                            (bills.children?[0].name ?? '')
-                                                .toLowerCase()
-                                                .contains(query.toLowerCase()),
-                                      )
-                                      .toList();
-                                });
+                            ),
+                            onChanged: (query) {
+                              setState(() {
+                                filteredSchools = state.bills.where((bill) {
+                                  // اتأكد إن فيه أطفال قبل الوصول لأول عنصر
+                                  if (bill.children == null || bill.children!.isEmpty) return false;
+
+                                  final name = bill.children![0].name ?? '';
+                                  return name.toLowerCase().contains(query.toLowerCase());
+                                }).toList();
+                              });
+                            },
+
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // 🔹 قائمة الكروت
+                          Expanded(
+                            child: ListView.separated(
+                              controller: scrollController,
+                              itemCount: filteredSchools.length,
+                              separatorBuilder: (_, __) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) {
+                                final school = filteredSchools[index];
+
+                                // لو القائمة فارغة او مفيش أطفال
+                                if (school.children == null || school.children!.isEmpty) {
+                                  return const SizedBox.shrink(); // أو Container مع رسالة "لا يوجد بيانات"
+                                }
+
+                                final childName = school.children![0].name ?? 'لا يوجد اسم';
+
+                                return InkWell(
+                                  borderRadius: BorderRadius.circular(16),
+                                  onTap: () => Navigator.pop(context, school),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          colorScheme.primary.withOpacity(0.85),
+                                          colorScheme.primary.withOpacity(0.6),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: colorScheme.secondary.withOpacity(0.2),
+                                          child: Icon(Icons.school, color: colorScheme.onPrimary),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            childName,
+                                            style: TextStyle(
+                                              color: colorScheme.onPrimary,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: colorScheme.onPrimary.withOpacity(0.7),
+                                          size: 16,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
+
                             ),
-                            const SizedBox(height: 12),
-                            // 📋 القائمة
-                            Expanded(
-                              child: ListView.separated(
-                                controller: scrollController,
-                                itemCount: filteredSchools.length,
-                                itemBuilder: (context, index) {
-                                  final school = filteredSchools[index];
-                                  return ListTile(
-                                    title: Text(
-                                      school.children?[0].name ?? 'لا يوجد اسم',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
-                                    leading: Icon(
-                                      Icons.school,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                    onTap: () => Future.microtask(
-                                      () => Navigator.pop(context, school),
-                                    ),
-                                  );
-                                },
-                                separatorBuilder: (_, __) =>
-                                    const Divider(height: 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          );
-          // selectedBills.children?[1].name ??
-          // ✅ بعد الاختيار
-          if (selectedBills != null) {
-            widget._billsCtrl.text = selectedBills.children?[0].name ?? '';
-            widget.onSelected!(selectedBills.id);
-          }
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+
+// بعد الاختيار
+        if (selectedBills != null) {
+          widget._billsCtrl.text = selectedBills.children?[0].name ?? '';
+          widget.onSelected!(selectedBills.id);
         }
+
       },
       readOnly: true,
       controller: widget._billsCtrl,

@@ -1,5 +1,5 @@
+// app_theme.dart
 import 'package:flutter/material.dart';
-
 import 'app_colors.dart';
 
 class AppTheme {
@@ -19,16 +19,24 @@ class AppTheme {
       onSurface: AppColors.lightText,
     ),
     textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: AppColors.lightText),
+      bodyMedium: TextStyle(color: AppColors.lightText, fontSize: 14),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.lightSurface,
       hintStyle: const TextStyle(color: AppColors.lightHint),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.lightPrimary),
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: AppColors.lightPrimary),
       ),
+    ),
+
+    // <-- هنا استخدمنا CardThemeData بدل CardTheme -->
+    cardTheme: CardThemeData(
+      color: AppColors.lightSurface,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     ),
   );
 
@@ -48,16 +56,24 @@ class AppTheme {
       onSurface: AppColors.darkText,
     ),
     textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: AppColors.darkText),
+      bodyMedium: TextStyle(color: AppColors.darkText, fontSize: 14),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.darkCard,
+      fillColor: AppColors.darkSurface,
       hintStyle: const TextStyle(color: AppColors.darkHint),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.darkPrimary),
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: AppColors.darkPrimary),
       ),
+    ),
+
+    // <-- CardThemeData أيضاً هنا -->
+    cardTheme: CardThemeData(
+      color: AppColors.darkSurface,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     ),
   );
 }

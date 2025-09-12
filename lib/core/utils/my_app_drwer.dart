@@ -2,162 +2,194 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
-
-import '../../feature/home/presentation/manager/theme_Cubit.dart';
+import 'package:monkey_app/feature/home/presentation/manager/theme_Cubit.dart';
 
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(
-      context,
-    ).colorScheme; // جلب الـ colorScheme من الثيم
-
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              colorScheme.primary, // استخدام اللون الأساسي من الثيم
-              colorScheme.secondary, // استخدام اللون الثانوي من الثيم
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            //0xED7C2B46
+            colors: [Color(0xFFF4EDF6), Color(0xF9F4E8EF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
+            // ----- Header -----
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF745385), Color(0xFF745385)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+              ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: colorScheme.onPrimary,
-                    // استخدام اللون من الثيم
-                    child: Image.asset(kTest, height: 80),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 45,
+                      backgroundColor: Colors.white,
+                      child: Image.asset(kTest, height: 60),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     LangKeys.appName.tr(),
-                    style: TextStyle(
-                      color: colorScheme.onBackground,
-                      // استخدام اللون المتوافق مع الخلفية
-                      fontSize: 20,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Smart Management".tr(),
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white70,
+                      fontSize: 14,
                     ),
                   ),
                 ],
               ),
             ),
-            const Divider(color: Colors.white30),
 
-            _buildDrawerItem(
-              context,
-              icon: Icons.school_outlined,
-              text: LangKeys.school.tr(),
-              onTap: () => GoRouter.of(context).push(AppRouter.kSchoolView),
-            ),
-            _buildDrawerItem(
-              context,
-              icon: Icons.child_care,
-              text: LangKeys.children.tr(),
-              onTap: () => GoRouter.of(context).push(AppRouter.kChildrenSchool),
+            // ----- Menu -----
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const SizedBox(height: 10),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.school_outlined,
+                    text: LangKeys.school.tr(),
+                    onTap: () =>
+                        GoRouter.of(context).push(AppRouter.kSchoolView),
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.child_care,
+                    text: LangKeys.children.tr(),
+                    onTap: () =>
+                        GoRouter.of(context).push(AppRouter.kChildrenSchool),
+                  ),
+                  _buildExpansion(
+                    title: LangKeys.mainBills.tr(),
+                    items: [
+                      _buildDrawerItem(
+                        context,
+                        icon: Icons.receipt_long,
+                        text: LangKeys.allBills.tr(),
+                        onTap: () => GoRouter.of(
+                          context,
+                        ).push(AppRouter.kGetAllBillsView),
+                      ),
+                      _buildDrawerItem(
+                        context,
+                        icon: Icons.recent_actors,
+                        text: LangKeys.allActiveBills.tr(),
+                        onTap: () => GoRouter.of(
+                          context,
+                        ).push(AppRouter.kGetAllActiveBillsView),
+                      ),
+                    ],
+                  ),
+                  _buildExpansion(
+                    title: LangKeys.coffeeBills.tr(),
+                    items: [
+                      _buildDrawerItem(
+                        context,
+                        icon: Icons.coffee,
+                        text: LangKeys.allBills.tr(),
+                        onTap: () =>
+                            GoRouter.of(context).push(AppRouter.kCoffeeBills),
+                      ),
+                      _buildDrawerItem(
+                        context,
+                        icon: Icons.recent_actors,
+                        text: LangKeys.allActiveBills.tr(),
+                        onTap: () => GoRouter.of(
+                          context,
+                        ).push(AppRouter.kActiveCoffeeBills),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.language,
+                    text: LangKeys.changeLanguage.tr(),
+                    onTap: () {
+                      Locale newLocale = context.locale.languageCode == 'en'
+                          ? const Locale('ar', 'EG')
+                          : const Locale('en', 'US');
+                      context.setLocale(newLocale);
+                    },
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.dark_mode,
+                    text: LangKeys.nightMode.tr(),
+                    onTap: () {
+                      context.read<ThemeCubit>().toggle();
+                      Navigator.pop(context);
+                    },
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.exit_to_app,
+                    text: LangKeys.logOut.tr(),
+                    onTap: () async {
+                      await AuthHelper.clearAuthData();
+                      await AuthHelper.logOut();
+                      GoRouter.of(
+                        context,
+                      ).pushReplacement(AppRouter.kLoginView);
+                    },
+                  ),
+                ],
+              ),
             ),
 
-            ExpansionTile(
-              leading: Icon(Icons.receipt_long),
-              title: Text(LangKeys.mainBills.tr()),
-              children: [
-                _buildDrawerItem(
-                  onTap: () {
-                        GoRouter.of(context).push(AppRouter.kGetAllBillsView);
-                  },
-                  context,
-                  icon: Icons.receipt_long,
-                  text: LangKeys.allBills.tr(),
-                ),
-
-                _buildDrawerItem(
-                  onTap: () {
-                    GoRouter.of(context).push(AppRouter.kGetAllActiveBillsView);
-                  },
-                  context,
-                  icon: Icons.recent_actors,
-                  text: LangKeys.allActiveBills.tr(),
-                ),
-              ],
-            ),
-            ExpansionTile(
-              leading: Icon(Icons.receipt_long),
-              title: Text(LangKeys.coffeeBills.tr()),
-              children: [
-                _buildDrawerItem(
-                  onTap: () {
-                    GoRouter.of(context).push(AppRouter.kCoffeeBills);
-                  },
-                  context,
-                  icon: Icons.receipt_long,
-                  text: LangKeys.allBills.tr(),
-                ),
-
-                _buildDrawerItem(
-                  onTap: () {
-                    GoRouter.of(context).push(AppRouter.kActiveCoffeeBills);
-                  },
-                  context,
-                  icon: Icons.recent_actors,
-                  text: LangKeys.allActiveBills.tr(),
-                ),
-              ],
-            ),
-
-            //
-            _buildDrawerItem(
-              onTap: () {
-                Locale newLocale = context.locale.languageCode == 'en'
-                    ? Locale('ar', 'EG')
-                    : Locale('en', 'US');
-                context.setLocale(newLocale);
-              },
-              context,
-              icon: Icons.language,
-              text: LangKeys.changeLanguage.tr(),
-            ),
-
-            _buildDrawerItem(
-              context,
-              icon: Icons.dark_mode,
-              text: LangKeys.nightMode.tr(),
-              onTap: () {
-                context.read<ThemeCubit>().toggle();
-                Navigator.pop(context);
-              },
-            ),
-            _buildDrawerItem(
-              context,
-              icon: Icons.exit_to_app,
-              text: LangKeys.logOut.tr(),
-              onTap: () async {
-                await AuthHelper.clearAuthData();
-                await AuthHelper.logOut();
-                GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
-              },
-            ),
-
-            const SizedBox(height: 30),
-            const Center(
-              child: Text(
-                "© 2025 Monkey App",
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+            // ----- Footer -----
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.copyright, size: 12, color: Colors.white54),
+                  SizedBox(width: 4),
+                  Text(
+                    "2025 Monkey App",
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
+                ],
               ),
             ),
           ],
@@ -172,21 +204,44 @@ class MyAppDrawer extends StatelessWidget {
     required String text,
     required VoidCallback onTap,
   }) {
-    final colorScheme = Theme.of(
-      context,
-    ).colorScheme; // جلب الـ colorScheme من الثيم
-
     return ListTile(
-      leading: Icon(icon, color: colorScheme.onSurface),
-      // اللون المناسب للأيقونات حسب الثيم
+      leading: Container(
+        decoration: BoxDecoration(
+          color: Colors.white10,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon, color: Color(0xFF745385), size: 22),
+      ),
       title: Text(
         text,
-        style: TextStyle(
-          color: colorScheme.onSurface,
+        style: GoogleFonts.cairo(
+          color: Color(0xFF745385),
           fontSize: 16,
-        ), // استخدام اللون المناسب للنصوص
+          fontWeight: FontWeight.w700,
+        ),
       ),
       onTap: onTap,
+    );
+  }
+
+  Widget _buildExpansion({required String title, required List<Widget> items}) {
+    return Theme(
+      data: ThemeData().copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        collapsedIconColor: Colors.white70,
+        iconColor: Colors.amber,
+        leading: const Icon(Icons.folder_open, color: Color(0xFF745385)),
+        title: Text(
+          title,
+          style: GoogleFonts.cairo(
+            color: Color(0xFF745385),
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        children: items,
+      ),
     );
   }
 }

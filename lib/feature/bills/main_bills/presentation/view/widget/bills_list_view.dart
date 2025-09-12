@@ -83,10 +83,11 @@ class _BillsListViewState extends State<BillsListView> {
                   ).push(AppRouter.kShowDetailBills, extra: model.id);
                 },
                 child: BillsViewBodyItem(
-                  closeOnPressed: () async {
+                  onClose: () async {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
+                      backgroundColor: Colors.transparent, // مهم للزوايا الدائرية
                       builder: (context) {
                         return StatefulBuilder(
                           builder: (context, setModalState) {
@@ -99,98 +100,154 @@ class _BillsListViewState extends State<BillsListView> {
                                 left: 16,
                                 right: 16,
                                 top: 16,
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom +
-                                    16,
+                                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
                               ),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CustombuildHeader(
-                                      Theme.of(context).colorScheme,
-                                      LangKeys.payment.tr(),
-                                      Colors.grey,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      colorScheme.primary,
+                                      colorScheme.onPrimary,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 6),
                                     ),
-                                    Text(
-                                      '${LangKeys.totalPrice.tr()}: ${model.totalPrice?.toStringAsFixed(2) ?? "0.00"}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    CustomTextField(
-                                      label: LangKeys.visa.tr(),
-                                      hint: LangKeys.enterValue.tr(),
-                                      controller: visaCtrl,
-                                      keyboardType: TextInputType.number,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    CustomTextField(
-                                      label: LangKeys.cash.tr(),
-                                      hint: LangKeys.enterValue.tr(),
-                                      controller: cashCtrl,
-                                      keyboardType: TextInputType.number,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    CustomTextField(
-                                      label: LangKeys.instapay.tr(),
-                                      hint: LangKeys.enterValue.tr(),
-                                      controller: instCtrl,
-                                      keyboardType: TextInputType.number,
-                                    ),
-                                    const SizedBox(height: 16),
-
-                                    // المجموع
-                                    Builder(
-                                      builder: (context) {
-                                        final visa =
-                                            double.tryParse(visaCtrl.text) ?? 0;
-                                        final cash =
-                                            double.tryParse(cashCtrl.text) ?? 0;
-                                        final instaPay =
-                                            double.tryParse(instCtrl.text) ?? 0;
-                                        final sum = visa + cash + instaPay;
-                                        final totalPrice =
-                                            model.totalPrice ?? 0;
-
-                                        return Text(
-                                          '${LangKeys.totalPrice.tr()}: ${sum.toStringAsFixed(2)}',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: sum == totalPrice
-                                                ? Colors.green
-                                                : Colors.red,
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        // Handle أعلى البوتوم شيت
+                                        Center(
+                                          child: Container(
+                                            width: 50,
+                                            height: 5,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[400],
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                        const SizedBox(height: 16),
 
-                                    const SizedBox(height: 20),
+                                        // عنوان
+                                        Text(
+                                          LangKeys.payment.tr(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Divider(color: Colors.grey[300], thickness: 1.2),
+                                        const SizedBox(height: 12),
 
-                                    CustomButton(
-                                      text: LangKeys.save.tr(),
-                                      onPressed: () {
-                                        final visa =
-                                            double.tryParse(visaCtrl.text) ?? 0;
-                                        final cash =
-                                            double.tryParse(cashCtrl.text) ?? 0;
-                                        final instaPay =
-                                            double.tryParse(instCtrl.text) ?? 0;
-                                        final sum = visa + cash + instaPay;
-                                        final totalPrice =
-                                            model.totalPrice ?? 0;
+                                        // السعر الكلي
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              LangKeys.totalPrice.tr(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: Colors.tealAccent,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${model.totalPrice?.toStringAsFixed(2) ?? "0.00"} ج.م',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                                color: Colors.tealAccent,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 16),
 
-                                        if ((totalPrice - sum).abs() < 0.01) {
-                                          context
-                                              .read<CloseBillsCubit>()
-                                              .closeBills(
+                                        // حقول الدفع
+                                        CustomTextField(
+                                          label: LangKeys.visa.tr(),
+                                          hint: LangKeys.enterValue.tr(),
+                                          controller: visaCtrl,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        CustomTextField(
+                                          label: LangKeys.cash.tr(),
+                                          hint: LangKeys.enterValue.tr(),
+                                          controller: cashCtrl,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        CustomTextField(
+                                          label: LangKeys.instapay.tr(),
+                                          hint: LangKeys.enterValue.tr(),
+                                          controller: instCtrl,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        const SizedBox(height: 16),
+
+                                        // المجموع الحالي
+                                        Builder(
+                                          builder: (context) {
+                                            final visa = double.tryParse(visaCtrl.text) ?? 0;
+                                            final cash = double.tryParse(cashCtrl.text) ?? 0;
+                                            final instaPay = double.tryParse(instCtrl.text) ?? 0;
+                                            final sum = visa + cash + instaPay;
+                                            final totalPrice = model.totalPrice ?? 0;
+
+                                            return Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+
+                                                Text(
+                                                  '${sum.toStringAsFixed(2)} ج.م',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: sum == totalPrice ? Colors.green : Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+
+                                        // زر الحفظ
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: colorScheme.primary,
+                                            padding: const EdgeInsets.symmetric(vertical: 14),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            elevation: 6,
+                                          ),
+                                          onPressed: () {
+                                            final visa = double.tryParse(visaCtrl.text) ?? 0;
+                                            final cash = double.tryParse(cashCtrl.text) ?? 0;
+                                            final instaPay = double.tryParse(instCtrl.text) ?? 0;
+                                            final sum = visa + cash + instaPay;
+                                            final totalPrice = model.totalPrice ?? 0;
+
+                                            if ((totalPrice - sum).abs() < 0.01) {
+                                              context.read<CloseBillsCubit>().closeBills(
                                                 CloseBillsParam(
                                                   id: model.id,
                                                   visa: visa,
@@ -198,16 +255,26 @@ class _BillsListViewState extends State<BillsListView> {
                                                   instaPay: instaPay,
                                                 ),
                                               );
-                                          Navigator.pop(context);
-                                        } else {
-                                          showRedFlush(
-                                            context,
-                                            'The sum must equal total price',
-                                          );
-                                        }
-                                      },
+                                              Navigator.pop(context);
+                                            } else {
+                                              showRedFlush(
+                                                context,
+                                                'The sum must equal total price',
+                                              );
+                                            }
+                                          },
+                                          child:  Text(
+                                              LangKeys.save.tr(),
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );
@@ -220,56 +287,121 @@ class _BillsListViewState extends State<BillsListView> {
                       instCtrl.clear();
                     });
                   },
-                  ApplyDiscountonPressed: () {
+
+
+                  onDiscount: () {
                     final ctrl = TextEditingController();
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
+                      backgroundColor: Colors.transparent, // للزوايا الدائرية
                       builder: (context) {
                         return Padding(
                           padding: EdgeInsets.only(
                             left: 16,
                             right: 16,
                             top: 16,
-                            bottom:
-                                MediaQuery.of(context).viewInsets.bottom + 16,
+                            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustombuildHeader(
-                                colorScheme,
-                                LangKeys.discountType.tr(),
-                                Colors.grey,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.deepPurple.shade300,
+                                  Colors.deepPurple.shade50,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              CustomTextField(
-                                label: LangKeys.discountType.tr(),
-                                hint: LangKeys.discountType.tr(),
-                                controller: ctrl,
-                                keyboardType: TextInputType.name,
-                              ),
-                              const SizedBox(height: 16),
-                              CustomButton(
-                                text: LangKeys.save.tr(),
-                                onPressed: () {
-                                  final cubit =
-                                      BlocProvider.of<ApplyDiscountCubit>(
-                                        context,
-                                      );
-                                  cubit.applyDiscount(
-                                    ApplyDiscountParams(
-                                      id: model.id!,
-                                      discount: ctrl.text,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    // Handle أعلى البوتوم شيت
+                                    Center(
+                                      child: Container(
+                                        width: 50,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[400],
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                  Navigator.pop(context);
-                                },
+                                    const SizedBox(height: 16),
+
+                                    // العنوان
+                                    Text(
+                                      LangKeys.discountType.tr(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Divider(color: Colors.grey[300], thickness: 1.2),
+                                    const SizedBox(height: 12),
+
+                                    // حقل الخصم
+                                    CustomTextField(
+                                      label: LangKeys.discountType.tr(),
+                                      hint: LangKeys.discountType.tr(),
+                                      controller: ctrl,
+                                      keyboardType: TextInputType.name,
+                                    ),
+                                    const SizedBox(height: 20),
+
+                                    // زر الحفظ
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: colorScheme.primary,
+                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        elevation: 6,
+                                      ),
+                                      onPressed: () {
+                                        final cubit = BlocProvider.of<ApplyDiscountCubit>(context);
+                                        cubit.applyDiscount(
+                                          ApplyDiscountParams(
+                                            id: model.id!,
+                                            discount: ctrl.text,
+                                          ),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      child:  Text(
+                                        LangKeys.save.tr(),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },
-                    );
+                    ).whenComplete(() => ctrl.clear());
                   },
                   bills: model,
                 ),

@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-
 import '../../../../../core/utils/styles.dart';
 import '../../../domain/entity/school_entity.dart';
 
@@ -15,98 +14,87 @@ class CustomDetailSchoolCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      elevation: 6,
-      shadowColor: colorScheme.primary.withOpacity(0.2),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      color: colorScheme.surfaceVariant.withOpacity(0.7),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfo(
-              icon: Icons.school_rounded,
-              label: LangKeys.name.tr(),
-              text: schoolModel.name,
-              style: Styles.textStyle20.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
-              ),
-              context: context,
-            ),
-            const SizedBox(height: 20),
-            _buildInfo(
-              icon: Icons.location_on_rounded,
-              label: LangKeys.address.tr(),
-              text: schoolModel.address,
-              style: Styles.textStyle16.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.85),
-              ),
-              context: context,
-            ),
-            const SizedBox(height: 20),
-            _buildInfo(
-              icon: Icons.notes_rounded,
-              label: LangKeys.notes.tr(),
-              text: schoolModel.notes?.isNotEmpty == true
-                  ? schoolModel.notes!
-                  : LangKeys.notFoundNote.tr(),
-              style: Styles.textStyle16.copyWith(
-                fontStyle: FontStyle.italic,
-                color: colorScheme.onSurface.withOpacity(0.6),
-              ),
-              context: context,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfo({
-    required IconData icon,
-    required String label,
-    required String text,
-    required TextStyle style,
-    required BuildContext context,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: colorScheme.primary.withOpacity(0.1),
-            shape: BoxShape.circle,
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: colorScheme.surfaceVariant.withOpacity(0.95),
+      child: Ink(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.surface,
+              colorScheme.primary.withOpacity(0.08),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          padding: const EdgeInsets.all(8),
-          child: Icon(icon, size: 24, color: colorScheme.primary),
         ),
-        const SizedBox(width: 16),
-        Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: Styles.textStyle14.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.primary.withOpacity(0.9),
-                ),
+              // الاسم
+              Row(
+                children: [
+                  Icon(Icons.school_rounded,
+                      size: 20, color: colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      schoolModel.name,
+                      style: Styles.textStyle16.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                text,
-                style: style,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(height: 8),
+
+              // العنوان
+              Row(
+                children: [
+                  Icon(Icons.location_on_rounded,
+                      size: 18, color: colorScheme.secondary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      schoolModel.address,
+                      style: Styles.textStyle14.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.85),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              // الملاحظات
+              Row(
+                children: [
+                  Icon(Icons.notes_rounded,
+                      size: 18, color: colorScheme.tertiary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      schoolModel.notes?.isNotEmpty == true
+                          ? schoolModel.notes!
+                          : LangKeys.notFoundNote.tr(),
+                      style: Styles.textStyle12.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: colorScheme.onSurface.withOpacity(0.65),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

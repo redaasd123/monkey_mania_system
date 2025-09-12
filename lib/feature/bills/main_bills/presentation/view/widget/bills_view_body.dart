@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
@@ -76,28 +77,69 @@ class _BillsViewBodyState extends State<BillsViewBody> {
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[900]!.withOpacity(0.95)
+                : Colors.white.withOpacity(0.95),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 10,
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],  // بنفسجي → أزرق
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
+            ),
             onSelected: (value) {
               if (value == 'branch') {
                 showBranchBottomSheet(
                   context,
                   onSelected: (param) {
                     context.read<BillsCubit>().fetchBills(param);
-                    print('${param.branch}😀😀😀😀😀😀😀');
+                    print('${param.branch}');
                   },
                 );
               }
             },
-            itemBuilder: (context) => const [
-              PopupMenuItem<String>(value: 'branch', child: Text('Branch')),
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'branch',
+                child: Row(
+                  children: [
+                    Icon(Icons.store_mall_directory,
+                        color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Branch',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
+          )
         ],
       ),
 
       body: const AllBillsBlocConsumer(),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: colorScheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () async {
           final data = await showBillsBottomSheet(context, LangKeys.bills.tr());
@@ -184,25 +226,39 @@ class AllBillsBlocConsumer extends StatelessWidget {
         builder: (context, state) {
           switch (state.status) {
             // ---------------- Loading ----------------
-            case BillsStatus.loading:
+            case BillsStatus.searchLoading:
               return Stack(
                 children: [
-                  Center(child: CircularProgressIndicator()),
+                  Center(
+                    child: SpinKitFadingCircle(
+                      color: Colors.blue, // غير اللون زي ما تحب
+                      size: 60,
+                    ),
+                  ),
                   LinearProgressIndicator(minHeight: 3),
                 ],
               );
 
-            case BillsStatus.searchLoading:
-            case BillsStatus.createLoading:
+            case BillsStatus.loading:
               return Stack(
                 children: [
-                  BillsListView(bills: state.bills),
+                  Center(
+                    child: SpinKitFadingCircle(
+                      color: Colors.blue, // غير اللون زي ما تحب
+                      size: 60,
+                    ),
+                  ),
                   const Align(
                     alignment: Alignment.topCenter,
                     child: LinearProgressIndicator(minHeight: 3),
                   ),
+                  BillsListView(bills: state.bills),
                 ],
               );
+
+
+            case BillsStatus.createLoading:
+
 
             // ---------------- Success ----------------
             case BillsStatus.success:

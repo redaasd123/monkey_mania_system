@@ -1,14 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_bills_coffee_body.dart';
 
 import '../../../../../../../core/utils/langs_key.dart';
-import '../../../../../../../core/utils/service_locator.dart';
 import '../../../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
-import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../../../manager/coffee_bills/coffee_bills_cubit.dart';
 import 'all_active_bills_builder.dart';
 
@@ -74,7 +69,32 @@ class _AllActiveBillsCoffeeBodyState extends State<AllActiveBillsCoffeeBody> {
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[900]!.withOpacity(0.95)
+                : Colors.white.withOpacity(0.95), // لون القائمة حسب الثيم
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 10,
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],  // بنفسجي → أزرق
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
+            ),
             onSelected: (value) {
               if (value == 'branch') {
                 showBranchBottomSheet(
@@ -85,10 +105,28 @@ class _AllActiveBillsCoffeeBodyState extends State<AllActiveBillsCoffeeBody> {
                 );
               }
             },
-            itemBuilder: (context) => const [
-              PopupMenuItem<String>(value: 'branch', child: Text('Branch')),
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'branch',
+                child: Row(
+                  children: [
+                    Icon(Icons.store_mall_directory,
+                        color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Branch',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
+          )
+
+
         ],
       ),
       body: ActiveCoffeeListViewBuilder(),

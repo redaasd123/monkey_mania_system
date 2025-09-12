@@ -304,13 +304,12 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       },
     );
   }
-
   Widget _buildAddressSelector() {
     final allAreas = [
-      ' الصعيدي القديم',
+      'الصعيدي القديم',
       'منطقة النوادي',
       'الحي الثالث',
-      'الصعيدي الجديد ',
+      'الصعيدي الجديد',
       'المنطقة المركزية',
     ];
     final searchCtrl = TextEditingController();
@@ -318,92 +317,171 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
     return StatefulBuilder(
       builder: (context, setState) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 24,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF745385),
+                Color(0xFF745385),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  LangKeys.address.tr(),
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: searchCtrl,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    hintText: LangKeys.address.tr(),
-                    border: OutlineInputBorder(),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 🔘 Handle
+                  Container(
+                    width: 60,
+                    height: 6,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white54,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
-                  onChanged: (val) => setState(() {
-                    filteredAreas = allAreas
-                        .where((area) => area.contains(val.trim()))
-                        .toList();
-                  }),
-                ),
-                const SizedBox(height: 12),
-                ...filteredAreas.map(
-                  (area) => Column(
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.location_city_outlined),
-                        title: Text(area),
+
+                  // 🏷️ العنوان
+                  Text(
+                    LangKeys.address.tr(),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 🔍 صندوق البحث
+                  TextField(
+                    controller: searchCtrl,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                      hintText: LangKeys.address.tr(),
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.15),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: (val) => setState(() {
+                      filteredAreas = allAreas
+                          .where((area) => area
+                          .toLowerCase()
+                          .contains(val.trim().toLowerCase()))
+                          .toList();
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 📋 قائمة المناطق
+                  ...filteredAreas.map(
+                        (area) => Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.deepPurple.shade400,
+                          child: const Icon(Icons.location_city_outlined,
+                              color: Colors.white),
+                        ),
+                        title: Text(
+                          area,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios,
+                            size: 16, color: Colors.grey),
                         onTap: () => Navigator.pop(context, area),
                       ),
-                      const Divider(),
-                    ],
+                    ),
                   ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.edit_location_alt_outlined),
-                  title: Text(LangKeys.enterAddressManually.tr()),
-                  onTap: () async {
-                    final manualAddress = await showDialog<String>(
-                      context: context,
-                      builder: (context) {
-                        final manualCtrl = TextEditingController();
-                        return AlertDialog(
-                          title: Text(LangKeys.enterAddressManually.tr()),
-                          content: TextField(
-                            controller: manualCtrl,
-                            decoration: const InputDecoration(
-                              hintText: 'مثال: خلف الجامعة - بجوار كلية العلوم',
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(LangKeys.cansel.tr()),
-                            ),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  Navigator.pop(context, manualCtrl.text),
-                              child: Text(LangKeys.ok.tr()),
-                            ),
-                          ],
-                        );
-                      },
-                    );
 
-                    if (manualAddress != null &&
-                        manualAddress.trim().isNotEmpty) {
-                      Navigator.pop(context, manualAddress.trim());
-                    }
-                  },
-                ),
-              ],
+                  const SizedBox(height: 12),
+
+                  // ✍️ زر الإدخال اليدوي
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.orange.shade400,
+                        child: const Icon(Icons.edit_location_alt_outlined,
+                            color: Colors.white),
+                      ),
+                      title: Text(
+                        LangKeys.enterAddressManually.tr(),
+                        style: TextStyle(
+                          color: Colors.orange.shade700,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () async {
+                        final manualAddress = await showDialog<String>(
+                          context: context,
+                          builder: (context) {
+                            final manualCtrl = TextEditingController();
+                            return AlertDialog(
+                              title: Text(LangKeys.enterAddressManually.tr()),
+                              content: TextField(
+                                controller: manualCtrl,
+                                decoration: const InputDecoration(
+                                  hintText: 'مثال: خلف الجامعة - بجوار كلية العلوم',
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(LangKeys.cansel.tr()),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, manualCtrl.text),
+                                  child: Text(LangKeys.ok.tr()),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        if (manualAddress != null &&
+                            manualAddress.trim().isNotEmpty) {
+                          Navigator.pop(context, manualAddress.trim());
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
     );
   }
+
+
 
   ///////////////////////////////
   Widget _buildField(
@@ -548,97 +626,131 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
           final selectedSchool = await showModalBottomSheet<SchoolEntity>(
             context: context,
             isScrollControlled: true,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Colors.transparent,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             builder: (_) {
               return DraggableScrollableSheet(
                 expand: false,
-                initialChildSize: 0.6,
+                initialChildSize: 0.7,
                 minChildSize: 0.4,
-                maxChildSize: 0.9,
+                maxChildSize: 0.95,
                 builder: (context, scrollController) {
-                  List<SchoolEntity> filteredSchools = List.from(
-                    state.allSchool,
-                  );
-                  final TextEditingController searchCtrl =
-                      TextEditingController();
+                  List<SchoolEntity> filteredSchools = List.from(state.allSchool);
+                  final TextEditingController searchCtrl = TextEditingController();
 
                   return StatefulBuilder(
                     builder: (context, setState) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            // 🔍 حقل البحث
-                            TextField(
-                              controller: searchCtrl,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              decoration: InputDecoration(
-                                hintText: LangKeys.search.tr(),
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    width: 2,
-                                  ),
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF745385),
+                              Color(0xFF807387),
+
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(24)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              // 🔘 Handle
+                              Container(
+                                width: 50,
+                                height: 5,
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              onChanged: (query) {
-                                setState(() {
-                                  filteredSchools = state.allSchool
-                                      .where(
-                                        (school) => (school.name ?? '')
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()),
-                                      )
-                                      .toList();
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                            // 📋 قائمة المدارس القابلة للتمرير
-                            Expanded(
-                              child: ListView.separated(
-                                controller: scrollController,
-                                itemCount: filteredSchools.length,
-                                itemBuilder: (context, index) {
-                                  final school = filteredSchools[index];
-                                  return ListTile(
-                                    title: Text(
-                                      school.name ?? 'لا يوجد اسم',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
-                                    leading: Icon(
-                                      Icons.school,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                    onTap: () => Future.microtask(
-                                      () => Navigator.pop(context, school),
-                                    ),
-                                  );
+
+                              // 🏫 العنوان
+                              Text(
+                                "اختر المدرسة",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // 🔍 البحث
+                              TextField(
+                                controller: searchCtrl,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white.withOpacity(0.15),
+                                  hintText: "ابحث عن مدرسة...",
+                                  hintStyle: const TextStyle(color: Colors.white70),
+                                  prefixIcon:
+                                  const Icon(Icons.search, color: Colors.white70),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                onChanged: (query) {
+                                  setState(() {
+                                    filteredSchools = state.allSchool
+                                        .where(
+                                          (school) => (school.name ?? '')
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase()),
+                                    )
+                                        .toList();
+                                  });
                                 },
-                                separatorBuilder: (_, __) =>
-                                    const Divider(height: 1),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+
+                              // 📋 قائمة المدارس
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: scrollController,
+                                  itemCount: filteredSchools.length,
+                                  itemBuilder: (context, index) {
+                                    final school = filteredSchools[index];
+
+                                    return Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 4),
+                                      child: ListTile(
+                                        contentPadding: const EdgeInsets.all(12),
+                                        leading: CircleAvatar(
+                                          backgroundColor: Colors.indigo.shade400,
+                                          child: const Icon(Icons.school,
+                                              color: Colors.white),
+                                        ),
+                                        title: Text(
+                                          school.name ?? 'لا يوجد اسم',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        onTap: () => Future.microtask(
+                                              () => Navigator.pop(context, school),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -654,6 +766,7 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
             widget.onSelected!(selectedSchool.id); // ترجع الـ ID
           }
         }
+
       },
 
       readOnly: true,

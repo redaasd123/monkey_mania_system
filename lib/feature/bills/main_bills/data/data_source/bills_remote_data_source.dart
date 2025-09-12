@@ -58,7 +58,7 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
       endPoint: 'bill/create/',
       body: param.toJson(),
     );
-    return result;
+    return GetAllBillsModel.fromJson(result);
   }
 
   @override
