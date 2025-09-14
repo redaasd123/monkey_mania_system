@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // --- Light Theme ---
   //static const Color lightPrimary = Color(0xFF5A55CA);  reda
-  static const Color lightPrimary = Color(0xFF745385); // Indigo Violet
+  static const Color lightPrimary = Color(0xFF5A55CA); // Indigo Violet
   static const Color lightSecondary = Color(0xFF9D84FF); // Purple Accent
   static const Color lightBackground = Color(0xFFF7F8FA); // Very Light Gray
   static const Color lightSurface = Colors.white; // Cards

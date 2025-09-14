@@ -3,69 +3,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
-import 'package:monkey_app/feature/home/presentation/manager/theme_Cubit.dart';
+import 'package:monkey_app/core/theme_color/theme_Cubit.dart';
 
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFF4EDF6), Color(0xF9F4E8EF)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          image: DecorationImage(
-            image: AssetImage(kSea), // حط الصورة بتاعتك هنا
-            fit: BoxFit.cover,
-            opacity: 0.70, // درجة الشفافية عشان النصوص تفضل واضحة
-          ),
-        ),
+        color: colorScheme.surface,
         child: Column(
           children: [
             // ----- Header -----
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF745385), Color(0xFF745385)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  colors: [
+                    colorScheme.primary,
+                    colorScheme.primary.withOpacity(0.9),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
                 ),
               ),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 45,
-                      backgroundColor: Colors.white,
-                      child: Image.asset(kTest, height: 60),
-                    ),
+                  CircleAvatar(
+                    radius: 46,
+                    backgroundColor: colorScheme.onPrimary,
+                    child: Image.asset(kTest),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     LangKeys.appName.tr(),
                     style: GoogleFonts.montserrat(
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
@@ -75,7 +68,7 @@ class MyAppDrawer extends StatelessWidget {
                   Text(
                     "Smart Management".tr(),
                     style: GoogleFonts.montserrat(
-                      color: Colors.white70,
+                      color: colorScheme.onPrimary.withOpacity(0.7),
                       fontSize: 14,
                     ),
                   ),
@@ -89,65 +82,81 @@ class MyAppDrawer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   const SizedBox(height: 10),
+
+                  // Schools
                   _buildDrawerItem(
                     context,
-                    icon: Icons.school_outlined,
+                    icon: FontAwesomeIcons.school,
                     text: LangKeys.school.tr(),
                     onTap: () =>
                         GoRouter.of(context).push(AppRouter.kSchoolView),
                   ),
+
+                  // Children
                   _buildDrawerItem(
                     context,
-                    icon: Icons.child_care,
+                    icon: FontAwesomeIcons.child,
                     text: LangKeys.children.tr(),
                     onTap: () =>
                         GoRouter.of(context).push(AppRouter.kChildrenSchool),
                   ),
-                  _buildExpansion(
+
+                  // Main Bills
+                  _buildFancyExpansion(
+                    context,
                     title: LangKeys.mainBills.tr(),
+                    icon: FontAwesomeIcons.receipt,
+                    backgroundColor: Colors.blue.shade50,
+                    iconColor: Colors.blueAccent,
                     items: [
                       _buildDrawerItem(
                         context,
-                        icon: Icons.receipt_long,
+                        icon: FontAwesomeIcons.list,
                         text: LangKeys.allBills.tr(),
-                        onTap: () => GoRouter.of(
-                          context,
-                        ).push(AppRouter.kGetAllBillsView),
+                        onTap: () =>
+                            GoRouter.of(context).push(AppRouter.kGetAllBillsView),
                       ),
                       _buildDrawerItem(
                         context,
-                        icon: Icons.recent_actors,
+                        icon: FontAwesomeIcons.checkCircle,
                         text: LangKeys.allActiveBills.tr(),
-                        onTap: () => GoRouter.of(
-                          context,
-                        ).push(AppRouter.kGetAllActiveBillsView),
+                        onTap: () => GoRouter.of(context)
+                            .push(AppRouter.kGetAllActiveBillsView),
                       ),
                     ],
                   ),
-                  _buildExpansion(
+
+                  // Coffee Bills
+                  _buildFancyExpansion(
+                    context,
                     title: LangKeys.coffeeBills.tr(),
+                    icon: FontAwesomeIcons.coffee,
+                    backgroundColor: Colors.brown.shade50,
+                    iconColor: Colors.brown,
                     items: [
                       _buildDrawerItem(
                         context,
-                        icon: Icons.coffee,
+                        icon: FontAwesomeIcons.list,
                         text: LangKeys.allBills.tr(),
                         onTap: () =>
                             GoRouter.of(context).push(AppRouter.kCoffeeBills),
                       ),
                       _buildDrawerItem(
                         context,
-                        icon: Icons.recent_actors,
+                        icon: FontAwesomeIcons.checkCircle,
                         text: LangKeys.allActiveBills.tr(),
-                        onTap: () => GoRouter.of(
-                          context,
-                        ).push(AppRouter.kActiveCoffeeBills),
+                        onTap: () =>
+                            GoRouter.of(context).push(AppRouter.kActiveCoffeeBills),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 10),
+
+                  // Language
                   _buildDrawerItem(
                     context,
-                    icon: Icons.language,
+                    icon: FontAwesomeIcons.language,
                     text: LangKeys.changeLanguage.tr(),
                     onTap: () {
                       Locale newLocale = context.locale.languageCode == 'en'
@@ -156,25 +165,27 @@ class MyAppDrawer extends StatelessWidget {
                       context.setLocale(newLocale);
                     },
                   ),
+
+                  // Night Mode
                   _buildDrawerItem(
                     context,
-                    icon: Icons.dark_mode,
+                    icon: FontAwesomeIcons.moon,
                     text: LangKeys.nightMode.tr(),
                     onTap: () {
                       context.read<ThemeCubit>().toggle();
                       Navigator.pop(context);
                     },
                   ),
+
+                  // Logout
                   _buildDrawerItem(
                     context,
-                    icon: Icons.exit_to_app,
+                    icon: FontAwesomeIcons.rightFromBracket,
                     text: LangKeys.logOut.tr(),
                     onTap: () async {
                       await AuthHelper.clearAuthData();
                       await AuthHelper.logOut();
-                      GoRouter.of(
-                        context,
-                      ).pushReplacement(AppRouter.kLoginView);
+                      GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
                     },
                   ),
                 ],
@@ -182,16 +193,20 @@ class MyAppDrawer extends StatelessWidget {
             ),
 
             // ----- Footer -----
-            const Padding(
-              padding: EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.copyright, size: 12, color: Colors.white54),
-                  SizedBox(width: 4),
+                  Icon(Icons.copyright,
+                      size: 12, color: colorScheme.onSurface.withOpacity(0.6)),
+                  const SizedBox(width: 4),
                   Text(
                     "2025 Monkey App",
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    style: TextStyle(
+                      color: colorScheme.onSurface.withOpacity(0.6),
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -201,26 +216,26 @@ class MyAppDrawer extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildDrawerItem(
       BuildContext context, {
         required IconData icon,
         required String text,
         required VoidCallback onTap,
       }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ListTile(
-      leading: Container(
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Icon(icon, color: Color(0xFF510D73), size: 24), // أغمق
+      leading: CircleAvatar(
+        radius: 20,
+        backgroundColor: colorScheme.secondaryContainer,
+        child: FaIcon(icon, color: colorScheme.onSecondaryContainer, size: 20),
       ),
       title: Text(
         text,
-        style: GoogleFonts.playfairDisplay( // خط فخم
-          color: Color(0xFF510D73),
-          fontSize: 18,
+        style: GoogleFonts.playfairDisplay(
+          color: colorScheme.onSurface,
+          fontSize: 17,
           fontWeight: FontWeight.w700,
           letterSpacing: 1.1,
         ),
@@ -229,25 +244,42 @@ class MyAppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildExpansion({required String title, required List<Widget> items}) {
-    return Theme(
-      data: ThemeData().copyWith(dividerColor: Colors.transparent),
-      child: ExpansionTile(
-        collapsedIconColor: Colors.black54,
-        iconColor: Colors.amber,
-        leading: const Icon(Icons.folder_open, color: Color(0xFF510D73)),
-        title: Text(
-          title,
-          style: GoogleFonts.playfairDisplay(
-            color: Color(0xFF510D73),
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
+  Widget _buildFancyExpansion(
+      BuildContext context, {
+        required String title,
+        required IconData icon,
+        required List<Widget> items,
+        Color? backgroundColor,
+        Color? iconColor,
+      }) {
+    final colorScheme = Theme.of(context).colorScheme;
 
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 3,
+      color: backgroundColor ?? colorScheme.surface,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: CircleAvatar(
+            radius: 22,
+            backgroundColor: (backgroundColor ?? colorScheme.secondaryContainer).withOpacity(0.5),
+            child: FaIcon(icon, color: iconColor ?? colorScheme.onSecondaryContainer, size: 24),
           ),
+          collapsedIconColor: colorScheme.onSurface,
+          iconColor: colorScheme.primary,
+          title: Text(
+            title,
+            style: GoogleFonts.playfairDisplay(
+              color: colorScheme.onSurface,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          children: items,
         ),
-        children: items,
       ),
     );
   }
-
 }

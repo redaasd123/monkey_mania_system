@@ -26,15 +26,7 @@ class _BillsViewBodyState extends State<BillsViewBody> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(kFly), // صورتك هنا
-          fit: BoxFit.cover, // تملى الشاشة كلها
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    return  Scaffold(
         appBar: AppBar(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
@@ -164,7 +156,7 @@ class _BillsViewBodyState extends State<BillsViewBody> {
             }
           },
         ),
-      ),
+
     );
   }
 }

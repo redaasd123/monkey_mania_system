@@ -5,6 +5,7 @@ import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/bil
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../manager/fetch_bills_cubit/bills_cubit.dart';
 
+
 class BillsView extends StatelessWidget {
   const BillsView({super.key});
 

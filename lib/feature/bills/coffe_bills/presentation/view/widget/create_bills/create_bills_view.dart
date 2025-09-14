@@ -208,7 +208,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
 
-              // مربع ديكور
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
