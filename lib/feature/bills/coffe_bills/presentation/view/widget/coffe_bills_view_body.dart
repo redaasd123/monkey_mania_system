@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/show_detail_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffee_bills_list_view.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 import '../../../../../../core/utils/app_router.dart';
 import '../../../../../../core/utils/langs_key.dart';
+import '../../../../../../core/utils/my_app_drwer.dart';
 import '../../../../../../core/widget/widget/custom_show_loder.dart';
+import '../../../../../branch/presentation/manager/branch_cubit.dart';
 import '../../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
 import '../../manager/coffee_bills/coffee_bills_cubit.dart';
 
@@ -23,127 +24,128 @@ class CoffeeBillsViewBody extends StatefulWidget {
 
 class _CoffeeBillsViewBodyState extends State<CoffeeBillsViewBody> {
   @override
-
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return  Scaffold(
-        appBar: AppBar(
-          backgroundColor: colorScheme.primary,
-          foregroundColor: colorScheme.onPrimary,
-          title: BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
-            builder: (context, state) {
-              final cubit = context.read<CoffeeBillsCubit>();
-              return state.isSearching
-                  ? TextField(
-                      autofocus: true,
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                      cursorColor: colorScheme.onPrimary,
-                      decoration: InputDecoration(
-                        hintText: LangKeys.school.tr(),
-                        hintStyle: TextStyle(
-                          color: colorScheme.onPrimary.withOpacity(0.6),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                        filled: true,
-                        fillColor: colorScheme.primary,
+    return Scaffold(
+      drawer: const MyAppDrawer(),
+      appBar: AppBar(
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        title: BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
+          builder: (context, state) {
+            final cubit = context.read<CoffeeBillsCubit>();
+            return state.isSearching
+                ? TextField(
+                    autofocus: true,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    cursorColor: colorScheme.onPrimary,
+                    decoration: InputDecoration(
+                      hintText: LangKeys.school.tr(),
+                      hintStyle: TextStyle(
+                        color: colorScheme.onPrimary.withOpacity(0.6),
                       ),
-                      onChanged: (val) {
-                        cubit.searchBills(val);
-                      },
-                    )
-                  : Text(
-                      LangKeys.bills.tr(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    );
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
-                builder: (context, state) {
-                  return Icon(state.isSearching ? Icons.close : Icons.search);
-                },
-              ),
-              onPressed: () {
-                setState(() {
-                  context.read<CoffeeBillsCubit>().toggleSearch();
-                });
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                      filled: true,
+                      fillColor: colorScheme.primary,
+                    ),
+                    onChanged: (val) {
+                      cubit.searchBills(val);
+                    },
+                  )
+                : Text(
+                    LangKeys.bills.tr(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
+              builder: (context, state) {
+                return Icon(state.isSearching ? Icons.close : Icons.search);
               },
             ),
-            PopupMenuButton<String>(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.grey[900]!.withOpacity(0.95)
-                  : Colors.white.withOpacity(0.95),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-              elevation: 10,
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)], // بنفسجي → أزرق
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+            onPressed: () {
+              setState(() {
+                context.read<CoffeeBillsCubit>().toggleSearch();
+              });
+            },
+          ),
+          PopupMenuButton<String>(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[900]!.withOpacity(0.95)
+                : Colors.white.withOpacity(0.95),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 10,
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],
+                  // بنفسجي → أزرق
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
+                ],
+              ),
+              child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
+            ),
+            onSelected: (value) {
+              if (value == 'branch') {
+                showBranchBottomSheet(
+                  context,
+                  onSelected: (param) {
+                    print('📍 From BottomSheet: ${param.branch}');
+                    context.read<CoffeeBillsCubit>().fetchBillsCoffee(param);
+                  },
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'branch',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.store_mall_directory,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Branch',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ],
                 ),
-                child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
               ),
-              onSelected: (value) {
-                if (value == 'branch') {
-                  showBranchBottomSheet(
-                    context,
-                    onSelected: (param) {
-                      context.read<CoffeeBillsCubit>().fetchBillsCoffee(param);
-                      print('${param.branch}');
-                    },
-                  );
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  value: 'branch',
-                  child: Row(
-                    children: [
-                      Icon(Icons.store_mall_directory,
-                          color: Theme.of(context).colorScheme.primary),
-                      const SizedBox(width: 10),
-                      Text(
-                        'Branch',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
-      
-          ],
-        ),
-        body: CoffeeBillsBuilder(),
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add, color: Colors.white),
-            onPressed: (){
+            ],
+          ),
+        ],
+      ),
+      body: CoffeeBillsBuilder(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
           GoRouter.of(context).push(AppRouter.kCreateCoffeeBillsView);
-      
-        }),
-
+        },
+      ),
     );
   }
 }
@@ -153,68 +155,61 @@ class CoffeeBillsBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CoffeeBillsCubit, BillsCoffeeState>(
-      listener: (context, state) {
-        // ---------------- Failure ----------------
-        if (state.status == CoffeeBillsStatus.failure ||
-            state.status == CoffeeBillsStatus.activeFailure ||
-            state.status == CoffeeBillsStatus.createFailure) {
-          hideLoader(context);
-          showRedFlush(context, state.errorMessage ?? "حدث خطأ");
-        }
-
-        // ---------------- Loading ----------------
-      },
-      builder: (context, state) {
-        switch (state.status) {
-          // ---------------- Loading ----------------
-          case CoffeeBillsStatus.loading:
-          case CoffeeBillsStatus.activeLoading:
-            return Stack(
-              children: [
-
-                Center(
-                  child: SpinKitFadingCircle(
-                    color: Colors.blue, // غير اللون زي ما تحب
-                    size: 60,
-                  ),
-                ),
-                LinearProgressIndicator(minHeight: 3),
-              ],
-            );
-
-          // ---------------- Search Loading ----------------
-          case CoffeeBillsStatus.searchLoading:
-            return Stack(
-              children: [
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: LinearProgressIndicator(minHeight: 3),
-                ),
-              ],
-            );
-
-          // ---------------- Success ----------------
-          case CoffeeBillsStatus.createSuccess:
-          case CoffeeBillsStatus.success:
-          case CoffeeBillsStatus.activeSuccess:
-            if (state.bills.isEmpty) {
-              return const Center(child: Text("لا توجد بيانات"));
+    return MultiBlocListener(
+      listeners: [
+        // ✅ اسمع لBranchCubit
+        BlocListener<BranchCubit, BranchState>(
+          listener: (context, state) {
+            if (state is BranchSelectedState) {
+              context.read<CoffeeBillsCubit>().fetchBillsCoffee(
+                FetchBillsParam(branch: [state.branchId]),
+              );
             }
-            return CoffeeBillsListView(bills: state.bills);
+          },
+        ),
 
+        // ✅ اسمع لCoffeeBillsCubit (زي ما عندك)
+        BlocListener<CoffeeBillsCubit, BillsCoffeeState>(
+          listener: (context, state) {
+            if (state.status == CoffeeBillsStatus.failure ||
+                state.status == CoffeeBillsStatus.activeFailure ||
+                state.status == CoffeeBillsStatus.createFailure) {
+              hideLoader(context);
+              showRedFlush(context, state.errorMessage ?? "حدث خطأ");
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<CoffeeBillsCubit, BillsCoffeeState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case CoffeeBillsStatus.loading:
+            case CoffeeBillsStatus.activeLoading:
+              return Stack(
+                children: [
+                  const Center(
+                    child: SpinKitFadingCircle(color: Colors.blue, size: 60),
+                  ),
+                  const LinearProgressIndicator(minHeight: 3),
+                ],
+              );
 
+            case CoffeeBillsStatus.success:
+            case CoffeeBillsStatus.createSuccess:
+            case CoffeeBillsStatus.activeSuccess:
+              if (state.bills.isEmpty) {
+                return const Center(child: Text("لا توجد بيانات"));
+              }
+              return CoffeeBillsListView(bills: state.bills);
 
-          // ---------------- Empty ----------------
-          case CoffeeBillsStatus.empty:
-            return const Center(child: Text("لا توجد بيانات"));
+            case CoffeeBillsStatus.empty:
+              return const Center(child: Text("لا توجد بيانات"));
 
-
-          // ---------------- Default ----------------
-          default:
-            return const SizedBox.shrink();
-        }
-      },
+            default:
+              return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
 }

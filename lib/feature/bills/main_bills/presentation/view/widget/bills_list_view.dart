@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
-import 'package:monkey_app/core/widget/widget/custom_build_header_sheet_.dart';
-import 'package:monkey_app/core/widget/widget/custom_button.dart';
 import 'package:monkey_app/core/widget/widget/custom_text_field.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/close_bills_param.dart';
@@ -15,7 +13,6 @@ import '../../../../../../core/widget/widget/custom_flush.dart';
 import '../../../domain/entity/Bills_entity.dart';
 import '../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../manager/close_bills_cubit/close_bills_cubit.dart';
-import '../../manager/get_one_bills_cubit.dart';
 import 'apply_discount_param.dart';
 import 'bills_view_body_item.dart';
 
@@ -37,6 +34,7 @@ class _BillsListViewState extends State<BillsListView> {
 
   @override
   void initState() {
+    super.initState();
     scrollController = ScrollController();
     scrollController.addListener(scrollListener);
   }
@@ -63,6 +61,14 @@ class _BillsListViewState extends State<BillsListView> {
     super.dispose();
   }
 
+  /// 🔹 Helper: احسب المجموع الحالي من كل الحقول
+  double get currentSum {
+    final visa = double.tryParse(visaCtrl.text) ?? 0;
+    final cash = double.tryParse(cashCtrl.text) ?? 0;
+    final instaPay = double.tryParse(instCtrl.text) ?? 0;
+    return visa + cash + instaPay;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BillsCubit, BillsState>(
@@ -76,24 +82,29 @@ class _BillsListViewState extends State<BillsListView> {
             itemBuilder: (context, index) {
               final colorScheme = Theme.of(context).colorScheme;
               final model = bills[index];
+
               return GestureDetector(
                 onTap: () {
-                  GoRouter.of(
-                    context,
-                  ).push(AppRouter.kShowDetailBills, extra: model.id);
+                  GoRouter.of(context).push(AppRouter.kShowDetailBills, extra: model.id);
                 },
                 child: BillsViewBodyItem(
-                  onClose: () async {
+                  bills: model,
+
+                  onClose: () {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
-                      backgroundColor: Colors.transparent, // مهم للزوايا الدائرية
+                      backgroundColor: Colors.transparent,
                       builder: (context) {
                         return StatefulBuilder(
                           builder: (context, setModalState) {
-                            visaCtrl.addListener(() => setModalState(() {}));
-                            cashCtrl.addListener(() => setModalState(() {}));
-                            instCtrl.addListener(() => setModalState(() {}));
+                            // ربط التحديث مع الحقول
+                            void updateState() => setModalState(() {});
+                            visaCtrl.addListener(updateState);
+                            cashCtrl.addListener(updateState);
+                            instCtrl.addListener(updateState);
+
+                            final totalPrice = model.totalPrice ?? 0;
 
                             return Padding(
                               padding: EdgeInsets.only(
@@ -107,7 +118,7 @@ class _BillsListViewState extends State<BillsListView> {
                                   gradient: LinearGradient(
                                     colors: [
                                       colorScheme.primary,
-                                      colorScheme.onPrimary,
+                                      colorScheme.secondaryContainer,
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -141,14 +152,14 @@ class _BillsListViewState extends State<BillsListView> {
                                         ),
                                         const SizedBox(height: 16),
 
-                                        // عنوان
+                                        // العنوان
                                         Text(
                                           LangKeys.payment.tr(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: colorScheme.primary,
+                                            color: colorScheme.onPrimaryContainer,
                                           ),
                                         ),
                                         const SizedBox(height: 12),
@@ -168,13 +179,14 @@ class _BillsListViewState extends State<BillsListView> {
                                               ),
                                             ),
                                             Text(
-                                              '${model.totalPrice?.toStringAsFixed(2) ?? "0.00"} ج.م',
+                                              '${(double.tryParse(model.totalPrice.toString()) ?? 0).toStringAsFixed(2)} ج.م',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18,
                                                 color: Colors.tealAccent,
                                               ),
                                             ),
+
                                           ],
                                         ),
                                         const SizedBox(height: 16),
@@ -203,29 +215,24 @@ class _BillsListViewState extends State<BillsListView> {
                                         const SizedBox(height: 16),
 
                                         // المجموع الحالي
-                                        Builder(
-                                          builder: (context) {
-                                            final visa = double.tryParse(visaCtrl.text) ?? 0;
-                                            final cash = double.tryParse(cashCtrl.text) ?? 0;
-                                            final instaPay = double.tryParse(instCtrl.text) ?? 0;
-                                            final sum = visa + cash + instaPay;
-                                            final totalPrice = model.totalPrice ?? 0;
-
-                                            return Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-
-                                                Text(
-                                                  '${sum.toStringAsFixed(2)} ج.م',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: sum == totalPrice ? Colors.green : Colors.red,
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              'المجموع الحالي',
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              '${currentSum.toStringAsFixed(2)} ج.م',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: currentSum == totalPrice
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(height: 20),
 
@@ -240,19 +247,13 @@ class _BillsListViewState extends State<BillsListView> {
                                             elevation: 6,
                                           ),
                                           onPressed: () {
-                                            final visa = double.tryParse(visaCtrl.text) ?? 0;
-                                            final cash = double.tryParse(cashCtrl.text) ?? 0;
-                                            final instaPay = double.tryParse(instCtrl.text) ?? 0;
-                                            final sum = visa + cash + instaPay;
-                                            final totalPrice = model.totalPrice ?? 0;
-
-                                            if ((totalPrice - sum).abs() < 0.01) {
+                                            if ((totalPrice - currentSum).abs() < 0.01) {
                                               context.read<CloseBillsCubit>().closeBills(
                                                 CloseBillsParam(
                                                   id: model.id,
-                                                  visa: visa,
-                                                  cash: cash,
-                                                  instaPay: instaPay,
+                                                  visa: double.tryParse(visaCtrl.text) ?? 0,
+                                                  cash: double.tryParse(cashCtrl.text) ?? 0,
+                                                  instaPay: double.tryParse(instCtrl.text) ?? 0,
                                                 ),
                                               );
                                               Navigator.pop(context);
@@ -263,9 +264,9 @@ class _BillsListViewState extends State<BillsListView> {
                                               );
                                             }
                                           },
-                                          child:  Text(
-                                              LangKeys.save.tr(),
-                                            style: TextStyle(
+                                          child: Text(
+                                            LangKeys.save.tr(),
+                                            style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
@@ -288,13 +289,12 @@ class _BillsListViewState extends State<BillsListView> {
                     });
                   },
 
-
                   onDiscount: () {
                     final ctrl = TextEditingController();
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
-                      backgroundColor: Colors.transparent, // للزوايا الدائرية
+                      backgroundColor: Colors.transparent,
                       builder: (context) {
                         return Padding(
                           padding: EdgeInsets.only(
@@ -329,7 +329,7 @@ class _BillsListViewState extends State<BillsListView> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    // Handle أعلى البوتوم شيت
+                                    // Handle
                                     Center(
                                       child: Container(
                                         width: 50,
@@ -349,7 +349,7 @@ class _BillsListViewState extends State<BillsListView> {
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: colorScheme.primary,
+                                        color: colorScheme.onPrimaryContainer,
                                       ),
                                     ),
                                     const SizedBox(height: 12),
@@ -376,7 +376,8 @@ class _BillsListViewState extends State<BillsListView> {
                                         elevation: 6,
                                       ),
                                       onPressed: () {
-                                        final cubit = BlocProvider.of<ApplyDiscountCubit>(context);
+                                        final cubit =
+                                        BlocProvider.of<ApplyDiscountCubit>(context);
                                         cubit.applyDiscount(
                                           ApplyDiscountParams(
                                             id: model.id!,
@@ -385,9 +386,9 @@ class _BillsListViewState extends State<BillsListView> {
                                         );
                                         Navigator.pop(context);
                                       },
-                                      child:  Text(
+                                      child: Text(
                                         LangKeys.save.tr(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
@@ -401,9 +402,8 @@ class _BillsListViewState extends State<BillsListView> {
                           ),
                         );
                       },
-                    ).whenComplete(() => ctrl.clear());
+                    ).whenComplete(() => ctrl.dispose());
                   },
-                  bills: model,
                 ),
               );
             },

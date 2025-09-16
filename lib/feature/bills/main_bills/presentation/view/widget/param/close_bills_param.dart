@@ -12,6 +12,6 @@ class CloseBillsParam {
   });
 
   Map<String, dynamic> toJon() {
-    return {"visa": visa, "insta_pay": instaPay, "vodafone_cash": cash};
+    return {"visa": visa, "instapay": instaPay, "cash": cash};
   }
 }

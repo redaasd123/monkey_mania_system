@@ -22,7 +22,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
   final CreateBillsCoffeeUSeCase createBillsCoffeeUSeCase;
 
   Future<void> fetchBillsCoffee(FetchBillsParam param) async {
-    if (state.isLoading || !state.hasMore) return;
+    if (state.isLoading) return;
 
     final pageNumber = param.page ?? state.currentPage;
 

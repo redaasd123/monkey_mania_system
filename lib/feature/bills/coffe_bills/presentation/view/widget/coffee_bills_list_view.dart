@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffe_bills_item.dart';
@@ -31,6 +32,7 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
   }
 
   void scrollListener() {
+    final branch = AuthHelper.getBranch();
     final cubit = BlocProvider.of<CoffeeBillsCubit>(context);
     final state = cubit.state;
     if (!scrollController.hasClients) return;
@@ -39,7 +41,7 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
     final currentScroll = scrollController.position.pixels;
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
-      cubit.fetchBillsCoffee(FetchBillsParam(page: state.currentPage));
+      cubit.fetchBillsCoffee(FetchBillsParam(page: state.currentPage,branch:[branch]));
     }
   }
 

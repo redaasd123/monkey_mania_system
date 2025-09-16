@@ -2,10 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import 'package:monkey_app/feature/home/presentation/manager/home_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/manager/login_cubit/login_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/login_page_item.dart';
+import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
 import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/widget/widget/custom_show_loder.dart';
@@ -16,21 +22,27 @@ class LoginViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
-      listener: (context,state) async {
+      listener: (context, state) async {
         hideLoader(context);
         if (state is LoginLoadingState) {
           showLoader(context);
         } else if (state is LoginSuccessState) {
-          showGreenFlush(context, LangKeys.loginSuccess.tr());
-          await Future.delayed(const Duration(milliseconds: 1000));
-          if (context.mounted) {
-            GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
+          final role = AuthHelper.getRole();
+          if (role == 'owner' || role == 'admin') {
+            showSelectBranchWithLoginBottomSheet(
+              context,
+              onSelected: (id) async {
+                 Hive.box(kAuthBox).put(AuthKeys.branch, id);
+                showGreenFlush(context, LangKeys.loginSuccess.tr());
+                await Future.delayed(const Duration(milliseconds: 1000));
+                if (context.mounted) {
+                  GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
+                }
+              },
+            );
           }
         } else if (state is LoginFailureState) {
-          showRedFlush(
-            context,
-            state.errMessage,
-          );
+          showRedFlush(context, state.errMessage);
         }
       },
       child: const LoginPageItem(),

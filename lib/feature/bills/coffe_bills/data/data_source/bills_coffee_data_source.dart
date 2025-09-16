@@ -49,13 +49,22 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   @override
   Future<BillsCoffeePageEntity> fetchBillsCoffee(FetchBillsParam param) async {
     final url = 'product_bill/all?${param.toQueryParams()}';
+
+    // 📨 Print request
+    print('📩 Request sent to: $url');
+
     var result = await getIt.get<Api>().get(endPoint: url);
+
+    // 📥 Print raw response
+    print('📥 Raw Response: $result');
 
     List<BillsCoffeeEntity> bills = [];
     for (var item in result['results']) {
-      bills.add(
-        BillsCoffeeModel.fromJson(item as Map<String, dynamic>).toEntity(),
-      );
+      final entity = BillsCoffeeModel.fromJson(item as Map<String, dynamic>).toEntity();
+      bills.add(entity);
+
+      // 🧾 Print each bill after parsing
+      print('🧾 Bill parsed: $entity');
     }
 
     int? extractPage(String? url) {
@@ -64,11 +73,16 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
       return int.tryParse(uri.queryParameters['page'] ?? '');
     }
 
-    return BillsCoffeePageEntity(
+    final pageEntity = BillsCoffeePageEntity(
       billsCoffeeEntity: bills,
       nextPage: extractPage(result['next']),
       previousPage: extractPage(result['previous']),
     );
+
+    // 📦 Print final entity
+    print('📦 Final BillsCoffeePageEntity: $pageEntity');
+
+    return pageEntity;
   }
 
   @override

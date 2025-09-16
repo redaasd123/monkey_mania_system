@@ -5,8 +5,10 @@ class LoginModel {
   final String role;
   final String access;
   final String reFresh;
+  final String branch;
 
   LoginModel({
+    required this.branch,
     required this.reFresh,
     required this.access,
     required this.role,
@@ -19,6 +21,7 @@ class LoginModel {
     final user = json['user'] ?? {};
 
     return LoginModel(
+      branch: json["branch"]??'',
       reFresh: json['refresh'] ?? '',
       access: json['access'] ?? '',
       role: user['role'] ?? '',

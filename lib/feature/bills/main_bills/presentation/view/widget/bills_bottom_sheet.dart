@@ -8,6 +8,7 @@ import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 
+import '../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../children/domain/param/fetch_children_param.dart';
@@ -32,7 +33,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
   final _nameCtrl = TextEditingController();
   final _childrenCtrl = TextEditingController();
   List<int>? _selectedChildrenId;
-  int? _selectedBranchId;
+  //int? _selectedBranchId;
 
   final _branchCtrl = TextEditingController();
   List<Map<String, dynamic>> children = [];
@@ -70,11 +71,12 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
       );
     }).toList();
 
+    final branch = AuthHelper.getBranch();
     final param = CreateBillsParam(
       discount: '"test-promo-percentage"',
       childrenId: _selectedChildrenId!,
       newChildren: newChildren,
-      branch: _selectedBranchId!,
+       branch: branch!,
     );
 
     print('✅ PARAM CREATED: $param');
@@ -192,7 +194,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
             ),
 
             const SizedBox(height: 12),
-            _buildBranchField(),
+           // _buildBranchField(),
             const SizedBox(height: 12),
             _buildField(promoCode, 'PromoCode', Icons.discount),
             const SizedBox(height: 12),
@@ -235,118 +237,118 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
     );
   }
 
-  Widget _buildBranchField() {
-    return TextFormField(
-      validator: _validate,
-      controller: _branchCtrl,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'branch',
-        prefixIcon: Icon(Icons.calendar_today),
-      ),
-      onTap: () async {
-        final cubit = BlocProvider.of<BranchCubit>(context);
-        await cubit.fetchBranch();
-        final state = cubit.state;
-
-        if (state is BranchSuccessState) {
-          print("✅ BranchSuccessState found");
-          final selectBranch = await showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            isScrollControlled: true,
-            builder: (context) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF745385),
-                      Color(0xFF745385),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 5,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white54,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      Text(
-                        "اختر الفرع",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Flexible(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: state.branch.length,
-                          itemBuilder: (context, index) {
-                            final branch = state.branch[index];
-                            return Card(
-                              elevation: 6,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(16),
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.purple.shade100,
-                                  child: const Icon(Icons.store, color: Color(0xFF745385),),
-                                ),
-                                title: Text(
-                                  branch.name ?? 'فرع بدون اسم',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                trailing: const Icon(Icons.arrow_forward_ios,
-                                    color: Color(0xFF745385),),
-                                onTap: () {
-                                  print("Tapped!");
-                                  Navigator.pop(context, branch);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-
-          if (selectBranch != null) {
-            _branchCtrl.text = selectBranch.name ?? 'savana';
-            _selectedBranchId = selectBranch.id; // احفظ الـ ID لاستخدامه في param
-            print("🟢 Selected Branch ID: $_selectedBranchId");
-          }
-        }
-
-      },
-    );
-  }
+  // Widget _buildBranchField() {
+  //   return TextFormField(
+  //     validator: _validate,
+  //     controller: _branchCtrl,
+  //     readOnly: true,
+  //     decoration: InputDecoration(
+  //       labelText: 'branch',
+  //       prefixIcon: Icon(Icons.calendar_today),
+  //     ),
+  //     onTap: () async {
+  //       final cubit = BlocProvider.of<BranchCubit>(context);
+  //       await cubit.fetchBranch();
+  //       final state = cubit.state;
+  //
+  //       if (state is BranchSuccessState) {
+  //         print("✅ BranchSuccessState found");
+  //         final selectBranch = await showModalBottomSheet(
+  //           context: context,
+  //           backgroundColor: Colors.transparent,
+  //           shape: const RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+  //           ),
+  //           isScrollControlled: true,
+  //           builder: (context) {
+  //             return Container(
+  //               decoration: BoxDecoration(
+  //                 gradient: LinearGradient(
+  //                   colors: [
+  //                     Color(0xFF745385),
+  //                     Color(0xFF745385),
+  //                   ],
+  //                   begin: Alignment.topCenter,
+  //                   end: Alignment.bottomCenter,
+  //                 ),
+  //                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+  //               ),
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(16.0),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     Container(
+  //                       width: 50,
+  //                       height: 5,
+  //                       margin: const EdgeInsets.only(bottom: 16),
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white54,
+  //                         borderRadius: BorderRadius.circular(10),
+  //                       ),
+  //                     ),
+  //                     Text(
+  //                       "اختر الفرع",
+  //                       style: const TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 20,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 16),
+  //                     Flexible(
+  //                       child: ListView.builder(
+  //                         shrinkWrap: true,
+  //                         itemCount: state.branch.length,
+  //                         itemBuilder: (context, index) {
+  //                           final branch = state.branch[index];
+  //                           return Card(
+  //                             elevation: 6,
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(16),
+  //                             ),
+  //                             margin: const EdgeInsets.symmetric(vertical: 8),
+  //                             child: ListTile(
+  //                               contentPadding: const EdgeInsets.all(16),
+  //                               leading: CircleAvatar(
+  //                                 backgroundColor: Colors.purple.shade100,
+  //                                 child: const Icon(Icons.store, color: Color(0xFF745385),),
+  //                               ),
+  //                               title: Text(
+  //                                 branch.name ?? 'فرع بدون اسم',
+  //                                 style: const TextStyle(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   fontSize: 16,
+  //                                 ),
+  //                               ),
+  //                               trailing: const Icon(Icons.arrow_forward_ios,
+  //                                   color: Color(0xFF745385),),
+  //                               onTap: () {
+  //                                 print("Tapped!");
+  //                                 Navigator.pop(context, branch);
+  //                               },
+  //                             ),
+  //                           );
+  //                         },
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         );
+  //
+  //         // if (selectBranch != null) {
+  //         //   _branchCtrl.text = selectBranch.name ?? 'savana';
+  //         //   _selectedBranchId = selectBranch.id; // احفظ الـ ID لاستخدامه في param
+  //         //   print("🟢 Selected Branch ID: $_selectedBranchId");
+  //         // }
+  //       }
+  //
+  //     },
+  //   );
+  // }
 
   ///////////////////////////////////
 

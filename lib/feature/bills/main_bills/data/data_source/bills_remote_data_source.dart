@@ -25,13 +25,12 @@ abstract class BillsRemoteDataSource {
 
   Future<dynamic> applyDiscount(ApplyDiscountParams param);
 }
+
 class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   @override
   Future<BillsPageEntity> fetchBills(FetchBillsParam param) async {
     final url = 'bill/all?${param.toQueryParams()}';
-    var result = await getIt.get<Api>().get(
-      endPoint: url,
-    );
+    var result = await getIt.get<Api>().get(endPoint: url);
     print('✅ API Response Received');
 
     List<BillsEntity> listBills = (result['results'] as List)
@@ -50,7 +49,6 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
       previousPage: extractPage(result['previous']),
     );
   }
-
 
   @override
   Future<BillsEntity> createBills(CreateBillsParam param) async {
@@ -85,8 +83,7 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
     // ).replace(path: endpoint, queryParameters: queryParams);
     // print('🌐 Full Request URL: $fullUrl');
     final url = 'bill/active/all?${param.toQueryParams()}';
-    var result = await getIt.get<Api>().get(
-      endPoint: url,);
+    var result = await getIt.get<Api>().get(endPoint: url);
 
     List<BillsEntity> bills = [];
     for (var item in result) {

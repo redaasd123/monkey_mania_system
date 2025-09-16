@@ -142,7 +142,7 @@ class _AllActiveListViewState extends State<AllActiveListView> {
                                           ),
                                         ),
                                         Text(
-                                          '${model.totalPrice?.toStringAsFixed(2) ?? "0.00"} ج.م',
+                                          '${(double.tryParse(model.totalPrice.toString()) ?? 0).toStringAsFixed(2)} ج.م',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,

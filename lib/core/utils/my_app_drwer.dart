@@ -1,14 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
-import 'package:monkey_app/core/utils/app_router.dart';
-import 'package:monkey_app/core/utils/constans.dart';
-import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/theme_color/theme_Cubit.dart';
+import 'package:monkey_app/core/utils/app_router.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
+import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
@@ -18,268 +19,253 @@ class MyAppDrawer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Drawer(
-      child: Container(
-        color: colorScheme.surface,
-        child: Column(
-          children: [
-            // ----- Header -----
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 40),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.primary,
-                    colorScheme.primary.withOpacity(0.9),
+      child: Column(
+        children: [
+          // ---------- HEADER ----------
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [colorScheme.primary, colorScheme.secondary],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
+              ),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.storefront_rounded,
+                    size: 50,
+                    color: Colors.blue,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  LangKeys.appName.tr(),
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "Smart Management".tr(),
+                  style: GoogleFonts.roboto(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ---------- MENU ----------
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(12),
+              children: [
+                _buildCardItem(
+                  context,
+                  title: LangKeys.school.tr(),
+                  icon: FontAwesomeIcons.school,
+                  color: Colors.teal,
+                  onTap: () => GoRouter.of(context).push(AppRouter.kSchoolView),
+                ),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.children.tr(),
+                  icon: FontAwesomeIcons.child,
+                  color: Colors.purple,
+                  onTap: () => GoRouter.of(context).push(AppRouter.kChildrenSchool),
+                ),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.mainBills.tr(),
+                  icon: FontAwesomeIcons.receipt,
+                  color: Colors.blue,
+                  onTap: () => GoRouter.of(context).push(AppRouter.kGetAllBillsView),
+                  extraActions: [
+                    _buildChipAction(
+                      context,
+                      text: LangKeys.allBills.tr(),
+                      onTap: () => GoRouter.of(context).push(AppRouter.kGetAllBillsView),
+                    ),
+                    _buildChipAction(
+                      context,
+                      text: LangKeys.allActiveBills.tr(),
+                      onTap: () => GoRouter.of(context).push(AppRouter.kGetAllActiveBillsView),
+                    ),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(35),
-                  bottomRight: Radius.circular(35),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.coffeeBills.tr(),
+                  icon: FontAwesomeIcons.coffee,
+                  color: Colors.brown,
+                  onTap: () => GoRouter.of(context).push(AppRouter.kCoffeeBills),
+                  extraActions: [
+                    _buildChipAction(
+                      context,
+                      text: LangKeys.allBills.tr(),
+                      onTap: () => GoRouter.of(context).push(AppRouter.kCoffeeBills),
+                    ),
+                    _buildChipAction(
+                      context,
+                      text: LangKeys.allActiveBills.tr(),
+                      onTap: () => GoRouter.of(context).push(AppRouter.kActiveCoffeeBills),
+                    ),
+                  ],
+                ),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.changeLanguage.tr(),
+                  icon: FontAwesomeIcons.language,
+                  color: Colors.orange,
+                  onTap: () {
+                    Locale newLocale = context.locale.languageCode == 'en'
+                        ? const Locale('ar', 'EG')
+                        : const Locale('en', 'US');
+                    context.setLocale(newLocale);
+                  },
+                ),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.nightMode.tr(),
+                  icon: FontAwesomeIcons.moon,
+                  color: Colors.indigo,
+                  onTap: () {
+                    context.read<ThemeCubit>().toggle();
+                    Navigator.pop(context);
+                  },
+                ),
+                _buildCardItem(
+                  context,
+                  title: "Select Branch",
+                  icon: FontAwesomeIcons.codeBranch,
+                  color: Colors.green,
+                  onTap: () {
+                    showSelectBranchWithLoginBottomSheet(
+                      context,
+                      onSelected: (branchId) {
+                        BlocProvider.of<BranchCubit>(context).selectBranch(branchId);
+                      },
+                    );
+                  },
+                ),
+                _buildCardItem(
+                  context,
+                  title: LangKeys.logOut.tr(),
+                  icon: FontAwesomeIcons.rightFromBracket,
+                  color: Colors.red,
+                  onTap: () async {
+                    await AuthHelper.clearAuthData();
+                    await AuthHelper.logOut();
+                    GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // ---------- FOOTER ----------
+          Container(
+            padding: const EdgeInsets.all(12),
+            color: colorScheme.primary.withOpacity(0.05),
+            child: Center(
+              child: Text(
+                "© 2025 Monkey App",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 46,
-                    backgroundColor: colorScheme.onPrimary,
-                    child: Image.asset(kTest),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    LangKeys.appName.tr(),
-                    style: GoogleFonts.montserrat(
-                      color: colorScheme.onPrimary,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Smart Management".tr(),
-                    style: GoogleFonts.montserrat(
-                      color: colorScheme.onPrimary.withOpacity(0.7),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
             ),
-
-            // ----- Menu -----
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  const SizedBox(height: 10),
-
-                  // Schools
-                  _buildDrawerItem(
-                    context,
-                    icon: FontAwesomeIcons.school,
-                    text: LangKeys.school.tr(),
-                    onTap: () =>
-                        GoRouter.of(context).push(AppRouter.kSchoolView),
-                  ),
-
-                  // Children
-                  _buildDrawerItem(
-                    context,
-                    icon: FontAwesomeIcons.child,
-                    text: LangKeys.children.tr(),
-                    onTap: () =>
-                        GoRouter.of(context).push(AppRouter.kChildrenSchool),
-                  ),
-
-                  // Main Bills
-                  _buildFancyExpansion(
-                    context,
-                    title: LangKeys.mainBills.tr(),
-                    icon: FontAwesomeIcons.receipt,
-                    backgroundColor: Colors.blue.shade50,
-                    iconColor: Colors.blueAccent,
-                    items: [
-                      _buildDrawerItem(
-                        context,
-                        icon: FontAwesomeIcons.list,
-                        text: LangKeys.allBills.tr(),
-                        onTap: () =>
-                            GoRouter.of(context).push(AppRouter.kGetAllBillsView),
-                      ),
-                      _buildDrawerItem(
-                        context,
-                        icon: FontAwesomeIcons.checkCircle,
-                        text: LangKeys.allActiveBills.tr(),
-                        onTap: () => GoRouter.of(context)
-                            .push(AppRouter.kGetAllActiveBillsView),
-                      ),
-                    ],
-                  ),
-
-                  // Coffee Bills
-                  _buildFancyExpansion(
-                    context,
-                    title: LangKeys.coffeeBills.tr(),
-                    icon: FontAwesomeIcons.coffee,
-                    backgroundColor: Colors.brown.shade50,
-                    iconColor: Colors.brown,
-                    items: [
-                      _buildDrawerItem(
-                        context,
-                        icon: FontAwesomeIcons.list,
-                        text: LangKeys.allBills.tr(),
-                        onTap: () =>
-                            GoRouter.of(context).push(AppRouter.kCoffeeBills),
-                      ),
-                      _buildDrawerItem(
-                        context,
-                        icon: FontAwesomeIcons.checkCircle,
-                        text: LangKeys.allActiveBills.tr(),
-                        onTap: () =>
-                            GoRouter.of(context).push(AppRouter.kActiveCoffeeBills),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Language
-                  _buildDrawerItem(
-                    context,
-                    icon: FontAwesomeIcons.language,
-                    text: LangKeys.changeLanguage.tr(),
-                    onTap: () {
-                      Locale newLocale = context.locale.languageCode == 'en'
-                          ? const Locale('ar', 'EG')
-                          : const Locale('en', 'US');
-                      context.setLocale(newLocale);
-                    },
-                  ),
-
-                  // Night Mode
-                  _buildDrawerItem(
-                    context,
-                    icon: FontAwesomeIcons.moon,
-                    text: LangKeys.nightMode.tr(),
-                    onTap: () {
-                      context.read<ThemeCubit>().toggle();
-                      Navigator.pop(context);
-                    },
-                  ),
-
-                  // Logout
-                  _buildDrawerItem(
-                    context,
-                    icon: FontAwesomeIcons.rightFromBracket,
-                    text: LangKeys.logOut.tr(),
-                    onTap: () async {
-                      await AuthHelper.clearAuthData();
-                      await AuthHelper.logOut();
-                      GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            // ----- Footer -----
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.copyright,
-                      size: 12, color: colorScheme.onSurface.withOpacity(0.6)),
-                  const SizedBox(width: 4),
-                  Text(
-                    "2025 Monkey App",
-                    style: TextStyle(
-                      color: colorScheme.onSurface.withOpacity(0.6),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDrawerItem(
-      BuildContext context, {
-        required IconData icon,
-        required String text,
-        required VoidCallback onTap,
-      }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return ListTile(
-      leading: CircleAvatar(
-        radius: 20,
-        backgroundColor: colorScheme.secondaryContainer,
-        child: FaIcon(icon, color: colorScheme.onSecondaryContainer, size: 20),
-      ),
-      title: Text(
-        text,
-        style: GoogleFonts.playfairDisplay(
-          color: colorScheme.onSurface,
-          fontSize: 17,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.1,
-        ),
-      ),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildFancyExpansion(
+  // ---- CARD ITEM ----
+  Widget _buildCardItem(
       BuildContext context, {
         required String title,
         required IconData icon,
-        required List<Widget> items,
-        Color? backgroundColor,
-        Color? iconColor,
+        required Color color,
+        required VoidCallback onTap,
+        List<Widget>? extraActions,
       }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 3,
-      color: backgroundColor ?? colorScheme.surface,
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          leading: CircleAvatar(
-            radius: 22,
-            backgroundColor: (backgroundColor ?? colorScheme.secondaryContainer).withOpacity(0.5),
-            child: FaIcon(icon, color: iconColor ?? colorScheme.onSecondaryContainer, size: 24),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 5,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: color.withOpacity(0.1),
+                    child: Icon(icon, color: color),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (extraActions != null) ...[
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  children: extraActions,
+                ),
+              ]
+            ],
           ),
-          collapsedIconColor: colorScheme.onSurface,
-          iconColor: colorScheme.primary,
-          title: Text(
-            title,
-            style: GoogleFonts.playfairDisplay(
-              color: colorScheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          children: items,
         ),
       ),
+    );
+  }
+
+  // ---- CHIP ACTION ----
+  Widget _buildChipAction(BuildContext context,
+      {required String text, required VoidCallback onTap}) {
+    return ActionChip(
+      label: Text(text, style: const TextStyle(fontSize: 13)),
+      backgroundColor: Colors.grey.shade200,
+      onPressed: onTap,
+      avatar: const Icon(Icons.arrow_forward_ios, size: 14),
     );
   }
 }

@@ -7,12 +7,16 @@ import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 
+import '../../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../../core/utils/langs_key.dart';
+import '../../../../../../../core/utils/my_app_drwer.dart';
+import '../../../../../../branch/presentation/manager/branch_cubit.dart';
 import '../../../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
 import '../../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../../manager/close_bills_cubit/close_bills_cubit.dart';
 import '../../../manager/fetch_bills_cubit/bills_cubit.dart';
 import '../param/create_bills_param.dart';
+import '../param/fetch_bills_param.dart';
 import '../show_bills_bottom_sheet.dart';
 import 'all_active_list_view.dart';
 
@@ -27,15 +31,8 @@ class _AllActiveBillsViewBodyState extends State<AllActiveBillsViewBody> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            fit: BoxFit.fill,
-            image: AssetImage(kFlowers3)),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    return Scaffold(
+      drawer: const MyAppDrawer(),
         appBar: AppBar(
           title: BlocBuilder<BillsCubit, BillsState>(
             builder: (context, state) {
@@ -160,20 +157,20 @@ class _AllActiveBillsViewBodyState extends State<AllActiveBillsViewBody> {
             final data = await showBillsBottomSheet(context, 'Add Bills');
             final cubit = BlocProvider.of<BillsCubit>(context);
             if (data != null) {
+              final branch = AuthHelper.getBranch();
               print('🧪 Data from bottom sheet: $data');
               final param = CreateBillsParam(
                 discount: 'test-promo-percentage',
                 childrenId: data.childrenId,
                 newChildren: data.newChildren,
-                branch: data.branch,
+                branch: branch!,
               );
               cubit.createBills(param);
             }
           },
         ),
-      ),
+
     );
-    ;
   }
 }
 
@@ -210,7 +207,16 @@ class AllActiveBillsConsumer extends StatelessWidget {
             }
           },
         ),
-
+        BlocListener<BranchCubit, BranchState>(
+          listener: (context, state) {
+            if (state is BranchSelectedState) {
+              // هنا ننده على BillsCubit ونجيب البيانات الخاصة بالـbranch الجديد
+              context.read<BillsCubit>().fetchActiveBills(
+                FetchBillsParam(branch: [state.branchId]),
+              );
+            }
+          },
+        ),
         /// 🔹 Apply Discount Cubit
         BlocListener<ApplyDiscountCubit, ApplyDiscountState>(
           listener: (context, state) async {

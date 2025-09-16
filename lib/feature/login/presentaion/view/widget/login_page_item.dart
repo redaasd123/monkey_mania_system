@@ -1,8 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/widget/widget/logo_with_shimer.dart';
+import 'package:monkey_app/feature/branch/presentation/view/show_branch_bottom_sheet.dart';
 
 import '../../../../../core/widget/widget/custom_button.dart';
 import '../../../../../core/widget/widget/custom_text_field.dart';
@@ -61,6 +65,9 @@ class _LoginPageItemState extends State<LoginPageItem> {
                       number: numberController.text.trim(),
                       pass: passwordController.text.trim(),
                     );
+
+
+
                   }
                 },
               ),

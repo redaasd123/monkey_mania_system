@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/use_case/use_case.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/feature/branch/domain/entity/branch_entity.dart';
 import 'package:monkey_app/feature/branch/domain/use_case/branch_use_case.dart';
 
@@ -10,6 +13,7 @@ class BranchCubit extends Cubit<BranchState> {
   final BranchUseCase branchUseCase;
 
   BranchCubit(this.branchUseCase) : super(BranchInitial());
+  int? selectedBranch;
 
   Future<void> fetchBranch() async {
     emit(BranchLoadingState());
@@ -18,5 +22,11 @@ class BranchCubit extends Cubit<BranchState> {
       (failure) => emit(BranchFailureState(errMessage: failure.errMessage)),
           (branch) => emit(BranchSuccessState(branch: branch)),
     );
+  }
+
+  void selectBranch(int branchId) {
+    Hive.box(kAuthBox).put(AuthKeys.branch, branchId);
+    selectedBranch = branchId;
+    emit(BranchSelectedState(branchId: branchId));
   }
 }

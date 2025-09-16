@@ -1,22 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:monkey_app/core/utils/styles.dart';
-import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import '../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
-import '../manager/branch_cubit.dart';
 
-class BranchBottomSheetBody extends StatefulWidget {
-  const BranchBottomSheetBody({super.key});
+import '../../../../../core/utils/styles.dart';
+import '../../../../../core/widget/widget/custom_flush.dart';
+import '../../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../branch/presentation/manager/branch_cubit.dart';
 
-  @override
-  State<BranchBottomSheetBody> createState() => _BranchBottomSheetBodyState();
-}
+class SelectBranchWithLogin extends StatelessWidget {
+   SelectBranchWithLogin({super.key});
 
-class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
-  DateTime? startDate;
-  DateTime? endDate;
-  final List<int> selectIndex = [];
+   int? selectIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +76,14 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                           itemCount: branches.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
-                            final isSelected = selectIndex.contains(index);
+                            final isSelected = selectIndex==index;
                             return InkWell(
                               onTap: () {
                                 setState(() {
                                   if (isSelected) {
-                                    selectIndex.remove(index);
+                                    selectIndex==null;
                                   } else {
-                                    selectIndex.add(index);
+                                    selectIndex=index;
                                   }
                                 });
                               },
@@ -134,31 +129,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                         ),
                       ),
 
-                      const SizedBox(height: 12),
-
-                      // حقول التواريخ
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildDateField(
-                              context: context,
-                              label: 'تاريخ البداية',
-                              selectedDate: startDate,
-                              onDatePicked: (date) => setState(() => startDate = date),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildDateField(
-                              context: context,
-                              label: 'تاريخ النهاية',
-                              selectedDate: endDate,
-                              onDatePicked: (date) => setState(() => endDate = date),
-                            ),
-                          ),
-                        ],
-                      ),
-
                       const SizedBox(height: 20),
 
                       // زر تم
@@ -174,33 +144,14 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            final selectedBranch = selectIndex.map((i) => branches[i].id).toList();
-
-                            if (selectedBranch.isEmpty) {
+                            if (selectIndex==null) {
                               showRedFlush(context, 'من فضلك اختر فرع على الأقل');
                               return;
                             }
+                            final selectedBranch = branches[selectIndex!].id;
 
-                            if ((startDate != null && endDate == null) ||
-                                (startDate == null && endDate != null)) {
-                              showRedFlush(context, 'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين');
-                              return;
-                            }
 
-                            if (startDate != null &&
-                                endDate != null &&
-                                endDate!.isBefore(startDate!)) {
-                              showRedFlush(context, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية');
-                              return;
-                            }
-
-                            final param = FetchBillsParam(
-                              branch: selectedBranch,
-                              startDate: startDate,
-                              endDate: endDate,
-                            );
-
-                            Navigator.pop(context, param);
+                            Navigator.pop(context, selectedBranch);
                           },
                           child: Text(
                             'تم',
@@ -218,89 +169,12 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
               );
             },
           );
-        } else if (state is BranchLoadingState) {
-          return const Center(child: SpinKitFadingCircle(color: Colors.blue,size: 60,));
+        } else if (state is BranchInitial) {
+          return  Center(child: SpinKitFadingCircle(size: 60,color: Colors.blue,));
         } else {
           return const Center(child: SizedBox());
         }
       },
-    );
-  }
-
-  Widget _buildDateField({
-    required BuildContext context,
-    required String label,
-    required DateTime? selectedDate,
-    required Function(DateTime) onDatePicked,
-  }) {
-    final color = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: () async {
-        final picked = await showDatePicker(
-          context: context,
-          initialDate: selectedDate ?? DateTime.now(),
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-          builder: (context, child) => Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: color.primary,
-                onPrimary: Colors.white,
-                onSurface: Colors.black87,
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(foregroundColor: color.primary),
-              ),
-            ),
-            child: child!,
-          ),
-        );
-
-        if (picked != null) onDatePicked(picked);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [color.primary.withOpacity(0.8), color.primary],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.date_range, color: Colors.white),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                selectedDate != null
-                    ? '${selectedDate.toLocal().toString().split(' ')[0]}'
-                    : label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

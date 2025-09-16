@@ -12,22 +12,23 @@ class AuthKeys {
   static const username = 'username';
   static const userId = 'user_id';
   static const role = 'role';
+  static const branch = 'branch';
 }
 
 class AuthHelper {
   static final Box _authBox = Hive.box(kAuthBox);
 
+  //
   static Future<void> saveTokens({
-    required String accessToken,
-    required String refreshToken,
-    required String username,
-    required int userId,
-    required String role,
+    required dynamic? branch,
+    required String? accessToken,
+    required String? refreshToken,
+    required String? username,
+    required String? role,
   }) async {
     await _authBox.put(AuthKeys.accessToken, accessToken);
     await _authBox.put(AuthKeys.refreshToken, refreshToken);
     await _authBox.put(AuthKeys.username, username);
-    await _authBox.put(AuthKeys.userId, userId);
     await _authBox.put(AuthKeys.role, role);
   }
 
@@ -36,6 +37,10 @@ class AuthHelper {
   static String? getRefreshToken() => _authBox.get(AuthKeys.refreshToken);
 
   static String? getUsername() => _authBox.get(AuthKeys.username);
+
+  static String? getRole() => _authBox.get(AuthKeys.role);
+
+  static int? getBranch() => _authBox.get(AuthKeys.branch);
 
   static Future<void> clearAuthData() async => await _authBox.clear();
 
@@ -73,7 +78,10 @@ class AuthHelper {
       }
 
       await _authBox.put(AuthKeys.accessToken, data['access']);
-      await _authBox.put(AuthKeys.refreshToken, data['refresh']); // ✅ التصحيح هنا
+      await _authBox.put(
+        AuthKeys.refreshToken,
+        data['refresh'],
+      ); // ✅ التصحيح هنا
 
       return data['access'];
     } catch (e, st) {

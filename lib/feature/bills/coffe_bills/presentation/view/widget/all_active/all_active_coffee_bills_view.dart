@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_bills_coffee_body.dart';
 
+import '../../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../../core/utils/service_locator.dart';
 import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../../../manager/coffee_bills/coffee_bills_cubit.dart';
@@ -12,13 +13,14 @@ class AllActiveCoffeeBillsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final branch = AuthHelper.getBranch();
     return MultiBlocProvider(
      providers: [
        BlocProvider(create: (context)=>getIt<GetOneBillsCoffeeCubit>()),
        BlocProvider(
          create: (context) =>
          getIt<CoffeeBillsCubit>()
-           ..fetchActiveBillsCoffee(FetchBillsParam(branch: ['all'])),
+           ..fetchActiveBillsCoffee(FetchBillsParam(branch: [branch])),
        ),
      ],
 

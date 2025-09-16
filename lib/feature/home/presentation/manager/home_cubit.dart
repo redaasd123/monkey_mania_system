@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:monkey_app/core/use_case/use_case.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
 import 'package:monkey_app/feature/home/domain/use_case/home_use_case.dart';
 
@@ -10,9 +11,9 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeUseCase) : super(HomeState());
   final HomeUseCase homeUseCase;
 
-  Future<void> fetchDashBoardData() async {
+  Future<void> fetchDashBoardData(FetchBillsParam param) async {
     emit(state.copyWith(status: HomeStatus.loading));
-    final result = await homeUseCase.call(NoParam());
+    final result = await homeUseCase.call(param);
     result.fold((failure) {
       print("❌ Failure: $failure");
       emit(

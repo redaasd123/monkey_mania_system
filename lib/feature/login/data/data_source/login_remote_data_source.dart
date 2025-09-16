@@ -32,15 +32,12 @@ class LoginRemoteDataSourceImpl extends LoginRemoteDataSource {
       final authModel = LoginModel.fromJson(response.data);
 
       await AuthHelper.saveTokens(
+        branch: authModel.branch,
         accessToken: authModel.access,
         refreshToken: authModel.reFresh,
         username: authModel.username,
-        userId: authModel.id,
         role: authModel.role,
       );
-
-      //getIt.get<TokenRefresher>().start();
-
       return authModel;
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {

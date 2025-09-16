@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 
 import '../../../manager/coffee_bills/coffee_bills_cubit.dart';
 import 'all_active_bills_coffee_list_view.dart';
@@ -21,22 +20,21 @@ class ActiveCoffeeListViewBuilder extends StatelessWidget {
         // ---------------- Success ----------------
 
         // ---------------- Loading ----------------
-
       },
       builder: (context, state) {
         switch (state.status) {
           case CoffeeBillsStatus.activeLoading:
             return Stack(
               children: [
-                Center(
-                  child: SpinKitFadingCircle(
-                    color: Colors.blue, // غير اللون زي ما تحب
-                    size: 60,
-                  ),
-                ),
                 const Align(
                   alignment: Alignment.topCenter,
                   child: LinearProgressIndicator(minHeight: 3),
+                ),
+                Center(
+                  child: SpinKitFadingCircle(
+                    color: Colors.blue,
+                    size: 60,
+                  ),
                 ),
               ],
             );
@@ -49,8 +47,6 @@ class ActiveCoffeeListViewBuilder extends StatelessWidget {
                 ),
               ],
             );
-
-
 
           case CoffeeBillsStatus.activeSuccess:
             if (state.bills.isEmpty) {

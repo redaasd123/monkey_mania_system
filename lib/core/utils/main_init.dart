@@ -25,6 +25,7 @@ class AppInitializer {
     _registerHiveAdapters();
     await _initHive();
 
+    // await Hive.deleteBoxFromDisk(kAuthBox);
     await Hive.deleteBoxFromDisk(kSchoolBox);
     await Hive.deleteBoxFromDisk(kChildrenBox);
     await Hive.deleteBoxFromDisk(kSaveCreateChild);

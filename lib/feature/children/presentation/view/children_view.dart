@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_state.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/children_view_body.dart';
+import 'package:monkey_app/feature/children/presentation/view/widget/reseve_data_floating_actio_button.dart';
 
 import '../../../../core/utils/constans.dart';
 import '../../../../core/utils/langs_key.dart';
@@ -29,6 +30,7 @@ class _ChildrenViewState extends State<ChildrenView> {
             ),
           ),
           child: Scaffold(
+            floatingActionButton: ReseveDataChildrenActionButton(context),
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: colorScheme.primary,

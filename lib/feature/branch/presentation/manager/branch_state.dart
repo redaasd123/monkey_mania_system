@@ -18,3 +18,7 @@ final class BranchSuccessState extends BranchState {
 
   BranchSuccessState({required this.branch});
 }
+final class BranchSelectedState extends BranchState {
+  final int branchId;
+   BranchSelectedState({required this.branchId});
+}
