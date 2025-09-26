@@ -30,12 +30,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(fit: BoxFit.fill, image: AssetImage(kFlowers2)),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    return Scaffold(
         appBar: AppBar(
           title: Text(
             LangKeys.bills,
@@ -300,7 +295,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
             }
           },
         ),
-      ),
+
     );
   }
 

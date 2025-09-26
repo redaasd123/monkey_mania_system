@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/create_bills/send_order_button.dart';
@@ -7,7 +6,6 @@ import '../../../../../../../core/widget/widget/custom_text_field.dart';
 import '../../../manager/coffee_bills/layers_cubit.dart';
 import '../../../manager/coffee_bills/order_cubit.dart';
 import 'card_layer3.dart';
-import 'create_bills_view.dart';
 import 'create_order_bottom_sheet.dart';
 import 'detail_order_widget.dart';
 import 'field_bills_id.dart';
@@ -74,50 +72,48 @@ class Layer3Section extends StatelessWidget {
             return BlocBuilder<LayersCubit, LayersState>(
               builder: (context, state) {
                 return Column(
-                  children: List.generate(
-                    state.layer3.length,
-                        (index) {
-                      final item = state.layer3[index];
-                      final imagePath = images[index % images.length];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(24),
-                                ),
+                  children: List.generate(state.layer3.length, (index) {
+                    final item = state.layer3[index];
+                    final imagePath = images[index % images.length];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(24),
                               ),
-                              builder: (_) {
-                                return OrderBottomSheet(
-                                  item: item,
-                                  imagePath: imagePath,
-                                  onAdd: (quantity, notes, selectedItem, imagePath) {
-                                    context.read<OrdersCubit>().addOrder(
-                                      OrderItem(
-                                        product: selectedItem,
-                                        quantity: quantity,
-                                        notes: notes,
-                                        imagePath: imagePath,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                          child: CardLayer3Widget(
-                            imagePath: imagePath,
-                            item: item,
-                          ),
+                            ),
+                            builder: (_) {
+                              return OrderBottomSheet(
+                                item: item,
+                                imagePath: imagePath,
+                                onAdd:
+                                    (quantity, notes, selectedItem, imagePath) {
+                                      context.read<OrdersCubit>().addOrder(
+                                        OrderItem(
+                                          product: selectedItem,
+                                          quantity: quantity,
+                                          notes: notes,
+                                          imagePath: imagePath,
+                                        ),
+                                      );
+                                    },
+                              );
+                            },
+                          );
+                        },
+                        child: CardLayer3Widget(
+                          imagePath: imagePath,
+                          item: item,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 );
               },
             );
@@ -186,7 +182,7 @@ class Layer3Section extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.blue.shade600, Colors.blue.shade400],
+                  colors: [Colors.teal, Colors.black45],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -217,13 +213,11 @@ class Layer3Section extends StatelessWidget {
               ),
             ),
           ),
-        )
-
+        ),
       ],
     );
   }
 }
-
 
 class _OrdersFormSection extends StatelessWidget {
   const _OrdersFormSection({
@@ -271,12 +265,9 @@ class _OrdersFormSection extends StatelessWidget {
             children: [
               const Text(
                 'Take Away',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(color: Colors.teal, fontSize: 14),
               ),
-              Switch(
-                value: takeAway,
-                onChanged: onTakeAwayChanged,
-              ),
+              Switch(value: takeAway, onChanged: onTakeAwayChanged),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../manager/coffee_bills/order_cubit.dart';
 import 'create_order_bottom_sheet.dart';
@@ -12,7 +13,7 @@ class DetailOrderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 220,
+      height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: state.length,
@@ -20,7 +21,7 @@ class DetailOrderWidget extends StatelessWidget {
           final order = state[index];
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -31,7 +32,9 @@ class DetailOrderWidget extends StatelessWidget {
                       context: context,
                       isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
                       ),
                       builder: (context) {
                         return OrderBottomSheet(
@@ -55,59 +58,60 @@ class DetailOrderWidget extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: 160,
+                    width: 170,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.brown.shade200, Colors.brown.shade400],
+                      gradient: const LinearGradient(
+                        //0xFF481B5E
+                        colors: [Color(0xFF141E30), Color(0xFF243B55)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                          color: Colors.black.withOpacity(0.35),
+                          blurRadius: 10,
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const SizedBox(height: 16),
 
-                        // صورة المنتج داخل CircleAvatar مع Border
+                        // صورة المنتج مع الكمية
                         Stack(
                           children: [
                             CircleAvatar(
-                              radius: 45,
-                              backgroundColor: Colors.white,
+                              radius: 46,
+                              backgroundColor: Colors.white.withOpacity(0.1),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(45),
+                                borderRadius: BorderRadius.circular(46),
                                 child: Image.asset(
                                   order.imagePath,
-                                  height: 90,
-                                  width: 90,
+                                  height: 92,
+                                  width: 92,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                             Positioned(
                               bottom: 0,
-                              right: 50,
+                              right: 8,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange.shade700,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 4,
-                                      offset: const Offset(1, 2),
-                                    ),
-                                  ],
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Colors.purple,
+                                      Colors.deepPurpleAccent,
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   "×${order.quantity}",
@@ -120,10 +124,9 @@ class DetailOrderWidget extends StatelessWidget {
                               ),
                             ),
                           ],
-
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
 
                         // اسم المنتج
                         Text(
@@ -133,8 +136,8 @@ class DetailOrderWidget extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black87,
+                            fontSize: 15,
+                            color: Colors.white,
                           ),
                         ),
 
@@ -142,48 +145,64 @@ class DetailOrderWidget extends StatelessWidget {
 
                         // السعر × الكمية
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Colors.green.shade600, Colors.green.shade400],
+                            gradient: const LinearGradient(
+                              colors: [Colors.green, Colors.lightGreen],
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.attach_money, size: 14, color: Colors.white),
+                              const Icon(
+                                FontAwesomeIcons.moneyBill,
+                                size: 14,
+                                color: Colors.white,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 "${order.product.price ?? 0} × ${order.quantity}",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
 
-                        // الملاحظات (إن وجدت)
+                        // الملاحظات
                         if ((order.notes ?? '').isNotEmpty)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            width: 130,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.white24,
+                                width: 0.8,
+                              ),
                             ),
                             child: Text(
                               order.notes!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.orange,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white70,
                               ),
                             ),
                           ),
@@ -192,16 +211,20 @@ class DetailOrderWidget extends StatelessWidget {
                   ),
                 ),
 
-                // زرار الإلغاء
+                // زر الإلغاء
                 Positioned(
-                  top: -6,
-                  right: -6,
+                  top: -8,
+                  right: -8,
                   child: CircleAvatar(
                     radius: 14,
                     backgroundColor: Colors.redAccent,
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.close, size: 16, color: Colors.white),
+                      icon: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                       onPressed: () {
                         context.read<OrdersCubit>().removeOrder(index);
                       },
@@ -214,9 +237,5 @@ class DetailOrderWidget extends StatelessWidget {
         },
       ),
     );
-
-
   }
 }
-
-

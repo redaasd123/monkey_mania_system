@@ -1,5 +1,5 @@
 class CreateBillsParam {
-  final String discount;
+  final String? discount;
   final List<int> childrenId;
   final List<NewChildren> newChildren;
   final int branch;
@@ -11,14 +11,21 @@ class CreateBillsParam {
     required this.branch,
   });
 
+
   Map<String, dynamic> toJson() {
-    return {
-      "discount": discount,
+    final Map<String, dynamic> data = {
       "children": childrenId,
       "new_children": newChildren.map((child) => child.toJson()).toList(),
       "branch": branch,
     };
+
+    if (discount != null && discount!.isNotEmpty) {
+      data["discount"] = discount;
+    }
+
+    return data;
   }
+
 }
 
 class NewChildren {

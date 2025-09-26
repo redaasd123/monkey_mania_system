@@ -156,7 +156,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.loading,
         ),
       );
-      fetchBills(FetchBillsParam(page: 1, query: null));
+      fetchBills(FetchBillsParam(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -171,7 +171,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.searchLoading,
         ),
       );
-      fetchBills(FetchBillsParam(page: 1, query: trimmedQuery));
+      fetchBills(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
 
@@ -188,7 +188,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.activeLoading,
         ),
       );
-      fetchActiveBills(FetchBillsParam(page: 1, query: null));
+      fetchActiveBills(FetchBillsParam(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -203,7 +203,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.searchLoading,
         ),
       );
-      fetchActiveBills(FetchBillsParam(page: 1, query: trimmedQuery));
+      fetchActiveBills(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
 
@@ -218,7 +218,7 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchBills(FetchBillsParam(page: 1));
+    await fetchBills(FetchBillsParam(page: 1,branch: ['all']));
   }
 
   Future<void> onRefreshActiveBills() async {
@@ -232,6 +232,6 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchActiveBills(FetchBillsParam(page: 1));
+    await fetchActiveBills(FetchBillsParam(page: 1,branch: ['all']));
   }
 }

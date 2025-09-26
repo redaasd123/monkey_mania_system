@@ -108,9 +108,12 @@ class _CoffeeBillsViewBodyState extends State<CoffeeBillsViewBody> {
               if (value == 'branch') {
                 showBranchBottomSheet(
                   context,
-                  onSelected: (param) {
-                    print('📍 From BottomSheet: ${param.branch}');
+                  onSelected: (param) async {
+                    // بعد كده ابعت الريكوست للـ API باستخدام البرانش اللي اتخزن
                     context.read<CoffeeBillsCubit>().fetchBillsCoffee(param);
+
+                    // طباعتها للتأكد
+                    print('Selected branch(s): ${param.branch}');
                   },
                 );
               }
@@ -157,7 +160,6 @@ class CoffeeBillsBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // ✅ اسمع لBranchCubit
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
             if (state is BranchSelectedState) {
@@ -168,7 +170,6 @@ class CoffeeBillsBuilder extends StatelessWidget {
           },
         ),
 
-        // ✅ اسمع لCoffeeBillsCubit (زي ما عندك)
         BlocListener<CoffeeBillsCubit, BillsCoffeeState>(
           listener: (context, state) {
             if (state.status == CoffeeBillsStatus.failure ||
@@ -198,12 +199,11 @@ class CoffeeBillsBuilder extends StatelessWidget {
             case CoffeeBillsStatus.createSuccess:
             case CoffeeBillsStatus.activeSuccess:
               if (state.bills.isEmpty) {
-                return const Center(child: Text("لا توجد بيانات"));
+                return const Center(child: Text("empty"));
               }
               return CoffeeBillsListView(bills: state.bills);
 
-            case CoffeeBillsStatus.empty:
-              return const Center(child: Text("لا توجد بيانات"));
+
 
             default:
               return const SizedBox.shrink();

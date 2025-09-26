@@ -17,7 +17,7 @@ enum BillsStatus {
 
 class BillsState extends Equatable {
   final BillsStatus status;
-  final List<BillsEntity> bills; // ✅統 واحد
+  final List<BillsEntity> bills;
   final String? errorMessage;
   final bool isSearching;
   final String searchQuery;
@@ -38,7 +38,7 @@ class BillsState extends Equatable {
 
   BillsState copyWith({
     BillsStatus? status,
-    List<BillsEntity>? bills, // ✅統 واحد
+    List<BillsEntity>? bills,
     String? errorMessage,
     bool? isSearching,
     String? searchQuery,

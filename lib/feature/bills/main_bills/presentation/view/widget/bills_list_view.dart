@@ -8,6 +8,7 @@ import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_b
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/close_bills_param.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
+import '../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/widget/widget/custom_flush.dart';
 import '../../../domain/entity/Bills_entity.dart';
@@ -43,12 +44,19 @@ class _BillsListViewState extends State<BillsListView> {
     final cubit = BlocProvider.of<BillsCubit>(context);
     final state = cubit.state;
     if (!scrollController.hasClients) return;
-
     final maxScroll = scrollController.position.maxScrollExtent;
     final currentScroll = scrollController.position.pixels;
 
+
     if (currentScroll >= 0.6 * maxScroll && state.hasMore && !state.isLoading) {
-      cubit.fetchBills(FetchBillsParam(page: state.currentPage));
+      final branches = AuthHelper.getBranch();
+      final branchList = branches is int ? [branches] : branches;
+      cubit.fetchBills(
+        FetchBillsParam(
+          page: state.currentPage,
+          branch: branchList,
+        ),
+      );
     }
   }
 
@@ -85,7 +93,9 @@ class _BillsListViewState extends State<BillsListView> {
 
               return GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).push(AppRouter.kShowDetailBills, extra: model.id);
+                  GoRouter.of(
+                    context,
+                  ).push(AppRouter.kShowDetailBills, extra: model.id);
                 },
                 child: BillsViewBodyItem(
                   bills: model,
@@ -111,7 +121,9 @@ class _BillsListViewState extends State<BillsListView> {
                                 left: 16,
                                 right: 16,
                                 top: 16,
-                                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom +
+                                    16,
                               ),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -137,7 +149,8 @@ class _BillsListViewState extends State<BillsListView> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         // Handle أعلى البوتوم شيت
                                         Center(
@@ -146,7 +159,8 @@ class _BillsListViewState extends State<BillsListView> {
                                             height: 5,
                                             decoration: BoxDecoration(
                                               color: Colors.grey[400],
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                           ),
                                         ),
@@ -159,16 +173,21 @@ class _BillsListViewState extends State<BillsListView> {
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: colorScheme.onPrimaryContainer,
+                                            color:
+                                                colorScheme.onPrimaryContainer,
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        Divider(color: Colors.grey[300], thickness: 1.2),
+                                        Divider(
+                                          color: Colors.grey[300],
+                                          thickness: 1.2,
+                                        ),
                                         const SizedBox(height: 12),
 
                                         // السعر الكلي
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               LangKeys.totalPrice.tr(),
@@ -186,7 +205,6 @@ class _BillsListViewState extends State<BillsListView> {
                                                 color: Colors.tealAccent,
                                               ),
                                             ),
-
                                           ],
                                         ),
                                         const SizedBox(height: 16),
@@ -216,11 +234,14 @@ class _BillsListViewState extends State<BillsListView> {
 
                                         // المجموع الحالي
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text(
                                               'المجموع الحالي',
-                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                             Text(
                                               '${currentSum.toStringAsFixed(2)} ج.م',
@@ -239,23 +260,43 @@ class _BillsListViewState extends State<BillsListView> {
                                         // زر الحفظ
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: colorScheme.primary,
-                                            padding: const EdgeInsets.symmetric(vertical: 14),
+                                            backgroundColor:
+                                                colorScheme.primary,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 14,
+                                            ),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             elevation: 6,
                                           ),
                                           onPressed: () {
-                                            if ((totalPrice - currentSum).abs() < 0.01) {
-                                              context.read<CloseBillsCubit>().closeBills(
-                                                CloseBillsParam(
-                                                  id: model.id,
-                                                  visa: double.tryParse(visaCtrl.text) ?? 0,
-                                                  cash: double.tryParse(cashCtrl.text) ?? 0,
-                                                  instaPay: double.tryParse(instCtrl.text) ?? 0,
-                                                ),
-                                              );
+                                            if ((totalPrice - currentSum)
+                                                    .abs() <
+                                                0.01) {
+                                              context
+                                                  .read<CloseBillsCubit>()
+                                                  .closeBills(
+                                                    CloseBillsParam(
+                                                      id: model.id,
+                                                      visa:
+                                                          double.tryParse(
+                                                            visaCtrl.text,
+                                                          ) ??
+                                                          0,
+                                                      cash:
+                                                          double.tryParse(
+                                                            cashCtrl.text,
+                                                          ) ??
+                                                          0,
+                                                      instaPay:
+                                                          double.tryParse(
+                                                            instCtrl.text,
+                                                          ) ??
+                                                          0,
+                                                    ),
+                                                  );
                                               Navigator.pop(context);
                                             } else {
                                               showRedFlush(
@@ -301,7 +342,8 @@ class _BillsListViewState extends State<BillsListView> {
                             left: 16,
                             right: 16,
                             top: 16,
-                            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                            bottom:
+                                MediaQuery.of(context).viewInsets.bottom + 16,
                           ),
                           child: Container(
                             decoration: BoxDecoration(
@@ -327,7 +369,8 @@ class _BillsListViewState extends State<BillsListView> {
                               child: SingleChildScrollView(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     // Handle
                                     Center(
@@ -336,7 +379,9 @@ class _BillsListViewState extends State<BillsListView> {
                                         height: 5,
                                         decoration: BoxDecoration(
                                           color: Colors.grey[400],
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -353,7 +398,10 @@ class _BillsListViewState extends State<BillsListView> {
                                       ),
                                     ),
                                     const SizedBox(height: 12),
-                                    Divider(color: Colors.grey[300], thickness: 1.2),
+                                    Divider(
+                                      color: Colors.grey[300],
+                                      thickness: 1.2,
+                                    ),
                                     const SizedBox(height: 12),
 
                                     // حقل الخصم
@@ -369,15 +417,21 @@ class _BillsListViewState extends State<BillsListView> {
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: colorScheme.primary,
-                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                         elevation: 6,
                                       ),
                                       onPressed: () {
                                         final cubit =
-                                        BlocProvider.of<ApplyDiscountCubit>(context);
+                                            BlocProvider.of<ApplyDiscountCubit>(
+                                              context,
+                                            );
                                         cubit.applyDiscount(
                                           ApplyDiscountParams(
                                             id: model.id!,

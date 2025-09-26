@@ -11,11 +11,7 @@ Future<CreateBillsParam?> showBillsBottomSheet(
   return showModalBottomSheet<CreateBillsParam?>(
     isScrollControlled: true,
     context: context,
-    builder: (_) => Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: BillsBottomSheet(title: title),
-    ),
+    builder: (_) =>  BillsBottomSheet(title: title),
+
   );
 }

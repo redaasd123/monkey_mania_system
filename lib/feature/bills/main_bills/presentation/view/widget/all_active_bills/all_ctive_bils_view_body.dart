@@ -210,7 +210,6 @@ class AllActiveBillsConsumer extends StatelessWidget {
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
             if (state is BranchSelectedState) {
-              // هنا ننده على BillsCubit ونجيب البيانات الخاصة بالـbranch الجديد
               context.read<BillsCubit>().fetchActiveBills(
                 FetchBillsParam(branch: [state.branchId]),
               );
@@ -239,6 +238,9 @@ class AllActiveBillsConsumer extends StatelessWidget {
               showRedFlush(context, state.errMessage);
               hideLoader(context);
             } else if (state is CloseBillsSuccess) {
+             await BlocProvider.of<BillsCubit>(
+                context,
+              ).fetchActiveBills(FetchBillsParam());
               showGreenFlush(context, 'Bill Closed');
               hideLoader(context);
             } else if (state is CloseBillsLoading) {
@@ -251,8 +253,8 @@ class AllActiveBillsConsumer extends StatelessWidget {
         builder: (context, state) {
           switch (state.status) {
             case BillsStatus.activeSuccess:
+            case BillsStatus.createSuccess:
               return AllActiveListView(bills: state.bills);
-
             case BillsStatus.createFailure:
               return AllActiveListView(bills: state.bills);
 
@@ -275,9 +277,10 @@ class AllActiveBillsConsumer extends StatelessWidget {
             case BillsStatus.activeLoading:
               return Stack(
                 children: [
+                  AllActiveListView(bills: state.bills),
                   Center(
                     child: SpinKitFadingCircle(
-                      color: Colors.blue, // غير اللون زي ما تحب
+                      color: Colors.blue,
                       size: 60,
                     ),
                   ),

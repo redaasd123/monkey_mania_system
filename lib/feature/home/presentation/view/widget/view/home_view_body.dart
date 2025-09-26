@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/constans.dart';
+import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/home/presentation/manager/home_cubit.dart';
+import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
 import '../../../../../../core/utils/my_app_drwer.dart';
+import '../../../../../branch/presentation/manager/branch_cubit.dart';
 import 'home_view_item.dart';
 
 class HomeViewBody extends StatelessWidget {
@@ -12,9 +17,7 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: HomeListView(),
       appBar: AppBar(
@@ -27,31 +30,59 @@ class HomeViewBody extends StatelessWidget {
   }
 }
 
-
 class HomeListView extends StatelessWidget {
   const HomeListView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        print("HomeState: ${state.status}");
-        if (state.status == HomeStatus.success) {
-          final data = state.data!;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BranchCubit, BranchState>(
+          listener: (context, state) {
+            if (state is BranchSelectedState) {
+              context.read<HomeCubit>().fetchDashBoardData(
+                FetchBillsParam(branch: [state.branchId]),
+              );
+            }
+          },
+        ),
 
-          return HomeViewBodyItem(data: data);
-
-        } else if (state.status == HomeStatus.failure) {
-          return Center(child: Text(state.errMessage ?? 'error'));
-        } else if (state.status == HomeStatus.loading) {
-          return const Center(
-            child: SpinKitFadingCircle(color: Colors.blue, size: 60),
-          );
-        } else {
-          return Center(child: Text(state.errMessage ?? 'no thing'));
-        }
-      },
+        BlocListener<HomeCubit, HomeState>(
+          listener: (context, state) async {
+            if (state.status == HomeStatus.initial) {
+              var branch = AuthHelper.getBranch();
+              if (branch == null) {
+                showSelectBranchWithLoginBottomSheet(
+                  context,
+                  onSelected: (selectedBranch) {
+                    Hive.box(kAuthBox).put(AuthKeys.branch, selectedBranch);
+                    BlocProvider.of<HomeCubit>(context).fetchDashBoardData(
+                      FetchBillsParam(branch: [selectedBranch]),
+                    );
+                  },
+                );
+              }
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          print("HomeState: ${state.status}");
+          if (state.status == HomeStatus.success) {
+            final data = state.data!;
+            return HomeViewBodyItem(data: data);
+          } else if (state.status == HomeStatus.failure) {
+            return Center(child: Text(state.errMessage ?? 'error'));
+          } else if (state.status == HomeStatus.loading) {
+            return const Center(
+              child: SpinKitFadingCircle(color: Colors.blue, size: 60),
+            );
+          } else {
+            return Center(child: Text(state.errMessage ?? 'no thing'));
+          }
+        },
+      ),
     );
   }
 }
-

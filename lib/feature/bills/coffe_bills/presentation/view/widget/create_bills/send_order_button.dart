@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 
 import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../../../core/widget/widget/custom_flush.dart';
@@ -44,7 +46,9 @@ class SendOrderButton extends StatelessWidget {
             );
           }).toList();
 
+
           final param = CreateBillsPCoffeeParam(
+            branchId: 1,
             product: products,
             billId: selectedBillId ?? 0,
             tableNumber: int.tryParse(tableNumberController.text.trim()) ?? 1,
@@ -54,8 +58,10 @@ class SendOrderButton extends StatelessWidget {
           context.read<CoffeeBillsCubit>().createBillsCoffeeCubit(param);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: Colors.teal,
+          foregroundColor: Colors.white,
+          // backgroundColor: Theme.of(context).colorScheme.primary,
+          // foregroundColor: Theme.of(context).colorScheme.onPrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

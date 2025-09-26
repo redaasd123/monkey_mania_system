@@ -8,6 +8,7 @@ import 'package:monkey_app/feature/school/presintation/manager/school_cubit/scho
 import '../../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
+import '../../../../../core/utils/selected_item_text_field.dart';
 import '../../../../school/domain/entity/school_entity.dart';
 
 class AddChildBottomSheet extends StatefulWidget {
@@ -103,41 +104,37 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      minChildSize: 0.6,
-      maxChildSize: 0.95,
-      builder: (_, controller) => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              colorScheme.primaryContainer,
-              colorScheme.primary.withOpacity(0.8),
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomCenter,
-          ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer,
+            colorScheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-          ),
-          child: SingleChildScrollView(
-            controller: controller,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildHandle(),
-                _buildHeader(colorScheme),
-                const SizedBox(height: 20),
-                _buildForm(context),
-              ],
-            ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 16,
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom +
+              24, // 👈 moves up with keyboard
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHandle(),
+              _buildHeader(colorScheme),
+              const SizedBox(height: 20),
+              _buildForm(context),
+            ],
           ),
         ),
       ),
@@ -206,13 +203,31 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             const SizedBox(height: 12),
             _buildAddressField(),
             const SizedBox(height: 12),
-            TextFieldSchoolID(
-              childrenCtrl: _schoolCtrl,
+
+            SelectItemTextField<SchoolEntity>(
+              controller: _schoolCtrl, // نفس الـ controller اللي كنت مستخدمه
               colorScheme: Theme.of(context).colorScheme,
-              onSelected: (int id) {
-                _selectedSchoolId = id;
+              label: LangKeys.school.tr(),
+              fetchItems: () async {
+                // هنا نستدعي الـ Cubit نفسه اللي كنت بتسحب منه المدارس
+                await context.read<SchoolCubit>().fetchSchool();
+                return context.read<SchoolCubit>().state.allSchool;
+              },
+              itemTitle: (school) => school.name ?? 'لا يوجد اسم', // طريقة عرض الاسم
+              onSelected: (school) {
+                _selectedSchoolId = school.id; // نفس المنطق القديم
+                print('Selected school ID: $_selectedSchoolId');
               },
             ),
+
+
+            // TextFieldSchoolID(
+            //   childrenCtrl: _schoolCtrl,
+            //   colorScheme: Theme.of(context).colorScheme,
+            //   onSelected: (int id) {
+            //     _selectedSchoolId = id;
+            //   },
+            // ),
             const SizedBox(height: 12),
             _buildField(
               _notesCtrl,
@@ -304,6 +319,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       },
     );
   }
+
   Widget _buildAddressSelector() {
     final allAreas = [
       'الصعيدي القديم',
@@ -321,8 +337,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF745385),
-                Color(0xFF745385),
+                Color(0xFF5A55CA), // Indigo Violet
+                Color(0xFF9D84FF),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -367,7 +383,10 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     controller: searchCtrl,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.white70,
+                      ),
                       hintText: LangKeys.address.tr(),
                       hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
@@ -379,9 +398,11 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     ),
                     onChanged: (val) => setState(() {
                       filteredAreas = allAreas
-                          .where((area) => area
-                          .toLowerCase()
-                          .contains(val.trim().toLowerCase()))
+                          .where(
+                            (area) => area.toLowerCase().contains(
+                              val.trim().toLowerCase(),
+                            ),
+                          )
                           .toList();
                     }),
                   ),
@@ -389,7 +410,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
                   // 📋 قائمة المناطق
                   ...filteredAreas.map(
-                        (area) => Card(
+                    (area) => Card(
                       color: Colors.white,
                       elevation: 4,
                       shape: RoundedRectangleBorder(
@@ -399,8 +420,10 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.deepPurple.shade400,
-                          child: const Icon(Icons.location_city_outlined,
-                              color: Colors.white),
+                          child: const Icon(
+                            Icons.location_city_outlined,
+                            color: Colors.white,
+                          ),
                         ),
                         title: Text(
                           area,
@@ -409,8 +432,11 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        trailing: const Icon(Icons.arrow_forward_ios,
-                            size: 16, color: Colors.grey),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
                         onTap: () => Navigator.pop(context, area),
                       ),
                     ),
@@ -427,8 +453,10 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.orange.shade400,
-                        child: const Icon(Icons.edit_location_alt_outlined,
-                            color: Colors.white),
+                        child: const Icon(
+                          Icons.edit_location_alt_outlined,
+                          color: Colors.white,
+                        ),
                       ),
                       title: Text(
                         LangKeys.enterAddressManually.tr(),
@@ -447,7 +475,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                               content: TextField(
                                 controller: manualCtrl,
                                 decoration: const InputDecoration(
-                                  hintText: 'مثال: خلف الجامعة - بجوار كلية العلوم',
+                                  hintText:
+                                      'مثال: خلف الجامعة - بجوار كلية العلوم',
                                 ),
                               ),
                               actions: [
@@ -480,8 +509,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       },
     );
   }
-
-
 
   ///////////////////////////////
   Widget _buildField(
@@ -637,24 +664,24 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                 minChildSize: 0.4,
                 maxChildSize: 0.95,
                 builder: (context, scrollController) {
-                  List<SchoolEntity> filteredSchools = List.from(state.allSchool);
-                  final TextEditingController searchCtrl = TextEditingController();
+                  List<SchoolEntity> filteredSchools = List.from(
+                    state.allSchool,
+                  );
+                  final TextEditingController searchCtrl =
+                      TextEditingController();
 
                   return StatefulBuilder(
                     builder: (context, setState) {
                       return Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              Color(0xFF745385),
-                              Color(0xFF807387),
-
-                            ],
+                            colors: [Color(0xFF5A55CA), Color(0xFF9D84FF)],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
-                          borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(24)),
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -690,9 +717,13 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                                   filled: true,
                                   fillColor: Colors.white.withOpacity(0.15),
                                   hintText: "ابحث عن مدرسة...",
-                                  hintStyle: const TextStyle(color: Colors.white70),
-                                  prefixIcon:
-                                  const Icon(Icons.search, color: Colors.white70),
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    color: Colors.white70,
+                                  ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide.none,
@@ -703,9 +734,9 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                                     filteredSchools = state.allSchool
                                         .where(
                                           (school) => (school.name ?? '')
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase()),
-                                    )
+                                              .toLowerCase()
+                                              .contains(query.toLowerCase()),
+                                        )
                                         .toList();
                                   });
                                 },
@@ -726,13 +757,20 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       margin: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 4),
+                                        vertical: 8,
+                                        horizontal: 4,
+                                      ),
                                       child: ListTile(
-                                        contentPadding: const EdgeInsets.all(12),
+                                        contentPadding: const EdgeInsets.all(
+                                          12,
+                                        ),
                                         leading: CircleAvatar(
-                                          backgroundColor: Colors.indigo.shade400,
-                                          child: const Icon(Icons.school,
-                                              color: Colors.white),
+                                          backgroundColor:
+                                              Colors.indigo.shade400,
+                                          child: const Icon(
+                                            Icons.school,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                         title: Text(
                                           school.name ?? 'لا يوجد اسم',
@@ -742,7 +780,7 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
                                           ),
                                         ),
                                         onTap: () => Future.microtask(
-                                              () => Navigator.pop(context, school),
+                                          () => Navigator.pop(context, school),
                                         ),
                                       ),
                                     );
@@ -766,7 +804,6 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
             widget.onSelected!(selectedSchool.id); // ترجع الـ ID
           }
         }
-
       },
 
       readOnly: true,
@@ -791,3 +828,36 @@ class _TextFieldSchoolIDState extends State<TextFieldSchoolID> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -13,9 +13,7 @@ Future<CreateChildrenParam?>? showAddChildBottomSheet(
     context: ctx,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-      child: AddChildBottomSheet(title: title, childrenEntity: model),
-    ),
+    builder: (_) => AddChildBottomSheet(title: title, childrenEntity: model),
+
   );
 }

@@ -45,16 +45,7 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(kFlowers2), // صورتك هنا
-          fit: BoxFit.cover, // تملى الشاشة كلها
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-
+    return Scaffold(
         appBar: AppBar(
           title: const Text("تفاصيل الفاتورة"),
           flexibleSpace: Container(
@@ -176,7 +167,6 @@ class _ShowDetailCoffeeState extends State<ShowDetailCoffee> {
             }
           },
         ),
-      ),
     );
   }
 }

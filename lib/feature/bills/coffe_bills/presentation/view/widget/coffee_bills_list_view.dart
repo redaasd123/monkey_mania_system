@@ -10,8 +10,9 @@ import '../../../../../../core/utils/app_router.dart';
 import '../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 class CoffeeBillsListView extends StatefulWidget {
-  const CoffeeBillsListView({super.key, required this.bills,});
-final List<BillsCoffeeEntity> bills;
+  const CoffeeBillsListView({super.key, required this.bills});
+
+  final List<BillsCoffeeEntity> bills;
 
   @override
   State<CoffeeBillsListView> createState() => _CoffeeBillsListViewState();
@@ -32,7 +33,6 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
   }
 
   void scrollListener() {
-    final branch = AuthHelper.getBranch();
     final cubit = BlocProvider.of<CoffeeBillsCubit>(context);
     final state = cubit.state;
     if (!scrollController.hasClients) return;
@@ -41,7 +41,9 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
     final currentScroll = scrollController.position.pixels;
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
-      cubit.fetchBillsCoffee(FetchBillsParam(page: state.currentPage,branch:[branch]));
+      cubit.fetchBillsCoffee(
+        FetchBillsParam(page: state.currentPage),
+      );
     }
   }
 
@@ -60,18 +62,18 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
       builder: (context, state) {
         final bills = state.bills;
         return RefreshIndicator(
-          onRefresh: ()=>BlocProvider.of<CoffeeBillsCubit>(context).onRefresh(),
+          onRefresh: () =>
+              BlocProvider.of<CoffeeBillsCubit>(context).onRefresh(),
           child: ListView.builder(
             controller: scrollController,
-            itemCount: bills.length ,
+            itemCount: bills.length,
             itemBuilder: (context, index) {
               final modal = bills[index];
               return GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).push(
-                    AppRouter.kShowDetailCoffeeBills,
-                    extra: modal.id,
-                  );
+                  GoRouter.of(
+                    context,
+                  ).push(AppRouter.kShowDetailCoffeeBills, extra: modal.id);
                 },
                 child: CoffeeBillsItem(billsCoffeeEntity: modal),
               );
@@ -80,6 +82,5 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
         );
       },
     );
-
   }
 }

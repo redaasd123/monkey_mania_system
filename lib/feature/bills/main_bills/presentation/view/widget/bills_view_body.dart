@@ -2,12 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:monkey_app/core/utils/poppup_menu_button.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/show_bills_bottom_sheet.dart';
 
+import '../../../../../../core/download_fiels/download_file.dart';
+import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/utils/my_app_drwer.dart';
 import '../../../../../branch/presentation/manager/branch_cubit.dart';
@@ -78,66 +81,27 @@ class _BillsViewBodyState extends State<BillsViewBody> {
               });
             },
           ),
-          PopupMenuButton<String>(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[900]!.withOpacity(0.95)
-                : Colors.white.withOpacity(0.95),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            elevation: 10,
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFC971E4), Color(0xFFC0A7C6)],
-                  // بنفسجي → أزرق
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.more_vert, color: Colors.white, size: 22),
-            ),
-            onSelected: (value) {
-              if (value == 'branch') {
-                showBranchBottomSheet(
-                  context,
-                  onSelected: (param) {
-                    context.read<BillsCubit>().fetchBills(param);
-                    print('${param.branch}');
-                  },
-                );
-              }
+          CustomPopupMenu(
+            onBranch: () {
+              showBranchBottomSheet(
+                context,
+                onSelected: (param) {
+                  context.read<BillsCubit>().fetchBills(param);
+                },
+              );
             },
-            itemBuilder: (context) => [
-              PopupMenuItem<String>(
-                value: 'branch',
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.store_mall_directory,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Branch',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            onDownload: () async {
+              final cubit = context.read<BillsCubit>().state;
+              await requestStoragePermission();
+              final downloader = FileDownloaderUI();
+              final param = FetchBillsParam(query: cubit.searchQuery);
+
+              await downloader.downloadFile(
+                context,
+                '${kBaseUrl}school/all/?is_csv_response=true&${param.toQueryParams()}',
+                'schools.csv',
+              );
+            },
           ),
         ],
       ),
@@ -151,7 +115,7 @@ class _BillsViewBodyState extends State<BillsViewBody> {
           if (data != null) {
             context.read<BillsCubit>().createBills(
               CreateBillsParam(
-                discount: data.discount,
+                discount: '',
                 childrenId: data.childrenId,
                 newChildren: data.newChildren,
                 branch: data.branch,
@@ -271,6 +235,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
             case BillsStatus.success:
             case BillsStatus.failure:
             case BillsStatus.createFailure:
+            case BillsStatus.createSuccess:
               return BillsListView(bills: state.bills);
 
             // ---------------- Empty ----------------

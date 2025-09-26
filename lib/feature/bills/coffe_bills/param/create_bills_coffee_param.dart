@@ -3,8 +3,10 @@ class CreateBillsPCoffeeParam {
   final int billId;
   final int tableNumber;
   final bool takeAway;
+  final int branchId;
 
   CreateBillsPCoffeeParam({
+    required this.branchId,
     required this.product,
     required this.billId,
     required this.tableNumber,
@@ -19,9 +21,12 @@ class CreateBillsPCoffeeParam {
       "take_away": takeAway,
     };
   }
+
+
+  String branchToQuery() {
+    return "branch_id=$branchId";
+  }
 }
-
-
 
 class Products {
   final String productType;
@@ -38,7 +43,7 @@ class Products {
 
     // ✅ ضيف المفتاح فقط لو فيه قيمة
     if (notes != null && notes!.isNotEmpty) {
-      map['notes'] = notes!; // ✅ استخدم ! عشان تقول للـ compiler انها مش null
+      map['notes'] = notes!;
     }
 
     return map;
@@ -51,4 +56,3 @@ class Products {
     required this.notes,
   });
 }
-

@@ -5,6 +5,7 @@ import 'package:monkey_app/core/utils/service_locator.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 import '../manager/coffee_bills/coffee_bills_cubit.dart';
+import '../manager/coffee_bills/order_cubit.dart';
 import 'widget/coffe_bills_view_body.dart';
 
 class CoffeeBillsView extends StatelessWidget {
@@ -12,13 +13,13 @@ class CoffeeBillsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final branch = AuthHelper.getBranch();
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => getIt<OrdersCubit>()),
         BlocProvider(
           create: (context) =>
               getIt<CoffeeBillsCubit>()
-                ..fetchBillsCoffee(FetchBillsParam(branch: [branch])),
+                ..fetchBillsCoffee(FetchBillsParam(branch: ['all'])),
         ),
       ],
       child: CoffeeBillsViewBody(),

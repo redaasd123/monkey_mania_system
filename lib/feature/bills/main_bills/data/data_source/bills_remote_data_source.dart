@@ -30,6 +30,11 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   @override
   Future<BillsPageEntity> fetchBills(FetchBillsParam param) async {
     final url = 'bill/all?${param.toQueryParams()}';
+
+    // ✅ اطبع الـ param والـ URL قبل إرسال الريكوست
+    print('📌 Fetching Bills with param: ${param.toQueryParams()}');
+    print('📌 Full URL: $url');
+
     var result = await getIt.get<Api>().get(endPoint: url);
     print('✅ API Response Received');
 
@@ -43,6 +48,9 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
       return int.tryParse(uri.queryParameters['page'] ?? '');
     }
 
+    print('📦 Parsed Bills List: $listBills');
+    print('➡️ Next Page: ${extractPage(result['next'])}, Previous Page: ${extractPage(result['previous'])}');
+
     return BillsPageEntity(
       bills: listBills,
       nextPage: extractPage(result['next']),
@@ -52,11 +60,14 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
   @override
   Future<BillsEntity> createBills(CreateBillsParam param) async {
-    var result = await getIt.get<Api>().post(
+    var response = await getIt.get<Api>().post(
       endPoint: 'bill/create/',
       body: param.toJson(),
     );
+
+    var result = response.data;
     return GetAllBillsModel.fromJson(result);
+
   }
 
   @override

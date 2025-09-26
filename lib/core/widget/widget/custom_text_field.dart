@@ -53,7 +53,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           labelText: widget.label,
           hintText: widget.hint,
           labelStyle: TextStyle(
-            color: scheme.primary,
+
+            color:Colors.teal,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),

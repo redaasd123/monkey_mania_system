@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/theme_color/theme_Cubit.dart';
 import 'package:monkey_app/core/utils/app_router.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
@@ -51,11 +52,12 @@ class MyAppDrawer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.storefront_rounded,
-                    size: 50,
-                    color: Colors.blue,
+                    child: CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Colors.white,
+                    child: Image.asset(kTest, height: 60),
                   ),
+
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -94,24 +96,29 @@ class MyAppDrawer extends StatelessWidget {
                   title: LangKeys.children.tr(),
                   icon: FontAwesomeIcons.child,
                   color: Colors.purple,
-                  onTap: () => GoRouter.of(context).push(AppRouter.kChildrenSchool),
+                  onTap: () =>
+                      GoRouter.of(context).push(AppRouter.kChildrenSchool),
                 ),
                 _buildCardItem(
                   context,
                   title: LangKeys.mainBills.tr(),
                   icon: FontAwesomeIcons.receipt,
                   color: Colors.blue,
-                  onTap: () => GoRouter.of(context).push(AppRouter.kGetAllBillsView),
+                  onTap: () =>
+                      GoRouter.of(context).push(AppRouter.kGetAllBillsView),
                   extraActions: [
                     _buildChipAction(
                       context,
                       text: LangKeys.allBills.tr(),
-                      onTap: () => GoRouter.of(context).push(AppRouter.kGetAllBillsView),
+                      onTap: () =>
+                          GoRouter.of(context).push(AppRouter.kGetAllBillsView),
                     ),
                     _buildChipAction(
                       context,
                       text: LangKeys.allActiveBills.tr(),
-                      onTap: () => GoRouter.of(context).push(AppRouter.kGetAllActiveBillsView),
+                      onTap: () => GoRouter.of(
+                        context,
+                      ).push(AppRouter.kGetAllActiveBillsView),
                     ),
                   ],
                 ),
@@ -120,20 +127,57 @@ class MyAppDrawer extends StatelessWidget {
                   title: LangKeys.coffeeBills.tr(),
                   icon: FontAwesomeIcons.coffee,
                   color: Colors.brown,
-                  onTap: () => GoRouter.of(context).push(AppRouter.kCoffeeBills),
+                  onTap: () =>
+                      GoRouter.of(context).push(AppRouter.kCoffeeBills),
                   extraActions: [
                     _buildChipAction(
                       context,
                       text: LangKeys.allBills.tr(),
-                      onTap: () => GoRouter.of(context).push(AppRouter.kCoffeeBills),
+                      onTap: () =>
+                          GoRouter.of(context).push(AppRouter.kCoffeeBills),
                     ),
                     _buildChipAction(
                       context,
                       text: LangKeys.allActiveBills.tr(),
-                      onTap: () => GoRouter.of(context).push(AppRouter.kActiveCoffeeBills),
+                      onTap: () => GoRouter.of(
+                        context,
+                      ).push(AppRouter.kActiveCoffeeBills),
                     ),
                   ],
                 ),
+
+
+
+
+
+                _buildCardItem(
+                  context,
+                  title: 'Expense',
+                  icon: FontAwesomeIcons.receipt,
+                  color: Colors.blue,
+                  onTap: () =>
+                      GoRouter.of(context).push(AppRouter.kGeneralExpenseView),
+                  extraActions: [
+                    _buildChipAction(
+                      context,
+                      text:'material',
+                      onTap: () =>
+                          GoRouter.of(context).push(AppRouter.kMaterialExpenseView),
+                    ),
+                    _buildChipAction(
+                      context,
+                      text: 'general',
+                      onTap: () => GoRouter.of(
+                        context,
+                      ).push(AppRouter.kGeneralExpenseView),
+                    ),
+                  ],
+                ),
+
+
+
+
+
                 _buildCardItem(
                   context,
                   title: LangKeys.changeLanguage.tr(),
@@ -146,6 +190,7 @@ class MyAppDrawer extends StatelessWidget {
                     context.setLocale(newLocale);
                   },
                 ),
+
                 _buildCardItem(
                   context,
                   title: LangKeys.nightMode.tr(),
@@ -165,7 +210,9 @@ class MyAppDrawer extends StatelessWidget {
                     showSelectBranchWithLoginBottomSheet(
                       context,
                       onSelected: (branchId) {
-                        BlocProvider.of<BranchCubit>(context).selectBranch(branchId);
+                        BlocProvider.of<BranchCubit>(
+                          context,
+                        ).selectBranch(branchId);
                       },
                     );
                   },
@@ -206,17 +253,20 @@ class MyAppDrawer extends StatelessWidget {
 
   // ---- CARD ITEM ----
   Widget _buildCardItem(
-      BuildContext context, {
-        required String title,
-        required IconData icon,
-        required Color color,
-        required VoidCallback onTap,
-        List<Widget>? extraActions,
-      }) {
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    List<Widget>? extraActions,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme; // ⬅️ جبت ألوان الثيم
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 5,
+      color: colorScheme.surface,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,
@@ -228,7 +278,7 @@ class MyAppDrawer extends StatelessWidget {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: color.withOpacity(0.1),
+                    backgroundColor: color.withOpacity(0.15),
                     child: Icon(icon, color: color),
                   ),
                   const SizedBox(width: 12),
@@ -238,7 +288,7 @@ class MyAppDrawer extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -246,11 +296,8 @@ class MyAppDrawer extends StatelessWidget {
               ),
               if (extraActions != null) ...[
                 const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  children: extraActions,
-                ),
-              ]
+                Wrap(spacing: 8, children: extraActions),
+              ],
             ],
           ),
         ),
@@ -259,8 +306,11 @@ class MyAppDrawer extends StatelessWidget {
   }
 
   // ---- CHIP ACTION ----
-  Widget _buildChipAction(BuildContext context,
-      {required String text, required VoidCallback onTap}) {
+  Widget _buildChipAction(
+    BuildContext context, {
+    required String text,
+    required VoidCallback onTap,
+  }) {
     return ActionChip(
       label: Text(text, style: const TextStyle(fontSize: 13)),
       backgroundColor: Colors.grey.shade200,

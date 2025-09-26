@@ -13,14 +13,13 @@ class AllActiveCoffeeBillsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final branch = AuthHelper.getBranch();
     return MultiBlocProvider(
      providers: [
        BlocProvider(create: (context)=>getIt<GetOneBillsCoffeeCubit>()),
        BlocProvider(
          create: (context) =>
          getIt<CoffeeBillsCubit>()
-           ..fetchActiveBillsCoffee(FetchBillsParam(branch: [branch])),
+           ..fetchActiveBillsCoffee(FetchBillsParam(branch: ['all'])),
        ),
      ],
 

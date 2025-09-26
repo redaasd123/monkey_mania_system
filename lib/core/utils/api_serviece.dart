@@ -9,7 +9,7 @@ class Api {
   final Dio dio;
 
   Api({required this.dio}) {
-    setupInterceptors(dio); // ✅ فعلنا الإنترسبتور هنا
+    setupInterceptors(dio);
   }
 
   Future<dynamic> getUri(Uri uri) async {
@@ -55,6 +55,7 @@ class Api {
     required String endPoint,
     required dynamic body,
     String? token,
+    Map<String, dynamic>? queryParameters,
   }) async {
     print("📦 Request Body: ${body.toString()}");
     Map<String, String> headers = {
@@ -64,6 +65,7 @@ class Api {
     print('📤 Headers: ${headers}');
     try {
       var response = await dio.post(
+        queryParameters: queryParameters,
         _baseUrl + endPoint,
         data: body,
         options: Options(headers: headers),

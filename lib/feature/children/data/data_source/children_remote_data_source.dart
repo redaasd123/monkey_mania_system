@@ -19,44 +19,65 @@ abstract class ChildrenRemoteDataSource {
 }
 
 class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
-  //final Api api;
 
   ChildrenRemoteDataSourceImpl();
 
   @override
   Future<ChildrenPageEntity> fetchChildren(FetchChildrenParam? param) async {
-    print('📌 Sending request for page: $param');
+    try {
+      print('🚀 Sending request for children list');
+      print('📌 Request param: $param');
+      print('📌 Request queryParams: ${param?.toJson()}');
 
-    Map<String, dynamic> result = await getIt.get<Api>().get(
-      endPoint: 'child/all/',
-      queryParameters: param?.toJson(),
-    );
+      Map<String, dynamic> result = await getIt.get<Api>().get(
+        endPoint: 'child/all/',
+        queryParameters: param?.toJson(),
+      );
 
-    // طباعة بيانات الرد
-    print('✅ Response status received');
-    print('📦 Response data count: ${result['count']}');
-    print('📦 Next page URL: ${result['next']}');
-    print('📦 Previous page URL: ${result['previous']}');
+      // 🟢 اطبع الريسبونس كامل
+      print('✅ Response received from API');
+      print('📦 Full Response: $result');
 
-    List<ChildrenEntity> childrenList = [];
-    for (var item in result['results']) {
-      childrenList.add(ChildrenModel.fromJson(item));
+      // طباعة بيانات عامة
+      print('📦 Response count: ${result['count']}');
+      print('📦 Next page URL: ${result['next']}');
+      print('📦 Previous page URL: ${result['previous']}');
+
+      List<ChildrenEntity> childrenList = [];
+      if (result['results'] != null) {
+        for (var item in result['results']) {
+          print('🔹 Raw child item: $item'); // قبل التحويل
+          final child = ChildrenModel.fromJson(item);
+          print('✅ Parsed child entity: $child'); // بعد التحويل
+          childrenList.add(child);
+        }
+      } else {
+        print('⚠️ No results found in response');
+      }
+
+      print('📥 Total children parsed: ${childrenList.length}');
+
+      // احفظ البيانات في Hive
+      saveChildrenData(childrenList, kChildrenBox);
+
+      int? extractPage(String? url) {
+        if (url == null) return null;
+        final uri = Uri.parse(url);
+        return int.tryParse(uri.queryParameters['page'] ?? '');
+      }
+
+      final entity = ChildrenPageEntity(
+        nextPage: extractPage(result['next']),
+        children: childrenList,
+      );
+
+      print('🎯 Final ChildrenPageEntity: $entity');
+      return entity;
+    } catch (e, st) {
+      print('❌ Error while fetching children: $e');
+      print('🛠️ StackTrace: $st');
+      rethrow;
     }
-
-    print('📥 Fetched ${childrenList.length} children from API');
-
-    saveChildrenData(childrenList, kChildrenBox);
-
-    int? extractPage(String? url) {
-      if (url == null) return null;
-      final uri = Uri.parse(url);
-      return int.tryParse(uri.queryParameters['page'] ?? '');
-    }
-
-    return ChildrenPageEntity(
-      nextPage: extractPage(result['next']),
-      children: childrenList,
-    );
   }
 
   @override

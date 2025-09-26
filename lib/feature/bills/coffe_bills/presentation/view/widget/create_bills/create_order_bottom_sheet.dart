@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../domain/entity/get_all_layers_entity.dart';
 
 class OrderBottomSheet extends StatefulWidget {
@@ -11,8 +11,7 @@ class OrderBottomSheet extends StatefulWidget {
       String notes,
       GetAllLayerEntity item,
       String imagePath,
-      )
-  onAdd;
+      ) onAdd;
 
   final int? initialQuantity;
   final String? initialNotes;
@@ -29,6 +28,7 @@ class OrderBottomSheet extends StatefulWidget {
   @override
   State<OrderBottomSheet> createState() => _OrderBottomSheetState();
 }
+
 class _OrderBottomSheetState extends State<OrderBottomSheet> {
   late int counter;
   late TextEditingController notesController = TextEditingController();
@@ -51,25 +51,22 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
     final colorScheme = Theme.of(context).colorScheme;
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.75,
+      initialChildSize: 0.8,
       minChildSize: 0.6,
       maxChildSize: 0.95,
       builder: (_, controller) => Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF6E6666),
-              Color(0xFF2E2626),
-            ],
+          gradient: const LinearGradient(
+            colors: [Color(0xFF141E30), Color(0xFF243B55)], // خلفية محترفة
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 16,
-              offset: const Offset(0, -8),
+              color: Colors.black.withOpacity(0.6),
+              blurRadius: 20,
+              offset: const Offset(0, -10),
             ),
           ],
         ),
@@ -77,55 +74,50 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
           padding: EdgeInsets.only(
             left: 20,
             right: 20,
-            top: 12,
+            top: 16,
             bottom: MediaQuery.of(context).viewInsets.bottom + 24,
           ),
           child: SingleChildScrollView(
             controller: controller,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Handle
                 Container(
-                  width: 50,
-                  height: 5,
-                  margin: const EdgeInsets.only(bottom: 16),
+                  width: 60,
+                  height: 6,
+                  margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: colorScheme.onSurface.withOpacity(0.4),
+                    color: Colors.white.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
 
                 // صورة المنتج
                 CircleAvatar(
-                  radius: 60,
-                  backgroundColor: colorScheme.primary.withOpacity(0.15),
+                  radius: 65,
+                  backgroundColor: Colors.white.withOpacity(0.1),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(60),
+                    borderRadius: BorderRadius.circular(65),
                     child: Image.asset(
                       widget.imagePath,
-                      height: 110,
-                      width: 110,
+                      height: 120,
+                      width: 120,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
 
-                // اسم المنتج (مش على الصورة)
+                // اسم المنتج
                 Text(
                   widget.item.product ?? '',
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: const TextStyle(
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
+                    color: Colors.white,
                     shadows: [
-                      Shadow(
-                        color: Colors.black26,
-                        blurRadius: 4,
-                        offset: Offset(1, 1),
-                      ),
+                      Shadow(color: Colors.black54, blurRadius: 6),
                     ],
                   ),
                 ),
@@ -136,110 +128,65 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.green.shade700, Colors.green.shade400],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.green.shade700.withOpacity(0.4),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.price_check, color: Colors.white, size: 20),
-                          const SizedBox(width: 6),
-                          Text(
-                            "${widget.item.price ?? 0} ج.م",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
+                    _infoChip(
+                      icon: FontAwesomeIcons.tag,
+                      text: "${widget.item.price ?? 0} ج.م",
+                      colors: [Colors.purple, Colors.deepPurpleAccent],
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.blue.shade700, Colors.blue.shade400],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.shade700.withOpacity(0.4),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.inventory_2, color: Colors.white, size: 20),
-                          const SizedBox(width: 6),
-                          Text(
-                            "المتاح: ${widget.item.availableUnits}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+                    _infoChip(
+                      icon: FontAwesomeIcons.boxOpen,
+                      text: "المتاح: ${widget.item.availableUnits}",
+                      colors: [Colors.blue, Colors.lightBlueAccent],
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 24),
 
-                // اختيار الكمية
+                // الكمية
                 Text(
                   'الكمية',
-                  style: TextStyle(
-                    fontSize: 16,
+                  style: const TextStyle(
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 12),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                       onPressed: () => setState(() => counter++),
-                      icon: Icon(Icons.add_circle, color: Colors.black, size: 36),
+                      icon: const Icon(FontAwesomeIcons.plusCircle,
+                          color: Colors.greenAccent, size: 34),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 8),
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceVariant.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.white30),
                       ),
                       child: Text(
                         '$counter',
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: const TextStyle(
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          if (counter > 0) counter--;
+                          if (counter > 1) counter--;
                         });
                       },
-                      icon: Icon(Icons.remove_circle, color: colorScheme.error, size: 36),
+                      icon: const Icon(FontAwesomeIcons.minusCircle,
+                          color: Colors.redAccent, size: 34),
                     ),
                   ],
                 ),
@@ -249,17 +196,19 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                 // الملاحظات
                 TextField(
                   controller: notesController,
-                  style: TextStyle(color: colorScheme.onSurface),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: "ملاحظات إضافية",
-                    labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                    labelStyle: TextStyle(
+                        color: Colors.white.withOpacity(0.8), fontSize: 14),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: colorScheme.surfaceVariant.withOpacity(0.25),
-                    prefixIcon: Icon(Icons.note_alt, color: colorScheme.secondary),
+                    fillColor: Colors.white.withOpacity(0.1),
+                    prefixIcon: const Icon(FontAwesomeIcons.noteSticky,
+                        color: Colors.amber),
                   ),
                   maxLines: 3,
                 ),
@@ -270,30 +219,31 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.error,
-                          foregroundColor: colorScheme.onError,
+                          backgroundColor: Colors.redAccent,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                              borderRadius: BorderRadius.circular(18)),
                         ),
+                        icon: const Icon(FontAwesomeIcons.xmark),
+                        label: const Text('إلغاء'),
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('إلغاء'),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          foregroundColor: colorScheme.onPrimary,
+                          backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                              borderRadius: BorderRadius.circular(18)),
                         ),
+                        icon: const Icon(FontAwesomeIcons.cartPlus),
+                        label: Text(widget.initialQuantity == null
+                            ? 'إضافة الطلب'
+                            : 'تعديل الطلب'),
                         onPressed: () {
                           if (counter >= 1) {
                             widget.onAdd(
@@ -305,9 +255,6 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                             Navigator.pop(context);
                           }
                         },
-                        child: Text(widget.initialQuantity == null
-                            ? 'إضافة الطلب'
-                            : 'تعديل الطلب'),
                       ),
                     ),
                   ],
@@ -318,9 +265,40 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
         ),
       ),
     );
+  }
 
-
-
-
+  // Widget Chip Info
+  Widget _infoChip(
+      {required IconData icon,
+        required String text,
+        required List<Color> colors}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: colors),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: colors.first.withOpacity(0.4),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.white, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

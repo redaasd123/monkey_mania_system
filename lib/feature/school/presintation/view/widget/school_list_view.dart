@@ -10,9 +10,10 @@ import 'package:monkey_app/feature/school/presintation/view/widget/show_add_bott
 import '../../../domain/entity/school_entity.dart';
 
 class SchoolListView extends StatelessWidget {
-  const SchoolListView({super.key, required this.school});
+  const SchoolListView({super.key, required this.school,  this.search = ''});
 
   final List<SchoolEntity> school;
+  final String? search;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,7 @@ class SchoolListView extends StatelessWidget {
           // 👇 قلبنا الفهرس بحيث 0 ← أحدث عنصر
           // final model = school[school.length - 1 - index];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: GestureDetector(
+          return  GestureDetector(
               onTap: () async {
                 final data = await schoolShowAddSchoolSheet(
                   context,
@@ -51,8 +50,8 @@ class SchoolListView extends StatelessWidget {
                 }
               },
 
-              child: CustomDetailSchoolCard(schoolModel: school[index]),
-            ),
+              child: CustomDetailSchoolCard(schoolModel: school[index],),
+
           );
         },
       ),

@@ -34,37 +34,41 @@ abstract class BillsCoffeeDataSource {
 class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   @override
   Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(
-    FetchBillsParam param,
-  ) async {
+      FetchBillsParam param,
+      ) async {
     final url = 'product_bill/active/all?${param.toQueryParams()}';
+    print('📤 Fetch Active Bills Coffee from: $url');
 
-    var result = await getIt.get<Api>().get(endPoint: url);
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
+
     List<BillsCoffeeEntity> bills = [];
-    for (var item in result) {
-      bills.add(BillsCoffeeModel.fromJson(item).toEntity());
+    for (var item in response) {
+      print('🔹 Raw Item: $item');
+      final entity = BillsCoffeeModel.fromJson(item).toEntity();
+      print('✅ Parsed Entity: $entity');
+      bills.add(entity);
     }
+
+    print('📦 Final Bills Count: ${bills.length}');
     return bills;
   }
 
   @override
   Future<BillsCoffeePageEntity> fetchBillsCoffee(FetchBillsParam param) async {
     final url = 'product_bill/all?${param.toQueryParams()}';
+    print('📤 Fetch Bills Coffee from: $url');
 
-    // 📨 Print request
-    print('📩 Request sent to: $url');
-
-    var result = await getIt.get<Api>().get(endPoint: url);
-
-    // 📥 Print raw response
-    print('📥 Raw Response: $result');
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
 
     List<BillsCoffeeEntity> bills = [];
-    for (var item in result['results']) {
-      final entity = BillsCoffeeModel.fromJson(item as Map<String, dynamic>).toEntity();
+    for (var item in response['results']) {
+      print('🔹 Raw Item: $item');
+      final entity =
+      BillsCoffeeModel.fromJson(item as Map<String, dynamic>).toEntity();
+      print('✅ Parsed Entity: $entity');
       bills.add(entity);
-
-      // 🧾 Print each bill after parsing
-      print('🧾 Bill parsed: $entity');
     }
 
     int? extractPage(String? url) {
@@ -75,90 +79,124 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
 
     final pageEntity = BillsCoffeePageEntity(
       billsCoffeeEntity: bills,
-      nextPage: extractPage(result['next']),
-      previousPage: extractPage(result['previous']),
+      nextPage: extractPage(response['next']),
+      previousPage: extractPage(response['previous']),
     );
 
-    // 📦 Print final entity
     print('📦 Final BillsCoffeePageEntity: $pageEntity');
-
     return pageEntity;
   }
 
   @override
   Future<GetOneBillsCoffeeEntity> getOneBillsCoffee(int id) async {
-    var result = await getIt.get<Api>().get(endPoint: 'product_bill/${id}/');
-    return GetOneCoffeeBillsModel.fromJson(result).toEntity();
+    final url = 'product_bill/$id/';
+    print('📤 Fetch One Bill Coffee from: $url');
+
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
+
+    final entity = GetOneCoffeeBillsModel.fromJson(response).toEntity();
+    print('✅ Parsed Entity: $entity');
+
+    return entity;
   }
 
   @override
-  Future<BillsCoffeeEntity> createBillsCoffee(CreateBillsPCoffeeParam param) async {
-    final response = await getIt.get<Api>().post(
-      endPoint: 'product_bill/create/',
-      body: param.toJson(),
-    );
-    return BillsCoffeeModel.fromJson(response.data).toEntity();
+  Future<BillsCoffeeEntity> createBillsCoffee(
+      CreateBillsPCoffeeParam param) async {
+    final url = 'product_bill/create/?${param.branchToQuery()}';
+    print('📤 Creating Bill Coffee at: $url');
+    print('📤 Request Body: ${param.toJson()}');
+
+
+    // 🛑 Debug قبل ما يتنفذ request
+    print('🚀 DEBUG: About to send POST request');
+    print('   👉 URL: $url');
+    print('   👉 Query Params: ${param.branchToQuery()}');
+    print('   👉 Body: ${param.toJson()}');
+    print('   👉 Headers: {Content-Type: application/json}');
+
+    try {
+      final response = await getIt.get<Api>().post(
+        endPoint: url,
+        body: param.toJson(),
+      );
+
+      print('📥 Raw Response: ${response.data}');
+
+      final entity = BillsCoffeeModel.fromJson(response.data).toEntity();
+      print('✅ Parsed Entity: $entity');
+
+      return entity;
+    } catch (e) {
+      print('❌ ERROR OCCURRED BEFORE RESPONSE HANDLED: $e');
+      rethrow;
+    }
   }
 
 
   @override
   Future<List<LayersEntity>> getLayerOne(FetchBillsParam param) async {
-    var result = await getIt.get<Api>().get(
-      endPoint: 'branch_product/layer1?${param.toQueryParams()}',
-    );
-    List<LayersEntity> category = [];
-    for (var item in result) {
-      category.add(LayersModel.fromJson(item).toEntity());
+    final url = 'branch_product/layer1?${param.toQueryParams()}';
+    print('📤 Fetch Layer One from: $url');
+
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
+
+    List<LayersEntity> layers = [];
+    for (var item in response) {
+      print('🔹 Raw Item: $item');
+      final entity = LayersModel.fromJson(item).toEntity();
+      print('✅ Parsed Entity: $entity');
+      layers.add(entity);
     }
-    return category;
+
+    print('📦 Final LayerOne Count: ${layers.length}');
+    return layers;
   }
 
   @override
   Future<List<LayersEntity>> getLayerTow(FetchBillsParam param) async {
-    var result = await getIt.get<Api>().get(
-      endPoint: 'branch_product/layer2?${param.toQueryParams()}',
-    );
-    print('URL: branch_product/layer1?${param.toQueryParams()}');
-    List<LayersEntity> category = [];
-    for (var item in result) {
-      category.add(LayersModel.fromJson(item).toEntity());
+    final url = 'branch_product/layer2?${param.toQueryParams()}';
+    print('📤 Fetch Layer Two from: $url');
+
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
+
+    List<LayersEntity> layers = [];
+    for (var item in response) {
+      print('🔹 Raw Item: $item');
+      final entity = LayersModel.fromJson(item).toEntity();
+      print('✅ Parsed Entity: $entity');
+      layers.add(entity);
     }
-    return category;
+
+    print('📦 Final LayerTwo Count: ${layers.length}');
+    return layers;
   }
 
   @override
   Future<List<GetAllLayerEntity>> getAllLayers(FetchBillsParam param) async {
-    // تكوين الـ URL الكامل
-    final fullUrl = 'branch_product/all?${param.toQueryParams()}';
-    print('📤 Fetching All Layers from full URL: $fullUrl');
+    final url = 'branch_product/all?${param.toQueryParams()}';
+    print('📤 Fetch All Layers from: $url');
 
-    // جلب البيانات من API
-    var result = await getIt.get<Api>().get(
-      endPoint: fullUrl,
-    );
+    var response = await getIt.get<Api>().get(endPoint: url);
+    print('📥 Raw Response: $response');
 
-    print('📥 Raw result from API: $result');
-
-    // تحويل كل عنصر من JSON → Model → Entity
     List<GetAllLayerEntity> layers = [];
-    for (var item in result) {
-      print('🔹 Processing item: $item');
+    for (var item in response) {
+      print('🔹 Raw Item: $item');
 
       final model = GetAllLayersModel.fromJson(item);
-      print('   Model created: $model');
+      print('   🛠 Model created: $model');
 
       final entity = model.toEntity();
-      print('   Entity created: ${entity.toString()}');
+      print('✅ Entity created: $entity');
 
       layers.add(entity);
     }
 
-    print('✅ Total layers fetched: ${layers.length}');
-    for (var i = 0; i < layers.length; i++) {
-      print('   Layer $i: ${layers[i]}');
-    }
-
+    print('📦 Total Layers Count: ${layers.length}');
     return layers;
   }
-
 }

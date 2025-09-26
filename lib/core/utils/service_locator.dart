@@ -42,6 +42,20 @@ import 'package:monkey_app/feature/children/domain/children_use_case/create_chil
 import 'package:monkey_app/feature/children/domain/children_use_case/fetch_children_use_case.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/update_children_use_case.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
+import 'package:monkey_app/feature/expense/general_expense/data/data_source/general_expense_remote_data_source.dart';
+import 'package:monkey_app/feature/expense/general_expense/data/repo_impl/general_expense_impl.dart';
+import 'package:monkey_app/feature/expense/general_expense/domain/repo/general_repo.dart';
+import 'package:monkey_app/feature/expense/general_expense/domain/use_case/create_general_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/general_expense/domain/use_case/general_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/general_expense/domain/use_case/update_general_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/general_expense/presentation/manager/general_expense_cubit.dart';
+import 'package:monkey_app/feature/expense/material_expense/data/data_source/general_expense_remote_data_source.dart';
+import 'package:monkey_app/feature/expense/material_expense/domain/repo/material_repo.dart';
+import 'package:monkey_app/feature/expense/material_expense/domain/use_case/create_material_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/material_expense/domain/use_case/material_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/material_expense/domain/use_case/materials_use_case.dart';
+import 'package:monkey_app/feature/expense/material_expense/domain/use_case/update_material_expense_use_case.dart';
+import 'package:monkey_app/feature/expense/material_expense/presentation/manager/material_expense_cubit.dart';
 import 'package:monkey_app/feature/home/data/data_source/home_remote_data_source.dart';
 import 'package:monkey_app/feature/home/data/repo/home_impl.dart';
 import 'package:monkey_app/feature/home/domain/repo/home_repo.dart';
@@ -62,6 +76,8 @@ import 'package:monkey_app/feature/school/domain/use_case/post_school_use_case.d
 import 'package:monkey_app/feature/school/domain/use_case/update_school_use_case.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 
+import '../../feature/expense/material_expense/data/repo_impl/material_repo_impl.dart';
+
 final getIt = GetIt.instance;
 
 void setUpServiceLocator() {
@@ -73,23 +89,23 @@ void setUpServiceLocator() {
 
   /* ───────── Login Layer ───────── */
   getIt.registerLazySingleton<LoginRemoteDataSource>(
-    () => LoginRemoteDataSourceImpl(getIt<Api>()),
+        () => LoginRemoteDataSourceImpl(getIt<Api>()),
   );
   getIt.registerLazySingleton<LoginRepo>(
-    () => LoginRepoImpl(loginRemoteDataSource: getIt()),
+        () => LoginRepoImpl(loginRemoteDataSource: getIt()),
   );
   getIt.registerFactory(() => LoginRepoUseCase(loginRepo: getIt()));
   getIt.registerFactory(() => LoginCubit(getIt()));
 
   /* ───────── School Layer ───────── */
   getIt.registerLazySingleton<SchoolRemoteDataSource>(
-    () => SchoolRemoteDataSourceImpl(api: getIt()),
+        () => SchoolRemoteDataSourceImpl(api: getIt()),
   );
   getIt.registerLazySingleton<SchoolLocalDataSource>(
-    () => SchoolLocalDataSourceImpl(),
+        () => SchoolLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<SchoolRepo>(
-    () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
+        () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => FetchSchoolUseCase(schoolRpo: getIt()));
   getIt.registerLazySingleton(() => UpdateSchoolUseCase(schoolRpo: getIt()));
@@ -98,56 +114,57 @@ void setUpServiceLocator() {
 
   /* ───────── Children Layer ───────── */
   getIt.registerLazySingleton<ChildrenRemoteDataSource>(
-    () => ChildrenRemoteDataSourceImpl(),
+        () => ChildrenRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenLocalDataSource>(
-    () => ChildrenLocalDataSourceImpl(),
+        () => ChildrenLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenRepo>(
-    () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
+        () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchChildrenUseCase(childrenRepo: getIt()),
+        () => FetchChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerLazySingleton(() => CreateChildUseCase(childrenRepo: getIt()));
   getIt.registerLazySingleton(
-    () => UpdateChildrenUseCase(childrenRepo: getIt()),
+        () => UpdateChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerFactory(
-    () => ChildrenCubit(
-      fetchChildrenUseCase: getIt(),
-      createChildUseCase: getIt(),
-      updateChildrenUseCase: getIt(),
-    ),
+        () =>
+        ChildrenCubit(
+          fetchChildrenUseCase: getIt(),
+          createChildUseCase: getIt(),
+          updateChildrenUseCase: getIt(),
+        ),
   );
 
   /* ───────── Branch Layer ───────── */
   getIt.registerLazySingleton<BranchRemoteDataSource>(
-    () => BranchRemoteDataSourceImpl(),
+        () => BranchRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BranchRepo>(
-    () => BranchRepoImpl(branchRemoteDataSource: getIt()),
+        () => BranchRepoImpl(branchRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BranchUseCase(branchRepo: getIt()));
   getIt.registerFactory(() => BranchCubit(getIt()));
 
   /* ───────── Main Bills Layer ───────── */
   getIt.registerLazySingleton<BillsRemoteDataSource>(
-    () => BillsRemoteDataSourceImpl(),
+        () => BillsRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BillsRepo>(
-    () => BillsRepoImpl(billsRemoteDataSource: getIt()),
+        () => BillsRepoImpl(billsRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => CreateBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => ApplyDiscountUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(
-    () => FetchActiveBillsUseCase(billsRepo: getIt()),
+        () => FetchActiveBillsUseCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(() => CloseBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => GetOneBillUseCase(billsRepo: getIt()));
   getIt.registerFactory(
-    () => BillsCubit(getIt(), getIt(), getIt(), getIt.get()),
+        () => BillsCubit(getIt(), getIt(), getIt(), getIt.get()),
   );
   getIt.registerFactory(() => ApplyDiscountCubit(getIt()));
   getIt.registerFactory(() => CloseBillsCubit(getIt()));
@@ -155,44 +172,97 @@ void setUpServiceLocator() {
 
   /* ───────── Coffee Bills Layer ───────── */
   getIt.registerLazySingleton<BillsCoffeeDataSource>(
-    () => BillsCoffeeDataSourceImpl(),
+        () => BillsCoffeeDataSourceImpl(),
   );
   getIt.registerLazySingleton<CoffeeBillsRepo>(
-    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
+        () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
   );
   getIt.registerLazySingleton(
-    () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
+        () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
+        () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton<GetLayerOneUseCase>(
-    () => GetLayerOneUseCase(billsRepo: getIt.get()),
+        () => GetLayerOneUseCase(billsRepo: getIt.get()),
   );
   getIt.registerLazySingleton<GetLayerTowUseCase>(
-    () => GetLayerTowUseCase(billsRepo: getIt.get()),
+        () => GetLayerTowUseCase(billsRepo: getIt.get()),
   );
   getIt.registerFactory(() => CoffeeBillsCubit(getIt(), getIt(), getIt()));
   getIt.registerLazySingleton<GetAllLayersUseCase>(
-    () => GetAllLayersUseCase(coffeeBillsRepo: getIt.get()),
+        () => GetAllLayersUseCase(coffeeBillsRepo: getIt.get()),
   );
   getIt.registerFactory(() => LayersCubit(getIt(), getIt(), getIt()));
   getIt.registerFactory(() => GetOneBillsCoffeeCubit(getIt()));
   getIt.registerLazySingleton<OrdersCubit>(() => OrdersCubit());
   getIt.registerLazySingleton<HomeRemoteDataSource>(
-    () => HomeRemoteDataSourceImpl(),
+        () => HomeRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<HomeRepo>(
-    () => HomeRepoImpl(homeRemoteDataSource: getIt.get()),
+        () => HomeRepoImpl(homeRemoteDataSource: getIt.get()),
   );
   getIt.registerLazySingleton<HomeUseCase>(
-    () => HomeUseCase(homeRepo: getIt.get()),
+        () => HomeUseCase(homeRepo: getIt.get()),
   );
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt.get()));
+  getIt.registerLazySingleton<GeneralExpenseRepo>(
+        () => GeneralExpenseImpl(remoteDataSource: getIt.get()),
+  );
+  getIt.registerCachedFactory<GeneralExpenseRemoteDataSource>(
+        () => GeneralExpenseRemoteDataSourceImpl(),
+  );
+  getIt.registerCachedFactory<CreateGeneralExpenseUseCase>(
+        () => CreateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+  );
+  getIt.registerCachedFactory<UpdateGeneralExpenseUseCase>(
+        () => UpdateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+  );
+  getIt.registerFactory<GeneralExpenseCubit>(
+        () =>
+        GeneralExpenseCubit(
+          updateGeneralExpenseUseCase: getIt.get(),
+          generalExpenseUseCase: getIt.get(),
+          createGeneralExpenseUseCase: getIt.get(),
+        ),
+  );
+
+  getIt.registerLazySingleton<GeneralExpenseUseCase>(
+        () => GeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+  );
+
+
+  getIt.registerLazySingleton<MaterialExpenseRepo>(
+        () => MaterialExpenseImpl(remoteDataSource: getIt.get()),
+  );
+  getIt.registerCachedFactory<MaterialExpenseRemoteDataSource>(
+        () => MaterialExpenseRemoteDataSourceImpl(),
+  );
+  getIt.registerCachedFactory<CreateMaterialExpenseUseCase>(
+        () => CreateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+  );
+  getIt.registerCachedFactory<UpdateMaterialExpenseUseCase>(
+        () => UpdateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+  );
+  getIt.registerCachedFactory<MaterialsUseCase>(() =>
+      MaterialsUseCase(repo: getIt.get()));
+  getIt.registerFactory<MaterialExpenseCubit>(
+        () =>
+        MaterialExpenseCubit(
+          materialsUseCase: getIt.get(),
+          updateMaterialExpenseUseCase: getIt.get(),
+          materialExpenseUseCase: getIt.get(),
+          createMaterialExpenseUseCase: getIt.get(),
+        ),
+  );
+
+  getIt.registerLazySingleton<MaterialExpenseUseCase>(
+        () => MaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+  );
 }

@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
-import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 
 import '../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
+import '../../../../../../core/utils/selected_item_text_field.dart';
 import '../../../../../children/domain/param/fetch_children_param.dart';
 import '../../../../../children/presentation/manager/cubit/children_state.dart';
 import 'new_children_field.dart';
@@ -18,6 +18,7 @@ import 'new_children_field.dart';
 class BillsBottomSheet extends StatefulWidget {
   final String title;
   final ChildrenEntity? childrenEntity;
+
   const BillsBottomSheet({super.key, required this.title, this.childrenEntity});
 
   @override
@@ -30,12 +31,9 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
   final _formKey = GlobalKey<FormState>();
 
   /////
-  final _nameCtrl = TextEditingController();
   final _childrenCtrl = TextEditingController();
   List<int>? _selectedChildrenId;
-  //int? _selectedBranchId;
 
-  final _branchCtrl = TextEditingController();
   List<Map<String, dynamic>> children = [];
   final _relations = ['father', 'mother', 'sibling', 'other'];
 
@@ -76,7 +74,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
       discount: '"test-promo-percentage"',
       childrenId: _selectedChildrenId!,
       newChildren: newChildren,
-       branch: branch!,
+      branch: branch!,
     );
 
     print('✅ PARAM CREATED: $param');
@@ -87,46 +85,40 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      minChildSize: 0.6,
-      maxChildSize: 0.95,
-      builder: (_, controller) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primaryContainer,
-                colorScheme.primary.withOpacity(0.8),
-              ],
-              begin: Alignment.topRight,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer,
+            colorScheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 16,
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom +
+              24, // 👈 moves up with keyboard
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHandle(),
+              _buildHeader(colorScheme),
+              const SizedBox(height: 20),
+              _buildForm(context),
+            ],
           ),
-          child: SingleChildScrollView(
-            controller: controller,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 16,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHandle(),
-                  _buildHeader(colorScheme),
-                  const SizedBox(height: 20),
-                  _buildForm(context),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -181,6 +173,34 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // SelectItemTextField<ChildrenEntity>(
+            //   controller: _childrenCtrl,
+            //   // نفس الـ controller اللي كنت مستخدمه
+            //   colorScheme: Theme.of(context).colorScheme,
+            //   label: LangKeys.children.tr(),
+            //   // بدل اسم الـ label
+            //   fetchItems: () async {
+            //     await context.read<ChildrenCubit>().fetchChildren(
+            //       FetchChildrenParam(),
+            //     );
+            //     return context.read<ChildrenCubit>().state.allChildren;
+            //   },
+            //   itemTitle: (school) => school.name ?? 'لا يوجد اسم',
+            //   onSelected: (value) {
+            //     List<int> selectedChildrenIds = [];
+            //
+            //     if (value is num) {
+            //       selectedChildrenIds = [value.toInt()];
+            //     } else if (value is List<num>) {
+            //       selectedChildrenIds = value.map((e) => e.toInt()).toList();
+            //     }
+            //
+            //     _selectedChildrenId = selectedChildrenIds;
+            //     print("Selected Children IDs: $_selectedChildrenId");
+            //   },
+            //
+            // ),
+
             TextFieldChildrenID(
               childrenCtrl: _childrenCtrl,
               colorScheme: Theme.of(context).colorScheme,
@@ -192,9 +212,8 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                 _selectedChildrenId = selectedChildrenIds;
               },
             ),
-
             const SizedBox(height: 12),
-           // _buildBranchField(),
+            // _buildBranchField(),
             const SizedBox(height: 12),
             _buildField(promoCode, 'PromoCode', Icons.discount),
             const SizedBox(height: 12),
@@ -236,121 +255,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
       ),
     );
   }
-
-  // Widget _buildBranchField() {
-  //   return TextFormField(
-  //     validator: _validate,
-  //     controller: _branchCtrl,
-  //     readOnly: true,
-  //     decoration: InputDecoration(
-  //       labelText: 'branch',
-  //       prefixIcon: Icon(Icons.calendar_today),
-  //     ),
-  //     onTap: () async {
-  //       final cubit = BlocProvider.of<BranchCubit>(context);
-  //       await cubit.fetchBranch();
-  //       final state = cubit.state;
-  //
-  //       if (state is BranchSuccessState) {
-  //         print("✅ BranchSuccessState found");
-  //         final selectBranch = await showModalBottomSheet(
-  //           context: context,
-  //           backgroundColor: Colors.transparent,
-  //           shape: const RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-  //           ),
-  //           isScrollControlled: true,
-  //           builder: (context) {
-  //             return Container(
-  //               decoration: BoxDecoration(
-  //                 gradient: LinearGradient(
-  //                   colors: [
-  //                     Color(0xFF745385),
-  //                     Color(0xFF745385),
-  //                   ],
-  //                   begin: Alignment.topCenter,
-  //                   end: Alignment.bottomCenter,
-  //                 ),
-  //                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-  //               ),
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(16.0),
-  //                 child: Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: [
-  //                     Container(
-  //                       width: 50,
-  //                       height: 5,
-  //                       margin: const EdgeInsets.only(bottom: 16),
-  //                       decoration: BoxDecoration(
-  //                         color: Colors.white54,
-  //                         borderRadius: BorderRadius.circular(10),
-  //                       ),
-  //                     ),
-  //                     Text(
-  //                       "اختر الفرع",
-  //                       style: const TextStyle(
-  //                         color: Colors.white,
-  //                         fontSize: 20,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-  //                     const SizedBox(height: 16),
-  //                     Flexible(
-  //                       child: ListView.builder(
-  //                         shrinkWrap: true,
-  //                         itemCount: state.branch.length,
-  //                         itemBuilder: (context, index) {
-  //                           final branch = state.branch[index];
-  //                           return Card(
-  //                             elevation: 6,
-  //                             shape: RoundedRectangleBorder(
-  //                               borderRadius: BorderRadius.circular(16),
-  //                             ),
-  //                             margin: const EdgeInsets.symmetric(vertical: 8),
-  //                             child: ListTile(
-  //                               contentPadding: const EdgeInsets.all(16),
-  //                               leading: CircleAvatar(
-  //                                 backgroundColor: Colors.purple.shade100,
-  //                                 child: const Icon(Icons.store, color: Color(0xFF745385),),
-  //                               ),
-  //                               title: Text(
-  //                                 branch.name ?? 'فرع بدون اسم',
-  //                                 style: const TextStyle(
-  //                                   fontWeight: FontWeight.bold,
-  //                                   fontSize: 16,
-  //                                 ),
-  //                               ),
-  //                               trailing: const Icon(Icons.arrow_forward_ios,
-  //                                   color: Color(0xFF745385),),
-  //                               onTap: () {
-  //                                 print("Tapped!");
-  //                                 Navigator.pop(context, branch);
-  //                               },
-  //                             ),
-  //                           );
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         );
-  //
-  //         // if (selectBranch != null) {
-  //         //   _branchCtrl.text = selectBranch.name ?? 'savana';
-  //         //   _selectedBranchId = selectBranch.id; // احفظ الـ ID لاستخدامه في param
-  //         //   print("🟢 Selected Branch ID: $_selectedBranchId");
-  //         // }
-  //       }
-  //
-  //     },
-  //   );
-  // }
-
-  ///////////////////////////////////
 
   Widget _buildField(
     TextEditingController? controller,
@@ -493,7 +397,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                                 phones[phoneIndex]['relationship'] = val!;
                               });
                             },
-                            decoration:  InputDecoration(
+                            decoration: InputDecoration(
                               labelText: LangKeys.relationShip.tr(),
                             ),
                           ),
@@ -598,8 +502,11 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                 minChildSize: 0.4,
                 maxChildSize: 0.95,
                 builder: (context, scrollController) {
-                  List<ChildrenEntity> filteredChildren = List.from(state.allChildren);
-                  final TextEditingController searchCtrl = TextEditingController();
+                  List<ChildrenEntity> filteredChildren = List.from(
+                    state.allChildren,
+                  );
+                  final TextEditingController searchCtrl =
+                      TextEditingController();
                   List<ChildrenEntity> selectedChildren = [];
 
                   return StatefulBuilder(
@@ -607,15 +514,13 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                       return Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              Color(0xFF745385),
-                              Color(0xFF745385),
-                            ],
+                            colors: [Color(0xFF745385), Color(0xFF745385)],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
-                          borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(24)),
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -651,9 +556,13 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                   filled: true,
                                   fillColor: Colors.white.withOpacity(0.15),
                                   hintText: "ابحث عن طفل...",
-                                  hintStyle: const TextStyle(color: Colors.white70),
-                                  prefixIcon:
-                                  const Icon(Icons.search, color: Colors.white70),
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    color: Colors.white70,
+                                  ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide.none,
@@ -664,9 +573,9 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                     filteredChildren = state.allChildren
                                         .where(
                                           (children) => (children.name ?? '')
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase()),
-                                    )
+                                              .toLowerCase()
+                                              .contains(query.toLowerCase()),
+                                        )
                                         .toList();
                                   });
                                 },
@@ -681,7 +590,7 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                   itemBuilder: (context, index) {
                                     final child = filteredChildren[index];
                                     final isSelected = selectedChildren.any(
-                                          (e) => e.id == child.id,
+                                      (e) => e.id == child.id,
                                     );
 
                                     return Card(
@@ -690,15 +599,21 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       margin: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 4),
+                                        vertical: 8,
+                                        horizontal: 4,
+                                      ),
                                       child: ListTile(
-                                        contentPadding: const EdgeInsets.all(12),
+                                        contentPadding: const EdgeInsets.all(
+                                          12,
+                                        ),
                                         leading: CircleAvatar(
                                           backgroundColor: isSelected
                                               ? Colors.green
                                               : Colors.purple.shade200,
-                                          child: const Icon(Icons.child_care,
-                                              color: Colors.white),
+                                          child: const Icon(
+                                            Icons.child_care,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                         title: Text(
                                           child.name ?? 'لا يوجد اسم',
@@ -711,14 +626,16 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                           isSelected
                                               ? Icons.check_circle
                                               : Icons.circle_outlined,
-                                          color:
-                                          isSelected ? Colors.green : Colors.grey,
+                                          color: isSelected
+                                              ? Colors.green
+                                              : Colors.grey,
                                         ),
                                         onTap: () {
                                           setState(() {
                                             if (isSelected) {
                                               selectedChildren.removeWhere(
-                                                      (e) => e.id == child.id);
+                                                (e) => e.id == child.id,
+                                              );
                                             } else {
                                               selectedChildren.add(child);
                                             }
@@ -737,7 +654,9 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
@@ -753,7 +672,9 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                     style: TextStyle(
                                       color: Colors.black,
 
-                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -776,7 +697,6 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
             widget._childCtrl.text = names;
           }
         }
-
       },
 
       readOnly: true,

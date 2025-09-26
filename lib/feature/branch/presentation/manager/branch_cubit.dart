@@ -13,7 +13,6 @@ class BranchCubit extends Cubit<BranchState> {
   final BranchUseCase branchUseCase;
 
   BranchCubit(this.branchUseCase) : super(BranchInitial());
-  int? selectedBranch;
 
   Future<void> fetchBranch() async {
     emit(BranchLoadingState());
@@ -26,7 +25,6 @@ class BranchCubit extends Cubit<BranchState> {
 
   void selectBranch(int branchId) {
     Hive.box(kAuthBox).put(AuthKeys.branch, branchId);
-    selectedBranch = branchId;
     emit(BranchSelectedState(branchId: branchId));
   }
 }

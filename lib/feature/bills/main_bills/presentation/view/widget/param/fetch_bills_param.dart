@@ -25,9 +25,9 @@ class FetchBillsParam {
     if (branch != null && branch!.isNotEmpty) {
       parts.addAll(branch!.map((id) => "branch_id=$id"));
      }
-      else {
-      parts.add("branch_id=all");
-    }
+    //   else {
+    //   parts.add("branch_id=all");
+    // }
 
     // Page
     if (page != null) {

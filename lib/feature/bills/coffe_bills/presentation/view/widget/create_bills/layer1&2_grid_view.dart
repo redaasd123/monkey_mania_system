@@ -4,6 +4,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 
 import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../../../../domain/entity/layers_entity.dart';
@@ -47,12 +48,13 @@ class Layer1A2GridView extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
+                  final branch = AuthHelper.getBranch();
                   if (state.status == LayersStatus.getLayerOneSuccess ||
                       state.status == LayersStatus.cashedLayerOne) {
                     context.read<LayersCubit>().getLayerTow(
                       FetchBillsParam(
                         layer1: item.name,
-                        branch: [1],
+                        branch: [branch],
                       ),
                     );
                   } else {
@@ -60,7 +62,7 @@ class Layer1A2GridView extends StatelessWidget {
                       FetchBillsParam(
                         layer1: state.selectedLayer1,
                         layer2: item.name,
-                        branch: [1],
+                        branch: [branch],
                       ),
                     );
                   }

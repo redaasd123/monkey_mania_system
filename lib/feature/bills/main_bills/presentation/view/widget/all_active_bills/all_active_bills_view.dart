@@ -17,11 +17,10 @@ class GetAllActiveBillsView extends StatefulWidget {
 class _GetAllActiveBillsViewState extends State<GetAllActiveBillsView> {
   @override
   Widget build(BuildContext context) {
-    final branch = AuthHelper.getBranch();
     return BlocProvider(
       create: (context) =>
           getIt<BillsCubit>()
-            ..fetchActiveBills(FetchBillsParam(branch: [branch])),
+            ..fetchActiveBills(FetchBillsParam(branch: ['all'])),
       child: AllActiveBillsViewBody(),
     );
   }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
 
 import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../main_bills/domain/entity/Bills_entity.dart';
@@ -53,11 +54,9 @@ class _TextFieldBillsIDState extends State<TextFieldBillsID> {
               );
             },
           );
-
-          await cubit.fetchActiveBills(FetchBillsParam(branch: ['all']));
+          await cubit.fetchActiveBills(FetchBillsParam(branch: [AuthHelper.getBranch()]));
           hasFetched = true;
 
-          // ✅ اقفل اللودر بعد التحميل
           Navigator.of(context, rootNavigator: true).pop();
         }
 
@@ -229,7 +228,7 @@ class _TextFieldBillsIDState extends State<TextFieldBillsID> {
       style: TextStyle(color: widget.colorScheme.onSurface),
       decoration: InputDecoration(
         labelText: LangKeys.bills.tr(),
-        labelStyle: TextStyle(color: widget.colorScheme.onSurface),
+        labelStyle: TextStyle(color: Colors.teal,),
         prefixIcon: Icon(Icons.school, color: widget.colorScheme.onSurface),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         focusedBorder: OutlineInputBorder(

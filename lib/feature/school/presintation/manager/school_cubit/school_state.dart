@@ -74,7 +74,6 @@ part of 'school_cubit.dart';
 //
 //   CreateOfflineState({required this.errMessage});
 // }
-
 enum SchoolStatus {
   initial,
   loading,
@@ -98,7 +97,7 @@ class SchoolState extends Equatable {
   final SchoolStatus status;
   final bool isSearching;
 
-  SchoolState({
+  const SchoolState({
     this.isSearching = false,
     this.status = SchoolStatus.initial,
     this.errMessage,
@@ -114,7 +113,7 @@ class SchoolState extends Equatable {
     SchoolStatus? status,
   }) {
     return SchoolState(
-      isSearching: isSearching??this.isSearching,
+      isSearching: isSearching ?? this.isSearching,
       searchQuery: searchQuery ?? this.searchQuery,
       status: status ?? this.status,
       errMessage: errMessage ?? this.errMessage,
@@ -123,5 +122,11 @@ class SchoolState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [allSchool, status, searchQuery, errMessage,isSearching];
+  List<Object?> get props => [
+    allSchool,
+    status,
+    searchQuery,
+    errMessage,
+    isSearching,
+  ];
 }

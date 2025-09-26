@@ -79,8 +79,7 @@ class _CreateBillsViewState extends State<CreateBillsView> {
             return true;
           },
           child: Scaffold(
-            appBar: CustomAppBar(title: 'Menue'),
-            backgroundColor: const Color(0xC8000000),
+            backgroundColor: const Color(0xFF141E30),
             body: Form(
               key: _formKey,
               child: SafeArea(
