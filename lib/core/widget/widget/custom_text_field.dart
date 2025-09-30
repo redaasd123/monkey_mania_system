@@ -6,9 +6,11 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final bool isPassword;
   final TextInputType keyboardType;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     super.key,
+    this.onChanged,
     required this.label,
     required this.hint,
     required this.controller,
@@ -35,6 +37,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
+        onChanged:widget.onChanged ,
         validator: _validator,
         style: TextStyle(color: scheme.onBackground),
         controller: widget.controller,

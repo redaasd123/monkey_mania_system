@@ -8,7 +8,7 @@ import 'package:monkey_app/feature/expense/material_expense/domain/use_case/mate
 import 'package:monkey_app/feature/expense/material_expense/domain/use_case/materials_use_case.dart';
 import 'package:monkey_app/feature/expense/material_expense/domain/use_case/update_material_expense_use_case.dart';
 
-import '../../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../general_expense/domain/use_case/param/create_param.dart';
 import '../../../general_expense/domain/use_case/param/update_param.dart';
 
@@ -178,6 +178,7 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery),
           searchQuery: trimmedQuery,
           isSearching: true,
           items: [],
@@ -209,5 +210,8 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
         ),
       );
     });
+  }
+  void setParam(FetchBillsParam param){
+    emit(state.copyWith(filters: param));
   }
 }

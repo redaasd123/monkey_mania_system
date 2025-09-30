@@ -5,8 +5,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layer
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills_coffee_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 
-import '../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
-import '../../param/create_bills_coffee_param.dart';
+import '../../../main_bills/domain/use_case/param/fetch_bills_param.dart';import '../../param/create_bills_coffee_param.dart';
 import '../entity/coffee_bills_page_entity.dart';
 
 abstract class CoffeeBillsRepo {

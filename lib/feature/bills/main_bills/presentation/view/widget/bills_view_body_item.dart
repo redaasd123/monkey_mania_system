@@ -10,8 +10,10 @@ class BillsViewBodyItem extends StatelessWidget {
     required this.bills,
     required this.onDiscount,
     required this.onClose,
+    required this.onUpdateCalculation,
   });
 
+  final VoidCallback onUpdateCalculation;
   final BillsEntity bills;
   final VoidCallback onDiscount;
   final VoidCallback onClose;
@@ -72,9 +74,9 @@ class BillsViewBodyItem extends StatelessWidget {
                   Text(
                     (bills.children != null && bills.children!.isNotEmpty)
                         ? bills.children!.first.phoneNumbers
-                        ?.map((e) => e.phoneNumber)
-                        .join(', ') ??
-                        LangKeys.notFound.tr()
+                                  ?.map((e) => e.phoneNumber)
+                                  .join(', ') ??
+                              LangKeys.notFound.tr()
                         : LangKeys.notFound.tr(),
                     style: TextStyle(
                       fontSize: 13,
@@ -120,7 +122,9 @@ class BillsViewBodyItem extends StatelessWidget {
             // 🎯 أزرار الأكشن (عرض ثابت علشان مفيش Overflow)
             SizedBox(
               width: 50,
-              child: Column(
+              child: // 🎯 أزرار الأكشن
+              Column(
+                mainAxisSize: MainAxisSize.min, // ✅ مش هياخد مساحة زيادة تحت
                 children: [
                   _buildActionButton(
                     icon: Icons.local_offer_outlined,
@@ -128,13 +132,22 @@ class BillsViewBodyItem extends StatelessWidget {
                     onTap: onDiscount,
                     tooltip: LangKeys.applyDiscount.tr(),
                   ),
-                  const SizedBox(height: 8),
-                  _buildActionButton(
-                    icon: Icons.close,
-                    color: Colors.red,
-                    onTap: onClose,
-                    tooltip: "إغلاق",
-                  ),
+                  const SizedBox(height: 6),
+
+                  const SizedBox(height: 6),
+                  bills.isActive == true
+                      ? _buildActionButton(
+                          icon: Icons.close,
+                          color: Colors.red,
+                          onTap: onClose,
+                          tooltip: "إغلاق",
+                        )
+                      : _buildActionButton(
+                          icon: Icons.calculate_outlined,
+                          color: Colors.orange,
+                          onTap: onUpdateCalculation,
+                          tooltip: "تحديث الحساب",
+                        ),
                 ],
               ),
             ),
@@ -154,10 +167,21 @@ class BillsViewBodyItem extends StatelessWidget {
       message: tooltip,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(30),
-        child: CircleAvatar(
-          radius: 18,
-          backgroundColor: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 2),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.2),
+                blurRadius: 3,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           child: Icon(icon, size: 18, color: color),
         ),
       ),

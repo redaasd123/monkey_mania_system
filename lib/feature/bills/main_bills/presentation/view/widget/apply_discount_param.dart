@@ -1,5 +1,5 @@
 class ApplyDiscountParams {
-  final num? id;
+  final int? id;
   final String discount;
 
   ApplyDiscountParams({required this.id, required this.discount});

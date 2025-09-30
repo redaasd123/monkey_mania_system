@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../manager/branch_cubit.dart';
 import 'branch_bottom_sheet_body.dart';
 

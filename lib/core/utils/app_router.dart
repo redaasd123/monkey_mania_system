@@ -10,6 +10,8 @@ import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/cr
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/show_detail_children.dart';
+import 'package:monkey_app/feature/csv_analytics/presentation/manager/anlytic_cubit.dart';
+import 'package:monkey_app/feature/csv_analytics/presentation/view/analytic_view.dart';
 import 'package:monkey_app/feature/expense/general_expense/presentation/manager/general_expense_cubit.dart';
 import 'package:monkey_app/feature/expense/material_expense/presentation/manager/material_expense_cubit.dart';
 import 'package:monkey_app/feature/expense/material_expense/presentation/view/material_expense_view.dart';
@@ -19,16 +21,17 @@ import 'package:monkey_app/feature/splash/presentation/views/splash_view.dart';
 
 import '../../feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
 import '../../feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
+import '../../feature/bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../feature/bills/main_bills/presentation/manager/get_one_bills_cubit.dart';
 import '../../feature/bills/main_bills/presentation/view/get_all_bills_view.dart';
 import '../../feature/bills/main_bills/presentation/view/widget/all_active_bills/all_active_bills_view.dart';
-import '../../feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import '../../feature/bills/main_bills/presentation/view/widget/show_detail_bills/show_detail_bills.dart';
 import '../../feature/expense/general_expense/presentation/view/general_expense_view.dart';
 import '../../feature/home/presentation/view/home_view.dart';
 import '../../main.dart';
 
 abstract class AppRouter {
+  static const kAnalytic  = '/kAnalytic';
   static const kGeneralExpenseView = '/kGeneralExpenseView';
   static const kMaterialExpenseView = '/kMaterialExpenseView';
   static const kLoginView = '/login';
@@ -137,6 +140,21 @@ abstract class AppRouter {
           );
         },
       ),
+
+
+      GoRoute(
+        path: kAnalytic,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) =>
+            getIt<AnalyticCubit>()..fetchAnalyticType(),
+            child: const AnalyticView(),
+          );
+
+        },
+      ),
+
+
 
       GoRoute(
         path: kMaterialExpenseView,

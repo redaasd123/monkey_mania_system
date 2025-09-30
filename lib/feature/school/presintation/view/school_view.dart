@@ -9,7 +9,7 @@ import 'package:monkey_app/feature/school/presintation/view/widget/school_view_b
 import '../../../../core/download_fiels/download_file.dart';
 import '../../../../core/utils/constans.dart';
 import '../../../bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-import '../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../branch/presentation/view/show_branch_bottom_sheet.dart';
 
 class SchoolView extends StatefulWidget {

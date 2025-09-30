@@ -16,12 +16,9 @@
    activeSuccess,
    activeFailure,
    searchLoading,
-
-
-
  }
-
  class BillsCoffeeState extends Equatable {
+   final FetchBillsParam filters;
    final CoffeeBillsStatus status;
    final List<BillsCoffeeEntity> bills;
    final String? errorMessage;
@@ -32,6 +29,7 @@
    final bool isLoading;
 
    const BillsCoffeeState({
+     this.filters = const FetchBillsParam(),
      this.status = CoffeeBillsStatus.initial,
      this.bills = const [], // ✅統 واحد
      this.errorMessage,
@@ -43,6 +41,7 @@
    });
 
    BillsCoffeeState copyWith({
+     FetchBillsParam? filters,
      GetOneBillsCoffeeEntity? getOneBills,
      CoffeeBillsStatus? status,
      List<BillsCoffeeEntity>? bills,
@@ -54,6 +53,7 @@
      bool? isLoading,
    }) {
      return BillsCoffeeState(
+       filters: filters??this.filters,
        status: status ?? this.status,
        bills: bills ?? this.bills,
        errorMessage: errorMessage ?? this.errorMessage,
@@ -67,7 +67,7 @@
 
    @override
    List<Object?> get props =>
-       [status, bills, errorMessage, isSearching, searchQuery, currentPage, hasMore, isLoading,
+       [status, bills, errorMessage, isSearching, searchQuery, currentPage, hasMore, isLoading,filters,
        ];
  }
 

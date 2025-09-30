@@ -1,13 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/update_calculations_param.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/update_calcoulation_use_case.dart';
 
 import '../../../domain/entity/Bills_entity.dart';
 import '../../../domain/use_case/create_bills_use_case.dart';
 import '../../../domain/use_case/fetch_active_bills_use_case.dart';
 import '../../../domain/use_case/fetch_bills_use_case.dart';
 import '../../../domain/use_case/get_one_bills_use_case.dart';
-import '../../view/widget/param/create_bills_param.dart';
-import '../../view/widget/param/fetch_bills_param.dart';
+import '../../../domain/use_case/param/create_bills_param.dart';
+import '../../../domain/use_case/param/fetch_bills_param.dart';
 
 part 'bills_state.dart';
 
@@ -16,11 +18,15 @@ class BillsCubit extends Cubit<BillsState> {
   final FetchActiveBillsUseCase fetchActiveBillsUseCase;
   final BillsUseCase billsUseCase;
   final GetOneBillUseCase getOneBillUseCase;
+  final UpdateCalculationsUseCase updateCalculationsUseCase;
 
-  BillsCubit(this.createBillsUseCase,
-      this.fetchActiveBillsUseCase,
-      this.billsUseCase,
-      this.getOneBillUseCase,) : super(BillsState());
+  BillsCubit(
+    this.updateCalculationsUseCase,
+    this.createBillsUseCase,
+    this.fetchActiveBillsUseCase,
+    this.billsUseCase,
+    this.getOneBillUseCase,
+  ) : super(BillsState());
 
   // 🔹 إنشاء فاتورة
 
@@ -33,7 +39,7 @@ class BillsCubit extends Cubit<BillsState> {
     final result = await fetchActiveBillsUseCase.call(param);
 
     result.fold(
-          (failure) {
+      (failure) {
         emit(
           state.copyWith(
             isLoading: false,
@@ -42,7 +48,7 @@ class BillsCubit extends Cubit<BillsState> {
           ),
         );
       },
-          (bills) {
+      (bills) {
         if (bills.isEmpty) {
           emit(state.copyWith(isLoading: false, status: BillsStatus.empty));
           return;
@@ -75,7 +81,7 @@ class BillsCubit extends Cubit<BillsState> {
     final result = await billsUseCase.call(param);
 
     result.fold(
-          (failure) {
+      (failure) {
         emit(
           state.copyWith(
             isLoading: false,
@@ -84,7 +90,7 @@ class BillsCubit extends Cubit<BillsState> {
           ),
         );
       },
-          (billsPage) {
+      (billsPage) {
         if (billsPage.bills.isEmpty && pageNumber == 1) {
           emit(
             state.copyWith(
@@ -116,23 +122,47 @@ class BillsCubit extends Cubit<BillsState> {
     );
   }
 
+  Future<void> updateCalculation(UpdateCalculationsParam param) async {
+    emit(state.copyWith(status: BillsStatus.calculationsLoading));
+    final result = await updateCalculationsUseCase.call(param);
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: BillsStatus.calculationsFailure,
+            errorMessage: failure.errMessage,
+          ),
+        );
+      },
+      (success) {
+        emit(state.copyWith(status: BillsStatus.calculationsSuccess));
+      },
+    );
+  }
+
   Future<void> createBills(CreateBillsParam param) async {
     emit(state.copyWith(status: BillsStatus.createLoading));
     final result = await createBillsUseCase.call(param);
-    result.fold((failure) {
-      print("🔥 EMIT CreateBillsFailureState: ${failure.errMessage}");
+    result.fold(
+      (failure) {
+        print("🔥 EMIT CreateBillsFailureState: ${failure.errMessage}");
 
-      emit(
-        state.copyWith(
-          status: BillsStatus.createFailure,
-          errorMessage: failure.errMessage,
-          bills: state.bills,
-        ),
-      );
-    }, (bills) {
-      final updateBills = List<BillsEntity>.from(state.bills)..insert(0, bills);
-      emit(state.copyWith(status: BillsStatus.createSuccess,bills: updateBills));
-    });
+        emit(
+          state.copyWith(
+            status: BillsStatus.createFailure,
+            errorMessage: failure.errMessage,
+            bills: state.bills,
+          ),
+        );
+      },
+      (bills) {
+        final updateBills = List<BillsEntity>.from(state.bills)
+          ..insert(0, bills);
+        emit(
+          state.copyWith(status: BillsStatus.createSuccess, bills: updateBills),
+        );
+      },
+    );
   }
 
   void toggleSearch() {
@@ -156,13 +186,14 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.loading,
         ),
       );
-      fetchBills(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchBills(FetchBillsParam(page: 1, query: null, branch: ['all']));
       return;
     }
 
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery, page: 1),
           searchQuery: trimmedQuery,
           isSearching: true,
           bills: [],
@@ -171,7 +202,9 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.searchLoading,
         ),
       );
-      fetchBills(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchBills(
+        FetchBillsParam(page: 1, query: trimmedQuery, branch: ['all']),
+      );
     }
   }
 
@@ -188,13 +221,14 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.activeLoading,
         ),
       );
-      fetchActiveBills(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchActiveBills(FetchBillsParam(page: 1, query: null, branch: ['all']));
       return;
     }
 
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery, page: 1),
           searchQuery: trimmedQuery,
           isSearching: true,
           bills: [],
@@ -203,7 +237,9 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.searchLoading,
         ),
       );
-      fetchActiveBills(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchActiveBills(
+        FetchBillsParam(page: 1, query: trimmedQuery, branch: ['all']),
+      );
     }
   }
 
@@ -218,7 +254,7 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchBills(FetchBillsParam(page: 1,branch: ['all']));
+    await fetchBills(FetchBillsParam(page: 1, branch: ['all']));
   }
 
   Future<void> onRefreshActiveBills() async {
@@ -232,6 +268,10 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchActiveBills(FetchBillsParam(page: 1,branch: ['all']));
+    await fetchActiveBills(FetchBillsParam(page: 1, branch: ['all']));
+  }
+
+  void setParam(FetchBillsParam param) {
+    emit(state.copyWith(filters: param));
   }
 }

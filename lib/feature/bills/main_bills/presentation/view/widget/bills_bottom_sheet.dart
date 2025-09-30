@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 
 import '../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
-import '../../../../../../core/utils/selected_item_text_field.dart';
 import '../../../../../children/domain/param/fetch_children_param.dart';
 import '../../../../../children/presentation/manager/cubit/children_state.dart';
+import '../../../domain/use_case/param/create_bills_param.dart';
 import 'new_children_field.dart';
 
 class BillsBottomSheet extends StatefulWidget {
@@ -71,7 +70,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
 
     final branch = AuthHelper.getBranch();
     final param = CreateBillsParam(
-      discount: '"test-promo-percentage"',
+      discount: promoCode.text,
       childrenId: _selectedChildrenId!,
       newChildren: newChildren,
       branch: branch!,
@@ -173,34 +172,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // SelectItemTextField<ChildrenEntity>(
-            //   controller: _childrenCtrl,
-            //   // نفس الـ controller اللي كنت مستخدمه
-            //   colorScheme: Theme.of(context).colorScheme,
-            //   label: LangKeys.children.tr(),
-            //   // بدل اسم الـ label
-            //   fetchItems: () async {
-            //     await context.read<ChildrenCubit>().fetchChildren(
-            //       FetchChildrenParam(),
-            //     );
-            //     return context.read<ChildrenCubit>().state.allChildren;
-            //   },
-            //   itemTitle: (school) => school.name ?? 'لا يوجد اسم',
-            //   onSelected: (value) {
-            //     List<int> selectedChildrenIds = [];
-            //
-            //     if (value is num) {
-            //       selectedChildrenIds = [value.toInt()];
-            //     } else if (value is List<num>) {
-            //       selectedChildrenIds = value.map((e) => e.toInt()).toList();
-            //     }
-            //
-            //     _selectedChildrenId = selectedChildrenIds;
-            //     print("Selected Children IDs: $_selectedChildrenId");
-            //   },
-            //
-            // ),
-
             TextFieldChildrenID(
               childrenCtrl: _childrenCtrl,
               colorScheme: Theme.of(context).colorScheme,

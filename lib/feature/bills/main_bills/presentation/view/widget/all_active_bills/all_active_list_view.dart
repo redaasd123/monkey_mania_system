@@ -7,15 +7,15 @@ import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/bil
 
 import '../../../../../../../core/utils/app_router.dart';
 import '../../../../../../../core/utils/langs_key.dart';
-import '../../../../../../../core/widget/widget/custom_build_header_sheet_.dart';
-import '../../../../../../../core/widget/widget/custom_button.dart';
 import '../../../../../../../core/widget/widget/custom_text_field.dart';
 import '../../../../domain/entity/Bills_entity.dart';
+import '../../../../domain/use_case/param/close_bills_param.dart';
+import '../../../../domain/use_case/param/update_calculations_param.dart';
 import '../../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../../manager/close_bills_cubit/close_bills_cubit.dart';
 import '../../../manager/fetch_bills_cubit/bills_cubit.dart';
 import '../apply_discount_param.dart';
-import '../param/close_bills_param.dart';
+import '../show_calculations_bottom_sheet.dart';
 
 class AllActiveListView extends StatefulWidget {
   const AllActiveListView({super.key, required this.bills});
@@ -57,11 +57,27 @@ class _AllActiveListViewState extends State<AllActiveListView> {
               ).push(AppRouter.kShowDetailBills, extra: model.id);
             },
             child: BillsViewBodyItem(
+              onUpdateCalculation: () async {
+                final data = await showCalculationsBottomSheet(context);
+                if (data != null) {
+                  final cubit = context
+                      .read<BillsCubit>()
+                      .updateCalculation(
+                    UpdateCalculationsParam(
+                      id: model.id,
+                      timePrice: data.timePrice,
+                      visa: data.visa,
+                      cash: data.cash,
+                      instapay: data.instapay,
+                    ),
+                  );
+                }
+              },
               onClose: () async {
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
-                  backgroundColor: Colors.transparent, // مهم للزوايا الدائرية
+                  backgroundColor: Colors.transparent,
                   builder: (context) {
                     return StatefulBuilder(
                       builder: (context, setModalState) {

@@ -12,10 +12,14 @@ enum BillsStatus {
   activeLoading,
   activeSuccess,
   activeFailure,
-  searchLoading
+  searchLoading,
+  calculationsLoading,
+  calculationsFailure,
+  calculationsSuccess,
 }
 
 class BillsState extends Equatable {
+  final FetchBillsParam filters;
   final BillsStatus status;
   final List<BillsEntity> bills;
   final String? errorMessage;
@@ -26,6 +30,7 @@ class BillsState extends Equatable {
   final bool isLoading;
 
   const BillsState({
+    this.filters  = const FetchBillsParam(),
     this.status = BillsStatus.initial,
     this.bills = const [], // ✅統 واحد
     this.errorMessage,
@@ -37,6 +42,7 @@ class BillsState extends Equatable {
   });
 
   BillsState copyWith({
+    FetchBillsParam? filters,
     BillsStatus? status,
     List<BillsEntity>? bills,
     String? errorMessage,
@@ -47,8 +53,10 @@ class BillsState extends Equatable {
     bool? isLoading,
   }) {
     return BillsState(
+      filters: filters ?? this.filters,
       status: status ?? this.status,
-      bills: bills ?? this.bills, // ✅統 واحد
+      bills: bills ?? this.bills,
+      // ✅統 واحد
       errorMessage: errorMessage ?? this.errorMessage,
       isSearching: isSearching ?? this.isSearching,
       searchQuery: searchQuery ?? this.searchQuery,
@@ -59,7 +67,15 @@ class BillsState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [status, bills, errorMessage, isSearching, searchQuery, currentPage, hasMore, isLoading];
+  List<Object?> get props => [
+    filters,
+    status,
+    bills,
+    errorMessage,
+    isSearching,
+    searchQuery,
+    currentPage,
+    hasMore,
+    isLoading,
+  ];
 }
-

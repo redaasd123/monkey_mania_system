@@ -17,6 +17,7 @@ enum GeneralExpenseStatus {
 }
 
 class GeneralExpenseState extends Equatable {
+  final FetchBillsParam filters;
   final List<GeneralExpenseItemEntity>? items;
   final GeneralExpenseStatus status;
   final String? errMessage;
@@ -29,6 +30,7 @@ class GeneralExpenseState extends Equatable {
   /////////////create
 
   const GeneralExpenseState({
+    this.filters = const FetchBillsParam(),
     this.searchQuery = '',
     this.isSearching = false,
     this.hasMore = true,
@@ -40,6 +42,7 @@ class GeneralExpenseState extends Equatable {
   });
 
   GeneralExpenseState copyWith({
+    FetchBillsParam? filters,
     String? searchQuery,
     bool? isSearching,
     List<GeneralExpenseItemEntity>? items,
@@ -50,6 +53,7 @@ class GeneralExpenseState extends Equatable {
     bool? hasMore,
   }) {
     return GeneralExpenseState(
+      filters: filters??this.filters,
       searchQuery: searchQuery??this.searchQuery,
       isSearching: isSearching ?? this.isSearching,
       items: items ?? this.items,
@@ -63,6 +67,7 @@ class GeneralExpenseState extends Equatable {
 
   @override
   List<Object?> get props => [
+    filters,
     searchQuery,
     items,
     status,

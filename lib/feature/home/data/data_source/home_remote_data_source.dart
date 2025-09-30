@@ -1,9 +1,9 @@
 import 'package:monkey_app/core/utils/api_serviece.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/home/data/model/home_model.dart';
 import 'package:monkey_app/feature/home/data/model/mapper.dart';
 
+import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../domain/entity/home_entity.dart';
 
 abstract class HomeRemoteDataSource {

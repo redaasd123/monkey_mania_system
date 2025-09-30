@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../domain/use_case/close_bills_use_case.dart';
-import '../../view/widget/param/close_bills_param.dart';
+import '../../../domain/use_case/param/close_bills_param.dart';
 
 part 'close_bills_state.dart';
 

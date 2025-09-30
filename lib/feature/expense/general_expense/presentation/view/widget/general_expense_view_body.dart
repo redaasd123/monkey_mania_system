@@ -6,7 +6,7 @@ import 'package:monkey_app/feature/expense/general_expense/presentation/manager/
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 
 import '../../../../../../core/utils/styles.dart';
-import '../../../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import 'general_expense_list_view.dart';
 
 class GeneralExpenseViewBody extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:monkey_app/feature/expense/material_expense/presentation/view/ma
 
 import '../../../../../core/utils/styles.dart';
 import '../../../../../core/widget/widget/custom_flush.dart';
-import '../../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../../branch/presentation/manager/branch_cubit.dart';
 
 class MaterialExpenseViewBody extends StatelessWidget {

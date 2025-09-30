@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/create_general_expense_use_case.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/general_expense_use_case.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/create_param.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/update_param.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/update_general_expense_use_case.dart';
 
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../domain/entity/general_expense_item_entity.dart';
 
 part 'general_expense_state.dart';
@@ -172,6 +172,7 @@ class GeneralExpenseCubit extends Cubit<GeneralExpenseState> {
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery),
           searchQuery: trimmedQuery,
           isSearching: true,
           items: [],
@@ -182,5 +183,8 @@ class GeneralExpenseCubit extends Cubit<GeneralExpenseState> {
       );
       fetchAllGeneralExpense(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
     }
+  }
+  void setParam(FetchBillsParam param) {
+    emit(state.copyWith(filters: param));
   }
 }

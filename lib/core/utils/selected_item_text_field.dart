@@ -6,7 +6,7 @@ class SelectItemTextField<T> extends StatefulWidget {
   final String label;
   final Future<List<T>> Function() fetchItems;
   final String Function(T) itemTitle;
-  final IconData Function(T)? itemIcon; // أيقونة لكل عنصر
+  final IconData Function(T)? itemIcon;
   final void Function(dynamic) onSelected;
   final bool multiSelect;
 

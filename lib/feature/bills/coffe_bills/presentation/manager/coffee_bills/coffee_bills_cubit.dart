@@ -4,8 +4,8 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
+import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../domain/entity/get_one_bills_coffee_entity.dart';
 import '../../../param/create_bills_coffee_param.dart';
 
@@ -168,6 +168,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery),
           searchQuery: trimmedQuery,
           isSearching: true,
           bills: [],
@@ -200,6 +201,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     if (trimmedQuery.isNotEmpty && trimmedQuery.length >= 2) {
       emit(
         state.copyWith(
+          filters: state.filters.copyWith(query: trimmedQuery),
           searchQuery: trimmedQuery,
           isSearching: true,
           bills: [],
@@ -238,5 +240,8 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     );
 
     await fetchActiveBillsCoffee(FetchBillsParam(page: 1,branch: ['all']));
+  }
+  void setParam(FetchBillsParam param){
+    emit(state.copyWith(filters: param));
   }
 }

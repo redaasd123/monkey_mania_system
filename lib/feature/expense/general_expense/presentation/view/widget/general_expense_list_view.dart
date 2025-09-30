@@ -5,7 +5,7 @@ import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/expense/general_expense/presentation/manager/general_expense_cubit.dart';
 import 'package:monkey_app/feature/expense/general_expense/presentation/view/widget/show_general_expense_bottom_sheet.dart';
 
-import '../../../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../domain/entity/general_expense_item_entity.dart';
 import '../../../domain/use_case/param/update_param.dart';
 import 'general_expense_item.dart';

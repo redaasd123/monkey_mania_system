@@ -4,7 +4,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/al
 
 import '../../../../../../../core/helper/auth_helper.dart';
 import '../../../../../../../core/utils/service_locator.dart';
-import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../manager/coffee_bills/coffee_bills_cubit.dart';
 import '../../../manager/get_one_bills/get_one_bills_coffee_cubit.dart';
 

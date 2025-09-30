@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/expense/material_expense/domain/entity/material_expense_item_entity.dart';
 import 'package:monkey_app/feature/expense/material_expense/domain/entity/materials.dart';
 import 'package:monkey_app/feature/expense/material_expense/presentation/manager/material_expense_cubit.dart';
@@ -106,7 +106,6 @@ class _GeneralExpenseBottomSheetState
               colorScheme: Theme.of(context).colorScheme,
               label: "material", // بدل اسم الـ label
               fetchItems: () async {
-                // هنا نستدعي الـ Cubit نفسه اللي كنت بتسحب منه المدارس
                 await context.read<MaterialExpenseCubit>().fetchMaterials(FetchBillsParam(branch: ['all']));
                 return context.read<MaterialExpenseCubit>().state.materials??[];
               },

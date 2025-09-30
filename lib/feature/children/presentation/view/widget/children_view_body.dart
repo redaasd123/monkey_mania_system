@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/children_bloc_builder_list_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/widget/reseve_data_floating_actio_button.dart';
 
+import '../../../../../core/download_fiels/download_file.dart';
+import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
+import '../../../../../core/utils/poppup_menu_button.dart';
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../manager/cubit/children_cubit.dart';
 import '../../manager/cubit/children_state.dart';
 
@@ -75,6 +79,24 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
                     setState(() {
                       context.read<ChildrenCubit>().toggleSearch();
                     });
+                  },
+                ),
+                CustomPopupMenu(
+                  onDownload: () async {
+                    final cubit = context.read<ChildrenCubit>().state;
+                    await requestStoragePermission();
+                    final downloader = FileDownloaderUI();
+                    final param = FetchBillsParam(
+                      query: cubit.searchQuery
+                    );
+                    final url =
+                        '${kBaseUrl}child/all/?is_csv_response=true&${param.toQueryParams()}';
+                    print("📤 Download Started");
+                    print("🔍 Search Query: ${cubit.searchQuery}");
+                    print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
+                    print("🌍 URL: $url");
+                    print("📂 File Name: allBills.csv");
+                    await downloader.downloadFile(context, url, ',children.csv');
                   },
                 ),
               ],

@@ -1,14 +1,16 @@
+import 'package:dartz/dartz.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/model/mapper.dart';
 import 'package:monkey_app/feature/bills/main_bills/domain/entity/bills_page_entity.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/update_calculations_param.dart';
 
 import '../../../../../core/utils/api_serviece.dart';
 import '../../domain/entity/Bills_entity.dart';
 import '../../domain/entity/get_one_bills_entity.dart';
+import '../../domain/use_case/param/close_bills_param.dart';
+import '../../domain/use_case/param/create_bills_param.dart';
+import '../../domain/use_case/param/fetch_bills_param.dart';
 import '../../presentation/view/widget/apply_discount_param.dart';
-import '../../presentation/view/widget/param/close_bills_param.dart';
-import '../../presentation/view/widget/param/create_bills_param.dart';
-import '../../presentation/view/widget/param/fetch_bills_param.dart';
 import '../model/all_bills_model/get_all_bills_model.dart';
 import '../model/get_one_bills_model.dart';
 
@@ -22,6 +24,8 @@ abstract class BillsRemoteDataSource {
   Future<BillsEntity> createBills(CreateBillsParam param);
 
   Future<dynamic> closeBills(CloseBillsParam param);
+
+  Future<dynamic> updateCalculation(UpdateCalculationsParam param);
 
   Future<dynamic> applyDiscount(ApplyDiscountParams param);
 }
@@ -49,7 +53,9 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
     }
 
     print('📦 Parsed Bills List: $listBills');
-    print('➡️ Next Page: ${extractPage(result['next'])}, Previous Page: ${extractPage(result['previous'])}');
+    print(
+      '➡️ Next Page: ${extractPage(result['next'])}, Previous Page: ${extractPage(result['previous'])}',
+    );
 
     return BillsPageEntity(
       bills: listBills,
@@ -67,7 +73,6 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
     var result = response.data;
     return GetAllBillsModel.fromJson(result);
-
   }
 
   @override
@@ -117,4 +122,31 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
     var result = await getIt.get<Api>().get(endPoint: 'bill/${id}/');
     return GetOneBillsModel.fromJson(result).toEntity();
   }
+
+  @override
+  Future<dynamic> updateCalculation(UpdateCalculationsParam param) async {
+    try {
+      print("📤 Sending Update Calculation Request...");
+      print("➡️ Endpoint: bill/${param.id}/update_calculations/");
+      print("➡️ Body: ${param.toJson()}");
+
+      var result = await getIt.get<Api>().put(
+        endPoint: 'bill/${param.id}/update_calculations/',
+        body: param.toJson(),
+      );
+
+      print("✅ Response Received:");
+      print("📦 Data: ${result.data}");
+      print("📦 StatusCode: ${result.statusCode}");
+      print("📦 Headers: ${result.headers}");
+
+      return result.data; // لاحظ هنا Unit مش هينفع تطبعها زي الداتا، ممكن ترجع result.data لو API بيرجع حاجة
+    } catch (e, stack) {
+      print("❌ ERROR in updateCalculation:");
+      print("   🔹 Error: $e");
+      print("   🔹 Stacktrace: $stack");
+      rethrow; // عشان ما نخفيش الخطأ عن الـ Bloc أو الكولر
+    }
+  }
+
 }

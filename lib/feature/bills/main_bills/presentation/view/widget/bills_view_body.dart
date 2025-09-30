@@ -5,8 +5,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/utils/poppup_menu_button.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/create_bills_param.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/show_bills_bottom_sheet.dart';
 
 import '../../../../../../core/download_fiels/download_file.dart';
@@ -15,6 +13,8 @@ import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/utils/my_app_drwer.dart';
 import '../../../../../branch/presentation/manager/branch_cubit.dart';
 import '../../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
+import '../../../domain/use_case/param/create_bills_param.dart';
+import '../../../domain/use_case/param/fetch_bills_param.dart';
 import '../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../manager/close_bills_cubit/close_bills_cubit.dart';
 import '../../manager/fetch_bills_cubit/bills_cubit.dart';
@@ -86,21 +86,31 @@ class _BillsViewBodyState extends State<BillsViewBody> {
               showBranchBottomSheet(
                 context,
                 onSelected: (param) {
-                  context.read<BillsCubit>().fetchBills(param);
+                  final cubit = context.read<BillsCubit>();
+                  final updatedFilters = cubit.state.filters.copyWith(
+                    branch: param.branch,
+                    startDate: param.startDate,
+                    endDate: param.endDate,
+                  );
+                  cubit.setParam(updatedFilters);
+                  cubit.fetchBills(updatedFilters);
                 },
               );
             },
+
             onDownload: () async {
               final cubit = context.read<BillsCubit>().state;
               await requestStoragePermission();
               final downloader = FileDownloaderUI();
-              final param = FetchBillsParam(query: cubit.searchQuery);
-
-              await downloader.downloadFile(
-                context,
-                '${kBaseUrl}school/all/?is_csv_response=true&${param.toQueryParams()}',
-                'schools.csv',
-              );
+              final param = cubit.filters;
+              final url =
+                  '${kBaseUrl}bill/all?is_csv_response=true&${param.toQueryParams()}';
+              print("📤 Download Started");
+              print("🔍 Search Query: ${cubit.searchQuery}");
+              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
+              print("🌍 URL: $url");
+              print("📂 File Name: allBills.csv");
+              await downloader.downloadFile(context, url, 'allBills.csv');
             },
           ),
         ],
@@ -139,6 +149,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
         BlocListener<BillsCubit, BillsState>(
           listener: (context, state) async {
             switch (state.status) {
+              case BillsStatus.calculationsFailure:
               case BillsStatus.createFailure:
                 hideLoader(context);
                 showRedFlush(context, state.errorMessage ?? 'Create failed');
@@ -217,6 +228,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
                 ],
               );
 
+            case BillsStatus.calculationsLoading:
             case BillsStatus.loading:
               return Stack(
                 children: [
@@ -234,6 +246,8 @@ class AllBillsBlocConsumer extends StatelessWidget {
             // ---------------- Success & Failure ----------------
             case BillsStatus.success:
             case BillsStatus.failure:
+            case BillsStatus.calculationsFailure:
+            case BillsStatus.calculationsSuccess:
             case BillsStatus.createFailure:
             case BillsStatus.createSuccess:
               return BillsListView(bills: state.bills);

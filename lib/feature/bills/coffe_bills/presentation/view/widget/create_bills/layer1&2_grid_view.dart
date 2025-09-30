@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 
-import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../../domain/entity/layers_entity.dart';
 import '../../../manager/coffee_bills/layers_cubit.dart';
 class Layer1A2GridView extends StatelessWidget {

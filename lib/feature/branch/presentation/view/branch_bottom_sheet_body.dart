@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import '../../../bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../manager/branch_cubit.dart';
 
 class BranchBottomSheetBody extends StatefulWidget {

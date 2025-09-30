@@ -7,7 +7,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffe_bills_item.dart';
 
 import '../../../../../../core/utils/app_router.dart';
-import '../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 
 class CoffeeBillsListView extends StatefulWidget {
   const CoffeeBillsListView({super.key, required this.bills});
@@ -42,7 +42,7 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
       cubit.fetchBillsCoffee(
-        FetchBillsParam(page: state.currentPage),
+        FetchBillsParam(page: state.currentPage,branch: ['all']),
       );
     }
   }

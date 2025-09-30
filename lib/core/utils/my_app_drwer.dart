@@ -52,12 +52,11 @@ class MyAppDrawer extends StatelessWidget {
                       ),
                     ],
                   ),
-                    child: CircleAvatar(
+                  child: CircleAvatar(
                     radius: 45,
                     backgroundColor: Colors.white,
                     child: Image.asset(kTest, height: 60),
                   ),
-
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -146,10 +145,6 @@ class MyAppDrawer extends StatelessWidget {
                   ],
                 ),
 
-
-
-
-
                 _buildCardItem(
                   context,
                   title: 'Expense',
@@ -160,9 +155,10 @@ class MyAppDrawer extends StatelessWidget {
                   extraActions: [
                     _buildChipAction(
                       context,
-                      text:'material',
-                      onTap: () =>
-                          GoRouter.of(context).push(AppRouter.kMaterialExpenseView),
+                      text: 'material',
+                      onTap: () => GoRouter.of(
+                        context,
+                      ).push(AppRouter.kMaterialExpenseView),
                     ),
                     _buildChipAction(
                       context,
@@ -174,9 +170,15 @@ class MyAppDrawer extends StatelessWidget {
                   ],
                 ),
 
-
-
-
+                _buildCardItem(
+                  context,
+                  title: 'analytics',
+                  icon: FontAwesomeIcons.android,
+                  color: Colors.red,
+                  onTap: () async {
+                    GoRouter.of(context).pushReplacement(AppRouter.kAnalytic);
+                  },
+                ),
 
                 _buildCardItem(
                   context,

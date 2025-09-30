@@ -6,8 +6,8 @@ import 'package:monkey_app/core/helper/auth_helper.dart';
 
 import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../main_bills/domain/entity/Bills_entity.dart';
+import '../../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../../../main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
-import '../../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 
 class TextFieldBillsID extends StatefulWidget {
   const TextFieldBillsID({

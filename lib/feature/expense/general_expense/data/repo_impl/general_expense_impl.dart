@@ -1,13 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:monkey_app/core/errors/failure.dart';
-import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/expense/general_expense/data/data_source/general_expense_remote_data_source.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/entity/general_expense_entity.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/entity/general_expense_item_entity.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/repo/general_repo.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/create_param.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/update_param.dart';
+
+import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 
 class GeneralExpenseImpl extends GeneralExpenseRepo {
   final GeneralExpenseRemoteDataSource remoteDataSource;

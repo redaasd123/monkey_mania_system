@@ -4,7 +4,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layer
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_all_layers_use_case.dart';
 
-import '../../../../main_bills/presentation/view/widget/param/fetch_bills_param.dart';
+import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../domain/use_case/get_layer_one.dart';
 import '../../../domain/use_case/get_layer_tow.dart';
 
