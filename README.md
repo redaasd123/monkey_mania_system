@@ -1,4 +1,3 @@
-
 ---
 
 **Monkey Mania** is a complete **accounting and management system** designed for kids’ play areas and cafés.  
@@ -83,7 +82,25 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ## 🖼️ App Screenshots
-📁 All screenshots are located in:  
-`assets/screenshots/`
 
-Example:
+📁 All screenshots are located in:  
+`assets/screenshot/`
+
+You can view the main app screens below 👇
+
+| Home | Billing | Child Profile | Analytics |
+|------|----------|----------------|------------|
+| ![Home](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/home.jpeg) | ![Billing](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/billing.jpeg) | ![Child](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/child.jpeg) | ![Analytics](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/analytics.jpeg) |
+
+---
+
+## 🔗 GitHub Repository
+👉 [**View Project on GitHub**](https://github.com/RedaHassanKhattab/monkey_mania)
+
+---
+
+## 🧑‍💻 Developer
+**Reda Hassan Khattab**  
+📍 New Damietta, Egypt  
+📧 [YourEmail@example.com]  
+📱 +20 01016254773  
