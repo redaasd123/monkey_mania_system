@@ -91,23 +91,22 @@ You can view the app screens below 👇
 ---
 
 ### 📸 App Preview
-
 | | | |
 |--|--|--|
-| ![1](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(1).jpeg) | ![2](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(2).jpeg) | ![3](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(3).jpeg) |
-| ![4](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(4).jpeg) | ![5](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(5).jpeg) | ![6](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(6).jpeg) |
-| ![7](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(7).jpeg) | ![8](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(8).jpeg) | ![9](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(9).jpeg) |
-| ![10](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(10).jpeg) | ![11](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(11).jpeg) | ![12](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(12).jpeg) |
-| ![13](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(13).jpeg) | ![14](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(14).jpeg) | ![15](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(15).jpeg) |
-| ![16](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(16).jpeg) | ![17](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(17).jpeg) | ![18](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(18).jpeg) |
-| ![19](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(19).jpeg) | ![20](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(20).jpeg) | ![21](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(21).jpeg) |
-| ![22](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(22).jpeg) | ![23](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(23).jpeg) | ![24](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(24).jpeg) |
-| ![25](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(25).jpeg) | ![26](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(26).jpeg) | ![27](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(27).jpeg) |
-| ![28](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(28).jpeg) | ![29](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(29).jpeg) | ![30](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(30).jpeg) |
-| ![31](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(31).jpeg) | ![32](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(32).jpeg) | ![33](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(33).jpeg) |
-| ![34](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(34).jpeg) | ![35](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(35).jpeg) | ![36](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(36).jpeg) |
-| ![37](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(37).jpeg) | ![38](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(38).jpeg) | ![39](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(39).jpeg) |
-| ![40](https://raw.githubusercontent.com/RedaHassanKhattab/monkey_mania/main/assets/screenshot/monke_app%20(40).jpeg) | | |
+| ![1](assets/screenshot/monke_app%20(1).jpeg) | ![2](assets/screenshot/monke_app%20(2).jpeg) | ![3](assets/screenshot/monke_app%20(3).jpeg) |
+| ![4](assets/screenshot/monke_app%20(4).jpeg) | ![5](assets/screenshot/monke_app%20(5).jpeg) | ![6](assets/screenshot/monke_app%20(6).jpeg) |
+| ![7](assets/screenshot/monke_app%20(7).jpeg) | ![8](assets/screenshot/monke_app%20(8).jpeg) | ![9](assets/screenshot/monke_app%20(9).jpeg) |
+| ![10](assets/screenshot/monke_app%20(10).jpeg) | ![11](assets/screenshot/monke_app%20(11).jpeg) | ![12](assets/screenshot/monke_app%20(12).jpeg) |
+| ![13](assets/screenshot/monke_app%20(13).jpeg) | ![14](assets/screenshot/monke_app%20(14).jpeg) | ![15](assets/screenshot/monke_app%20(15).jpeg) |
+| ![16](assets/screenshot/monke_app%20(16).jpeg) | ![17](assets/screenshot/monke_app%20(17).jpeg) | ![18](assets/screenshot/monke_app%20(18).jpeg) |
+| ![19](assets/screenshot/monke_app%20(19).jpeg) | ![20](assets/screenshot/monke_app%20(20).jpeg) | ![21](assets/screenshot/monke_app%20(21).jpeg) |
+| ![22](assets/screenshot/monke_app%20(22).jpeg) | ![23](assets/screenshot/monke_app%20(23).jpeg) | ![24](assets/screenshot/monke_app%20(24).jpeg) |
+| ![25](assets/screenshot/monke_app%20(25).jpeg) | ![26](assets/screenshot/monke_app%20(26).jpeg) | ![27](assets/screenshot/monke_app%20(27).jpeg) |
+| ![28](assets/screenshot/monke_app%20(28).jpeg) | ![29](assets/screenshot/monke_app%20(29).jpeg) | ![30](assets/screenshot/monke_app%20(30).jpeg) |
+| ![31](assets/screenshot/monke_app%20(31).jpeg) | ![32](assets/screenshot/monke_app%20(32).jpeg) | ![33](assets/screenshot/monke_app%20(33).jpeg) |
+| ![34](assets/screenshot/monke_app%20(34).jpeg) | ![35](assets/screenshot/monke_app%20(35).jpeg) | ![36](assets/screenshot/monke_app%20(36).jpeg) |
+| ![37](assets/screenshot/monke_app%20(37).jpeg) | ![38](assets/screenshot/monke_app%20(38).jpeg) | ![39](assets/screenshot/monke_app%20(39).jpeg) |
+| ![40](assets/screenshot/monke_app%20(40).jpeg) | | |
 
 ---
 
