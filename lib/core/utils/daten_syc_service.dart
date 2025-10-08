@@ -4,7 +4,6 @@ import 'package:monkey_app/core/utils/service_locator.dart';
 
 import 'api_serviece.dart';
 
-//ده بيخلق نوع بيانات جديد اسمه HttpMethod وله قيمتين فقط: HttpMethod.post و HttpMethod.put
 enum HttpMethod { post, put }
 
 class DataSyncService<T> {
@@ -37,7 +36,6 @@ class DataSyncService<T> {
       final item = box.get(key);
       if (item != null) {
         try {
-          // ✅ حدد الـ endpoint بناءً على الـ item الحالي
           final endpoint = endpointBuilder != null
               ? endpointBuilder!(item)
               : endPoint!;
@@ -50,7 +48,6 @@ class DataSyncService<T> {
 
           await box.delete(key);
         } catch (e) {
-          // Handle retry logic or logging if needed
         }
       }
     }

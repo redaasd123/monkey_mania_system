@@ -105,11 +105,6 @@ class _BillsViewBodyState extends State<BillsViewBody> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}bill/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
               await downloader.downloadFile(context, url, 'allBills.csv');
             },
           ),
@@ -121,11 +116,11 @@ class _BillsViewBodyState extends State<BillsViewBody> {
         backgroundColor: colorScheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () async {
-          final data = await showBillsBottomSheet(context, LangKeys.bills.tr());
+          final data = await showBillsBottomSheet(context, LangKeys.appName.tr());
           if (data != null) {
             context.read<BillsCubit>().createBills(
               CreateBillsParam(
-                discount: '',
+                discount: data.discount,
                 childrenId: data.childrenId,
                 newChildren: data.newChildren,
                 branch: data.branch,
@@ -145,7 +140,6 @@ class AllBillsBlocConsumer extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        /// 🔹 BillsCubit
         BlocListener<BillsCubit, BillsState>(
           listener: (context, state) async {
             switch (state.status) {
@@ -154,11 +148,13 @@ class AllBillsBlocConsumer extends StatelessWidget {
                 hideLoader(context);
                 showRedFlush(context, state.errorMessage ?? 'Create failed');
                 break;
-
               case BillsStatus.createSuccess:
                 hideLoader(context);
                 showGreenFlush(context, LangKeys.createdSuccessfully.tr());
                 break;
+              case BillsStatus.calculationsSuccess:
+                showGreenFlush(context,  LangKeys.ok.tr());
+                hideLoader(context);
 
               case BillsStatus.createLoading:
                 showLoader(context);
@@ -178,7 +174,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
               showRedFlush(context, state.errMessage);
             } else if (state is ApplyDiscountSuccessState) {
               hideLoader(context);
-              showGreenFlush(context, 'Discount Applied');
+              showGreenFlush(context,  LangKeys.ok.tr());
             } else if (state is ApplyDiscountLoadingState) {
               showLoader(context);
             }
@@ -193,18 +189,16 @@ class AllBillsBlocConsumer extends StatelessWidget {
               showRedFlush(context, state.errMessage);
             } else if (state is CloseBillsSuccess) {
               hideLoader(context);
-              showGreenFlush(context, 'Bill Closed');
+              showGreenFlush(context,  LangKeys.ok.tr());
             } else if (state is CloseBillsLoading) {
               showLoader(context);
             }
           },
         ),
 
-        /// 🔹 Branch Cubit (لما تختار برانش)
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
             if (state is BranchSelectedState) {
-              // هنا ننده على BillsCubit ونجيب البيانات الخاصة بالـbranch الجديد
               context.read<BillsCubit>().fetchBills(
                 FetchBillsParam(branch: [state.branchId]),
               );
@@ -254,7 +248,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
 
             // ---------------- Empty ----------------
             case BillsStatus.empty:
-              return const Center(child: Text('No bills found'));
+              return  Center(child: Text( LangKeys.notFound.tr()));
 
             // ---------------- Default ----------------
             default:

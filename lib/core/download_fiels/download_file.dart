@@ -4,11 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:flutter/material.dart';
 class FileDownloaderUI {
-
-  Future<void> downloadFile(BuildContext context, String url, String fileName) async {
+  Future<void> downloadFile(BuildContext context, String url, String fileName)
+  async {
     Directory downloadsDir;
 
     if (Platform.isAndroid) {
@@ -18,12 +17,15 @@ class FileDownloaderUI {
     }
     String savePath = "${downloadsDir.path}/$fileName";
     double progress = 0;
+    StateSetter? dialogSetState;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            dialogSetState = setState;
             return AlertDialog(
               title: const Text("جاري التحميل"),
               content: Column(
@@ -47,7 +49,9 @@ class FileDownloaderUI {
       onReceiveProgress: (received, total) {
         if (total != -1) {
           progress = received / total;
-          (context as Element).markNeedsBuild();
+          if (dialogSetState != null) {
+            dialogSetState!(() {});
+          }
         }
       },
     );

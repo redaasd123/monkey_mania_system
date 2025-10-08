@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/core/widget/widget/bottom_sheet_button.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 
@@ -70,34 +71,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     _notesCtrl.dispose();
     _schoolCtrl.dispose();
     super.dispose();
-  }
-
-  //flutter pub run build_runner build --delete-conflicting-outputs
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // if (_selectedSchoolId == null) {
-      //  showRedFlush(context, LangKeys.nameRequired.tr());
-      //   return;
-      // }
-
-      final childParam = CreateChildrenParam(
-        school: _selectedSchoolId,
-        name: _nameCtrl.text.trim(),
-        birthDate: _birthDateCtrl.text.trim(),
-        address: _addrCtrl.text.trim(),
-        notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
-        phones: phoneNumbers
-            .map(
-              (e) => {
-                'value': (e['value'] ?? '').toString().trim(),
-                'relationship': (e['relationship'] ?? 'father').toString(),
-              },
-            )
-            .toList(),
-      );
-
-      Navigator.pop(context, childParam);
-    }
   }
 
   @override
@@ -205,29 +178,19 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             const SizedBox(height: 12),
 
             SelectItemTextField<SchoolEntity>(
-              controller: _schoolCtrl, // نفس الـ controller اللي كنت مستخدمه
+              controller: _schoolCtrl,
               colorScheme: Theme.of(context).colorScheme,
               label: LangKeys.school.tr(),
               fetchItems: () async {
-                // هنا نستدعي الـ Cubit نفسه اللي كنت بتسحب منه المدارس
                 await context.read<SchoolCubit>().fetchSchool();
                 return context.read<SchoolCubit>().state.allSchool;
               },
-              itemTitle: (school) => school.name ?? 'لا يوجد اسم', // طريقة عرض الاسم
+              itemTitle: (school) => school.name ?? 'لا يوجد اسم',
               onSelected: (school) {
-                _selectedSchoolId = school.id; // نفس المنطق القديم
-                print('Selected school ID: $_selectedSchoolId');
+                _selectedSchoolId = school.id;
               },
             ),
 
-
-            // TextFieldSchoolID(
-            //   childrenCtrl: _schoolCtrl,
-            //   colorScheme: Theme.of(context).colorScheme,
-            //   onSelected: (int id) {
-            //     _selectedSchoolId = id;
-            //   },
-            // ),
             const SizedBox(height: 12),
             _buildField(
               _notesCtrl,
@@ -253,17 +216,32 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _submit,
-                child: Text(LangKeys.save.tr(), style: TextStyle(fontSize: 18)),
+              child: CustomButtomSheetButton(
+                text: LangKeys.save.tr(),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final childParam = CreateChildrenParam(
+                      school: _selectedSchoolId,
+                      name: _nameCtrl.text.trim(),
+                      birthDate: _birthDateCtrl.text.trim(),
+                      address: _addrCtrl.text.trim(),
+                      notes: _notesCtrl.text.trim().isEmpty
+                          ? null
+                          : _notesCtrl.text.trim(),
+                      phones: phoneNumbers
+                          .map(
+                            (e) => {
+                              'value': (e['value'] ?? '').toString().trim(),
+                              'relationship': (e['relationship'] ?? 'father')
+                                  .toString(),
+                            },
+                          )
+                          .toList(),
+                    );
+
+                    Navigator.pop(context, childParam);
+                  }
+                },
               ),
             ),
           ],
@@ -298,6 +276,10 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
   ///////////////////////////////////
   Widget _buildAddressField() {
     return TextFormField(
+      validator: (val) {
+        if (val == null || val.trim().isEmpty)
+          return LangKeys.nameRequired.tr();
+      },
       controller: _addrCtrl,
       readOnly: true,
       decoration: InputDecoration(
@@ -337,8 +319,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF5A55CA), // Indigo Violet
-                Color(0xFF9D84FF),
+                Color(0xFF004953), // Indigo Violet
+                Color(0xFF004953),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -367,7 +349,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     ),
                   ),
 
-                  // 🏷️ العنوان
+                  // 🏷️
                   Text(
                     LangKeys.address.tr(),
                     style: const TextStyle(
@@ -378,7 +360,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 🔍 صندوق البحث
                   TextField(
                     controller: searchCtrl,
                     style: const TextStyle(color: Colors.white),
@@ -408,7 +389,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 📋 قائمة المناطق
                   ...filteredAreas.map(
                     (area) => Card(
                       color: Colors.white,
@@ -419,7 +399,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.deepPurple.shade400,
+                          backgroundColor: Color(0xFF004953),
                           child: const Icon(
                             Icons.location_city_outlined,
                             color: Colors.white,
@@ -444,7 +424,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
 
                   const SizedBox(height: 12),
 
-                  // ✍️ زر الإدخال اليدوي
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -539,7 +518,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     );
   }
 
-  //: تُستخدم لإنشاء عدد من العناصر حسب عدد العناصر داخل phoneNumbers.
   List<Widget> _buildPhoneNumberFields() {
     return List.generate(phoneNumbers.length, (index) {
       return Column(
@@ -618,36 +596,3 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     } catch (_) {}
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

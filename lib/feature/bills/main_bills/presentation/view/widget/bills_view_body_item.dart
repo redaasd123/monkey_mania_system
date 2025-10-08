@@ -29,14 +29,7 @@ class BillsViewBodyItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [
-              colorScheme.surface,
-              colorScheme.primary.withOpacity(0.05),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+
         ),
         padding: const EdgeInsets.all(14),
         child: Row(
@@ -50,7 +43,6 @@ class BillsViewBodyItem extends StatelessWidget {
             ),
             const SizedBox(width: 12),
 
-            // 📋 معلومات الفاتورة
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,12 +111,11 @@ class BillsViewBodyItem extends StatelessWidget {
               ),
             ),
 
-            // 🎯 أزرار الأكشن (عرض ثابت علشان مفيش Overflow)
             SizedBox(
               width: 50,
-              child: // 🎯 أزرار الأكشن
+              child:
               Column(
-                mainAxisSize: MainAxisSize.min, // ✅ مش هياخد مساحة زيادة تحت
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildActionButton(
                     icon: Icons.local_offer_outlined,
@@ -140,7 +131,7 @@ class BillsViewBodyItem extends StatelessWidget {
                           icon: Icons.close,
                           color: Colors.red,
                           onTap: onClose,
-                          tooltip: "إغلاق",
+                          tooltip: LangKeys.cansel.tr(),
                         )
                       : _buildActionButton(
                           icon: Icons.calculate_outlined,

@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  //0xFF5A55CA
   // --- Light Theme ---
   //static const Color lightPrimary = Color(0xFF5A55CA);  reda
-  static const Color lightPrimary = Color(0xFF5A55CA); // Indigo Violet
+  static const Color lightPrimary = Color(0xFF004953); // Indigo Violet
   static const Color lightSecondary = Color(0xFF9D84FF); // Purple Accent
   static const Color lightBackground = Color(0xFFF7F8FA); // Very Light Gray
   static const Color lightSurface = Colors.white; // Cards
@@ -13,7 +14,7 @@ class AppColors {
   static const Color lightError = Color(0xFFE74C3C); // Soft Red
 
   // --- Dark Theme ---
-  static const Color darkPrimary = Color(0xFF7C6EE6); // Softer Violet
+  static const Color darkPrimary = Color(0xFF004953); // Softer Violet
   static const Color darkSecondary = Color(0xFFB197FC); // Light Lavender
   static const Color darkBackground = Color(0xFF121212); // Classic Dark
   static const Color darkSurface = Color(0xFF1E1E1E); // Card Dark

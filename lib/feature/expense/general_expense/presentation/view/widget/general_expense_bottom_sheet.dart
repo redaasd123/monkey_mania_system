@@ -1,9 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/core/widget/widget/custom_button.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/entity/general_expense_item_entity.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/create_param.dart';
 
 import '../../../../../../core/utils/constans.dart';
+import '../../../../../../core/widget/widget/custom_build_header_sheet_.dart';
 import '../../../../../../core/widget/widget/custom_text_field.dart';
 
 class GeneralExpenseBottomSheet extends StatefulWidget {
@@ -59,13 +63,13 @@ class _GeneralExpenseBottomSheetState extends State<GeneralExpenseBottomSheet> {
         ),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView( // 👈 يمنع overflow مع الكيبورد
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min, // قد المحتوى فقط
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHandle(),
-                _buildHeader(colorScheme),
+                CustombuildHeader(colorScheme, widget.title, colorScheme.onPrimary),
                 const SizedBox(height: 20),
                 _buildForm(context),
               ],
@@ -93,64 +97,37 @@ class _GeneralExpenseBottomSheetState extends State<GeneralExpenseBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomTextField(
-              label: ' Name',
-              hint: 'Enter Name',
+              label: LangKeys.name.tr(),
+              hint: LangKeys.name.tr(),
               controller: nameCtrl,
               keyboardType: TextInputType.text,
             ),
             CustomTextField(
-              label: ' price',
-              hint: 'Enter Total Price',
+              label: LangKeys.totalPrice.tr(),
+              hint: LangKeys.totalPrice.tr(),
               controller: priceCtrl,
               keyboardType: TextInputType.number,
             ),
             CustomTextField(
-              label: ' quantity',
-              hint: 'Enter quantity',
+              label: LangKeys.quantity.tr(),
+              hint: LangKeys.quantity.tr(),
               controller: quantityCtrl,
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: (){
-                final branch = AuthHelper.getBranch();
-                if (!_formKey.currentState!.validate()) {
-                  return;
-                }
-                final param = CreateExpenseParam(
-                  name: nameCtrl.text,
-                  branchId: branch,
-                  totalPrice: priceCtrl.text,
-                  quantity: quantityCtrl.text,
-                );
-                Navigator.pop(context,param);
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.zero,
-                backgroundColor: Colors.deepPurple,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Ink(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Add',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // ثابتة هنا لأن الجريدينت غامق
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            CustomButton(text: LangKeys.save.tr(), onPressed: (){
+              final branch = AuthHelper.getBranch();
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
+              final param = CreateExpenseParam(
+                name: nameCtrl.text,
+                branchId: branch,
+                totalPrice: priceCtrl.text,
+                quantity: quantityCtrl.text,
+              );
+              Navigator.pop(context,param);
+            },)
           ],
         ),
       ),

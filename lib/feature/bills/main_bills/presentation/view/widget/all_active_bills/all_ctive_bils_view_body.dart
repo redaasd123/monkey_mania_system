@@ -110,11 +110,6 @@ class _AllActiveBillsViewBodyState extends State<AllActiveBillsViewBody> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}bill/active/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
               await downloader.downloadFile(context, url, 'allActiveBills.csv');
             },
           ),
@@ -124,11 +119,10 @@ class _AllActiveBillsViewBodyState extends State<AllActiveBillsViewBody> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          final data = await showBillsBottomSheet(context, 'Add Bills');
+          final data = await showBillsBottomSheet(context,  LangKeys.appName.tr());
           final cubit = BlocProvider.of<BillsCubit>(context);
           if (data != null) {
             final branch = AuthHelper.getBranch();
-            print('🧪 Data from bottom sheet: $data');
             final param = CreateBillsParam(
               discount: data.discount,
               childrenId: data.childrenId,
@@ -163,7 +157,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
                 break;
 
               case BillsStatus.createSuccess:
-                showGreenFlush(context, 'Success');
+                showGreenFlush(context,  LangKeys.ok.tr());
                 hideLoader(context);
                 break;
 
@@ -193,7 +187,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
               showRedFlush(context, state.errMessage);
               hideLoader(context);
             } else if (state is ApplyDiscountSuccessState) {
-              showGreenFlush(context, 'Discount Applied');
+              showGreenFlush(context, LangKeys.ok.tr());
               hideLoader(context);
             } else if (state is ApplyDiscountLoadingState) {
               showLoader(context);
@@ -211,7 +205,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
               await BlocProvider.of<BillsCubit>(
                 context,
               ).fetchActiveBills(FetchBillsParam());
-              showGreenFlush(context, 'Bill Closed');
+              showGreenFlush(context, LangKeys.ok.tr());
               hideLoader(context);
             } else if (state is CloseBillsLoading) {
               showLoader(context);
@@ -229,8 +223,8 @@ class AllActiveBillsConsumer extends StatelessWidget {
               return AllActiveListView(bills: state.bills);
 
             case BillsStatus.empty:
-              return const Center(
-                child: Text('No Data', style: Styles.textStyle14),
+              return  Center(
+                child: Text(LangKeys.notFound.tr(), style: Styles.textStyle14),
               );
 
             case BillsStatus.searchLoading:

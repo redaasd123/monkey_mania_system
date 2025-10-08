@@ -22,14 +22,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            // gradient: LinearGradient(
-            //   colors: [
-            //     colorScheme.surface,
-            //     colorScheme.primary.withOpacity(0.08),
-            //   ],
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            // ),
+
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -60,26 +53,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
                 const SizedBox(width: 10),
 
                 // Address
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      Icon(Icons.location_on,
-                          size: 16, color: colorScheme.secondary),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          childrenEntity.address ?? "لا يوجد عنوان",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Styles.textStyle12.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
 
                 const SizedBox(width: 10),
 
@@ -88,7 +62,7 @@ class ChildrenViewBodyItem extends StatelessWidget {
                   flex: 2,
                   child: Row(
                     children: [
-                      Icon(Icons.phone, size: 16, color: colorScheme.tertiary),
+                      Icon(Icons.phone, size: 16, color: colorScheme.primary,),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
@@ -124,13 +98,8 @@ class ChildrenViewBodyItem extends StatelessWidget {
                       Icon(Icons.visibility,
                           size: 16, color: colorScheme.primary),
                       const SizedBox(width: 4),
-                      Text(
-                        "عرض",
-                        style: Styles.textStyle12.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+
+
                     ],
                   ),
                 ),

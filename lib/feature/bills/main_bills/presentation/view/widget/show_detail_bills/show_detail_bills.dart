@@ -33,7 +33,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            LangKeys.bills,
+            LangKeys.bills.tr(),
             style: Styles.textStyle20.copyWith(color: colorScheme.onPrimary),
           ),
           backgroundColor: colorScheme.primary,
@@ -177,7 +177,6 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
 
                       const SizedBox(height: 24),
 
-                      /// 💵 المدفوعات والأسعار
                       _buildBillRow(
                         context,
                         LangKeys.cash.tr(),
@@ -225,7 +224,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
                         context,
                         LangKeys.discountCoupon.tr(),
                         billsEntity.discountValue
-                            ?.toString(), // إذا كانت double?
+                            ?.toString(), //
                       ),
                       _buildBillRow(
                         context,
@@ -235,7 +234,6 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
 
                       const SizedBox(height: 16),
 
-                      /// 🏢 تفاصيل الفاتورة
                       _buildBillRow(
                         context,
                         LangKeys.branch.tr(),
@@ -254,7 +252,6 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
 
                       const SizedBox(height: 16),
 
-                      /// ⏱️ وقت الإنشاء والإنهاء
                       _buildBillRow(
                         context,
                         LangKeys.created.tr(),
@@ -268,7 +265,6 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
 
                       const SizedBox(height: 16),
 
-                      /// 👤 من أنشأ ومن أنهى
                       _buildBillRow(
                         context,
                         LangKeys.createdBy.tr(),
@@ -288,7 +284,7 @@ class _ShowDetailBillsState extends State<ShowDetailBills> {
             } else {
               return const Center(
                 child: SpinKitFadingCircle(
-                  color: Colors.blue, // غير اللون زي ما تحب
+                  color: Colors.blue,
                   size: 60,
                 ),
               );

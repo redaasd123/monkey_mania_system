@@ -35,13 +35,9 @@ class MaterialExpenseRemoteDataSourceImpl
       endPoint: 'material_expense/all?${param.toQueryParams()}',
     );
 
-    // 🟢 اطبع كل الداتا اللي راجعة
-    print("📥 Full API Response: $results");
-
     List<MaterialExpenseItemEntity> expenseItems = [];
 
     for (var item in results['results']) {
-      print("🔹 Single Item: $item");
       expenseItems.add(ResultsMaterialExpense.fromJson(item).toEntity());
     }
 
@@ -83,7 +79,7 @@ class MaterialExpenseRemoteDataSourceImpl
       endPoint: 'branch_material/all?${param.toQueryParams()}',
     );
     List<MaterialsEntity> data = [];
-    for(var item in result){
+    for (var item in result) {
       data.add(MaterialsModel.fromJson(item).toEntity());
     }
     return data;

@@ -1,16 +1,89 @@
-# monkey_app
 
-A new Flutter project.
+---
 
-## Getting Started
+**Monkey Mania** is a complete **accounting and management system** designed for kids’ play areas and cafés.  
+It’s a **large-scale, production-ready Flutter app** currently used in real environments — built with **Clean Architecture**, **BLoC**, and **Hive** for offline mode.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Main Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 👶 Children & Subscriptions
+- Create and update child profiles easily.
+- Add multiple phone numbers per child (e.g., father, mother).
+- Manage and renew monthly subscriptions automatically.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+### 💰 Billing & Daily Sales
+- Create invoices that can include multiple children.
+- Download invoices directly as **PDF files**.
+- Automatically calculate total daily sales.
+- Support for both single-time and monthly billing.
+
+---
+
+### 🏪 Branch & Role Management
+- Manage **multiple branches** with ease.
+- Owners/Admins can select **specific branches** or **view all**.
+- Role-based access (Owner, Admin, Employee).
+- Built-in **User Management System** to create, edit, and delete users.
+
+---
+
+### 👥 Users & Permissions
+- Admins can add new users and assign roles.
+- Dynamic permission control for full flexibility.
+- Secure authentication and access management.
+
+---
+
+### 📊 Analytics & Reports
+- Real-time analytics for invoices, subscriptions, and sales.
+- Reports by branch or global overview.
+- Data visualization for better insights.
+
+---
+
+### 🔄 Offline Mode
+- Works **without internet** using **Hive** local storage.
+- Automatically syncs with the server once connected.
+- Provides a reliable offline-first experience.
+
+---
+
+### 🌗 Modern UI/UX
+- Fully **responsive and elegant** Flutter design.
+- **Dark & Light Mode** support.
+- Available in **Arabic & English**.
+- Includes **Search**, **Filters**, and **Pagination**.
+
+---
+
+## 🧱 Technologies Used
+| Category | Tools / Packages |
+|-----------|------------------|
+| Language | Flutter & Dart |
+| State Management | BLoC / Cubit |
+| Architecture | Clean Architecture |
+| Database | Hive (Offline) |
+| Networking | REST API, Dio |
+| Utils | Equatable, CopyWith-Dartz |
+| Navigation | GoRouter |
+
+---
+
+## 🧩 Technical Highlights
+- Structured with **Clean Architecture principles**.
+- Real backend integration with authentication.
+- Optimized for performance and scalability.
+- Offline-first with auto-sync when online.
+- Well-organized folder structure for maintainability.
+
+---
+
+## 🖼️ App Screenshots
+📁 All screenshots are located in:  
+`assets/screenshots/`
+
+Example:

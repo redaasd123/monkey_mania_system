@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../core/errors/off_line_failure.dart';
 import '../../../../../core/param/create_school_param/create_school_param.dart';
 import '../../../../../core/param/update_school_param/update_school_param.dart';
+import '../../../../../core/utils/langs_key.dart';
 import '../../../domain/entity/school_entity.dart';
 import '../../../domain/use_case/fetch_school_use_case.dart';
 import '../../../domain/use_case/post_school_use_case.dart';
@@ -108,8 +110,7 @@ class SchoolCubit extends Cubit<SchoolState> {
             state.copyWith(
               status: SchoolStatus.offLineState,
               errMessage:
-                  'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.',
-            ),
+              LangKeys.messageFailureOffLine.tr(),            ),
           );
         } else {
           if (!isClosed)

@@ -15,6 +15,7 @@ class BranchRemoteDataSourceImpl extends BranchRemoteDataSource {
     for (var item in result) {
       branchList.add(BranchModel.fromJson(item));
     }
+
     return branchList;
   }
 }

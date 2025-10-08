@@ -15,7 +15,6 @@ class BranchRepoImpl extends BranchRepo {
   Future<Either<Failure, List<BranchEntity>>> fetchBranch() async {
     try {
       var result = await branchRemoteDataSource.fetchBranch();
-      print("${result}🤨🤨🤨🤨🤨🤨🤨🤨🤨");
       return right(result);
     } on Exception catch (e) {
       if (e is DioException) {

@@ -38,7 +38,7 @@ class SchoolRemoteDataSourceImpl extends SchoolRemoteDataSource {
 
   @override
   Future<SchoolModel> createSchool(CreateSchoolParam param) async {
-    try {
+
       final response = await api.post(
         endPoint: 'school/create/',
 
@@ -51,11 +51,7 @@ class SchoolRemoteDataSourceImpl extends SchoolRemoteDataSource {
       } else {
         throw ServerFailure(errMessage: 'Unexpected response format');
       }
-    } on DioException catch (e) {
-      throw ServerFailure.fromDioError(e);
-    } catch (e) {
-      throw ServerFailure(errMessage: e.toString());
-    }
+
 
     // }
   }

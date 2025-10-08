@@ -94,11 +94,10 @@ class CardLayer3Widget extends StatelessWidget {
                     ),
                   ),
                 ),
-                // الكمية المتاحة
                 Text(
                   "متاح: ${item.availableUnits}",
                   style: const TextStyle(
-                    color: Colors.blueAccent,
+                    color: Color(0xFF004953),
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),

@@ -68,7 +68,6 @@ class HomeListView extends StatelessWidget {
       ],
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          print("HomeState: ${state.status}");
           if (state.status == HomeStatus.success) {
             final data = state.data!;
             return HomeViewBodyItem(data: data);

@@ -19,7 +19,6 @@ FloatingActionButton ReseveDataChildrenActionButton(BuildContext context) {
         LangKeys.addChild.tr(),
       );
       if (data != null) {
-        debugPrint("✅ DATA FROM SHEET: $data");
         await createCubit.createChildren(data).then((value) async {
           await childrenCubit.fetchChildren(FetchChildrenParam());
         });

@@ -1,8 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
+
 import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../manager/branch_cubit.dart';
 
@@ -17,6 +21,13 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
   DateTime? startDate;
   DateTime? endDate;
   final List<int> selectIndex = [];
+  int? selectBranch;
+
+  @override
+  void initState() {
+    selectBranch = AuthHelper.getBranch();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +36,11 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
       builder: (context, state) {
         if (state is BranchSuccessState) {
           final branches = state.branch;
-
+          for (int i = 0; i < branches.length; i++) {
+            if (branches[i].id == selectBranch) {
+              selectIndex.add(i);
+            }
+          }
           return StatefulBuilder(
             builder: (context, setState) {
               return Container(
@@ -38,7 +53,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
@@ -52,7 +69,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Handle صغير أعلى البوتوم شيت
                       Container(
                         width: 50,
                         height: 5,
@@ -63,9 +79,8 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                       ),
                       const SizedBox(height: 16),
 
-                      // عنوان
                       Text(
-                        'اختيار الفروع',
+                        LangKeys.selectBranch.tr(),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -74,14 +89,16 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                       ),
                       const SizedBox(height: 16),
 
-                      // قائمة الفروع
                       Flexible(
                         child: ListView.separated(
                           shrinkWrap: true,
                           itemCount: branches.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final isSelected = selectIndex.contains(index);
+                            final isCurrent =
+                              branches[index].id == selectBranch;
                             return InkWell(
                               onTap: () {
                                 setState(() {
@@ -93,13 +110,19 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                 });
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16),
                                   gradient: LinearGradient(
                                     colors: isSelected
                                         ? [Colors.greenAccent, Colors.green]
-                                        : [Colors.grey.shade200, Colors.grey.shade300],
+                                        : [
+                                            Colors.grey.shade200,
+                                            Colors.grey.shade300,
+                                          ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -117,14 +140,27 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                       child: Text(
                                         branches[index].name ?? '',
                                         style: TextStyle(
-                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                          color: isSelected ? Colors.white : Colors.black87,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black87,
                                         ),
                                       ),
                                     ),
+                                      if (isCurrent)
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
                                     Icon(
-                                      isSelected ? Icons.check_circle : Icons.circle_outlined,
-                                      color: isSelected ? Colors.white : Colors.grey,
+                                      isSelected
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey,
                                     ),
                                   ],
                                 ),
@@ -136,24 +172,25 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
 
                       const SizedBox(height: 12),
 
-                      // حقول التواريخ
                       Row(
                         children: [
                           Expanded(
                             child: _buildDateField(
                               context: context,
-                              label: 'تاريخ البداية',
+                              label: LangKeys.startDate.tr(),
                               selectedDate: startDate,
-                              onDatePicked: (date) => setState(() => startDate = date),
+                              onDatePicked: (date) =>
+                                  setState(() => startDate = date),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildDateField(
                               context: context,
-                              label: 'تاريخ النهاية',
+                              label: LangKeys.endDate.tr(),
                               selectedDate: endDate,
-                              onDatePicked: (date) => setState(() => endDate = date),
+                              onDatePicked: (date) =>
+                                  setState(() => endDate = date),
                             ),
                           ),
                         ],
@@ -161,7 +198,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
 
                       const SizedBox(height: 20),
 
-                      // زر تم
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -174,23 +210,28 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            final selectedBranch = selectIndex.map((i) => branches[i].id).toList();
+                            final selectedBranch = selectIndex
+                                .map((i) => branches[i].id)
+                                .toList();
 
                             if (selectedBranch.isEmpty) {
-                              showRedFlush(context, 'من فضلك اختر فرع على الأقل');
+                              showRedFlush(
+                                context,
+                                LangKeys.chooseAtLeastOneBranch.tr(),
+                              );
                               return;
                             }
 
                             if ((startDate != null && endDate == null) ||
                                 (startDate == null && endDate != null)) {
-                              showRedFlush(context, 'يرجى اختيار تاريخ البداية والنهاية معًا أو تركهم فارغين');
+                              showRedFlush(context, LangKeys.datePicker.tr());
                               return;
                             }
 
                             if (startDate != null &&
                                 endDate != null &&
                                 endDate!.isBefore(startDate!)) {
-                              showRedFlush(context, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية');
+                              showRedFlush(context, LangKeys.dateBefore.tr());
                               return;
                             }
 
@@ -219,7 +260,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
             },
           );
         } else if (state is BranchLoadingState) {
-          return const Center(child: SpinKitFadingCircle(color: Colors.blue,size: 60,));
+          return const Center(
+            child: SpinKitFadingCircle(color: Colors.blue, size: 60),
+          );
         } else {
           return const Center(child: SizedBox());
         }
@@ -304,3 +347,4 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
     );
   }
 }
+

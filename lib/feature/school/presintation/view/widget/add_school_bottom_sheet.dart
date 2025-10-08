@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_app/core/param/create_school_param/create_school_param.dart';
-import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
+import 'package:monkey_app/core/widget/widget/custom_build_header_sheet_.dart';
 
 import '../../../domain/entity/school_entity.dart';
 
@@ -66,15 +66,19 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
           left: 20,
           right: 20,
           top: 16,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 24, // 👈 moves up with keyboard
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
         ),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHandle(),
-              _buildHeader(colorScheme),
+              CustombuildHeader(
+                colorScheme,
+                widget.text,
+                colorScheme.onPrimary,
+              ),
               const SizedBox(height: 20),
               _buildForm(context),
             ],
@@ -83,7 +87,6 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
       ),
     );
   }
-
 
   Widget _buildHandle() => Center(
     child: Container(
@@ -95,26 +98,6 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
         borderRadius: BorderRadius.circular(4),
       ),
     ),
-  );
-
-  Widget _buildHeader(ColorScheme colorScheme) => Row(
-    children: [
-      const CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 23,
-        backgroundImage: AssetImage(kTest),
-      ),
-      const SizedBox(width: 12),
-      Text(
-        LangKeys.appName.tr(),
-        style: TextStyle(
-          color: colorScheme.onPrimary,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-        ),
-      ),
-    ],
   );
 
   Widget _buildForm(BuildContext context) {

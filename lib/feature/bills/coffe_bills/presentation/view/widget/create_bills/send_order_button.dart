@@ -58,7 +58,7 @@ class SendOrderButton extends StatelessWidget {
           context.read<CoffeeBillsCubit>().createBillsCoffeeCubit(param);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
+          backgroundColor: Color(0xFF004953),
           foregroundColor: Colors.white,
           // backgroundColor: Theme.of(context).colorScheme.primary,
           // foregroundColor: Theme.of(context).colorScheme.onPrimary,

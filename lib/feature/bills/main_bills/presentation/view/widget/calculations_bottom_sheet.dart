@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_app/core/widget/widget/custom_build_header_sheet_.dart';
 import 'package:monkey_app/core/widget/widget/custom_button.dart';
 import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/update_calculations_param.dart';
 
@@ -57,11 +58,15 @@ class _CalculationsBottomSheetState extends State<CalculationsBottomSheet> {
         ),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHandle(),
-              _buildHeader(colorScheme),
+              CustombuildHeader(
+                colorScheme,
+                LangKeys.calculations.tr(),
+                colorScheme.onPrimary,
+              ),
               const SizedBox(height: 20),
               _buildForm(context),
             ],
@@ -83,27 +88,6 @@ class _CalculationsBottomSheetState extends State<CalculationsBottomSheet> {
     ),
   );
 
-  Widget _buildHeader(ColorScheme colorScheme) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 23,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage(kTest),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          'Calculations',
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -123,19 +107,23 @@ class _CalculationsBottomSheetState extends State<CalculationsBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 12),
-            _buildField(priceCtrl, 'Time price', Icons.price_change),
+            _buildField(priceCtrl, LangKeys.timePrice.tr(), Icons.price_change),
             const SizedBox(height: 12),
-            _buildField(visaCtrl, 'Visa', Icons.credit_card),
+            _buildField(visaCtrl, LangKeys.visa.tr(), Icons.credit_card),
             const SizedBox(height: 12),
-            _buildField(cashCtrl, 'Cash', Icons.attach_money),
+            _buildField(cashCtrl, LangKeys.cash.tr(), Icons.attach_money),
             const SizedBox(height: 12),
-            _buildField(instapayCtrl, 'Instapay', Icons.account_balance_wallet),
+            _buildField(
+              instapayCtrl,
+              LangKeys.instapay.tr(),
+              Icons.account_balance_wallet,
+            ),
             const SizedBox(height: 24),
             SizedBox(width: double.infinity),
             CustomButton(
-              text: 'Send',
+              text: LangKeys.save.tr(),
               onPressed: () {
-                if(_formKey.currentState!.validate()){
+                if (_formKey.currentState!.validate()) {
                   final param = UpdateCalculationsParam(
                     timePrice: int.tryParse(priceCtrl.text) ?? 0,
                     visa: int.tryParse(visaCtrl.text) ?? 0,
@@ -144,9 +132,7 @@ class _CalculationsBottomSheetState extends State<CalculationsBottomSheet> {
                   );
                   Navigator.pop(context, param);
                 }
-
               },
-
             ),
           ],
         ),

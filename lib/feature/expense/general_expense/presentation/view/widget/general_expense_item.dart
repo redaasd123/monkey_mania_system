@@ -54,7 +54,7 @@ class GeneralExpenseItem extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.price_change_outlined,
-                        size: 20, color: colorScheme.secondary),
+                        size: 20,  color: colorScheme.primary),
                     const SizedBox(width: 5),
                     Flexible(
                       child: Text(
@@ -78,7 +78,7 @@ class GeneralExpenseItem extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.countertops,
-                        size: 20, color: colorScheme.tertiary),
+                        size: 20, color: colorScheme.primary),
                     const SizedBox(width: 5),
                     Flexible(
                       child: Text(

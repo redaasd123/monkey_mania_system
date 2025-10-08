@@ -15,8 +15,7 @@ Future<void> showGreenFlush(BuildContext context, String message) async {
     Flushbar<void>(
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.FLOATING,
-      backgroundColor: colorScheme.secondary,
-      // اللون حسب الثيم (ثانوي)
+      backgroundColor: Colors.green,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),
@@ -24,7 +23,6 @@ Future<void> showGreenFlush(BuildContext context, String message) async {
       forwardAnimationCurve: Curves.easeOutBack,
       reverseAnimationCurve: Curves.easeIn,
       duration: const Duration(seconds: 15),
-      // ⭐ أطول 5 ثوانٍ
       messageText: Row(
         children: [
           const Icon(Icons.check_circle, color: Colors.white, size: 28),
@@ -71,7 +69,6 @@ Future<void> showRedFlush(BuildContext context, String message) async {
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.FLOATING,
       backgroundColor: colorScheme.error,
-      // اللون حسب الثيم (لون الخطأ)
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),

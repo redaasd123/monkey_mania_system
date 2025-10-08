@@ -56,7 +56,7 @@ class _MaterialExpenseViewState extends State<MaterialExpenseView> {
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                     cursorColor: colorScheme.onPrimary,
                     decoration: InputDecoration(
-                      hintText: LangKeys.school.tr(),
+                      hintText: LangKeys.search.tr(),
                       hintStyle: TextStyle(
                         color: colorScheme.onPrimary.withOpacity(0.6),
                       ),
@@ -70,7 +70,7 @@ class _MaterialExpenseViewState extends State<MaterialExpenseView> {
                     },
                   )
                 : Text(
-                    LangKeys.bills.tr(),
+                    LangKeys.material.tr(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -116,11 +116,6 @@ class _MaterialExpenseViewState extends State<MaterialExpenseView> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}material_expense/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
               await downloader.downloadFile(context, url, ',material_expense.csv');
             },
           ),

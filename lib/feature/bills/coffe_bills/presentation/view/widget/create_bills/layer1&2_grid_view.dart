@@ -23,6 +23,7 @@ class Layer1A2GridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         GridView.builder(
@@ -80,7 +81,7 @@ class Layer1A2GridView extends StatelessWidget {
                       ],
                       gradient: LinearGradient(
                         //0xFFF4EDF6
-                        colors: [Color(0xC8000000), Color(0xC8000000)],
+                        colors: [colorScheme.primary,colorScheme.primary,],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -111,7 +112,7 @@ class Layer1A2GridView extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Color(0xFF95AF06),
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -138,7 +139,7 @@ class Layer1A2GridView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFFAAAE90), Color(0xFFAA8693)],
+                    colors: [Color(0xFF004953), Color(0xFF004953)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -159,7 +160,7 @@ class Layer1A2GridView extends StatelessWidget {
                     const Text(
                       "الرجوع إلى المنيو",
                       style: TextStyle(
-                        color:Colors.black,
+                        color:Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
 

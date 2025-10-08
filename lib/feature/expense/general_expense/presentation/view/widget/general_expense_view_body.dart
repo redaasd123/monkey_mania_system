@@ -1,10 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
-import 'package:monkey_app/feature/expense/general_expense/presentation/manager/general_expense_cubit.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
+import 'package:monkey_app/feature/expense/general_expense/presentation/manager/general_expense_cubit.dart';
 
+import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/utils/styles.dart';
 import '../../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import 'general_expense_list_view.dart';
@@ -31,11 +33,11 @@ class GeneralExpenseViewBody extends StatelessWidget {
         BlocListener<GeneralExpenseCubit, GeneralExpenseState>(
           listener: (context, state) {
             if (state.status == GeneralExpenseStatus.createSuccess) {
-              showGreenFlush(context, "Expense created successfully ✅");
+              showGreenFlush(context, LangKeys.ok.tr());
             } else if (state.status == GeneralExpenseStatus.createFailure) {
               showRedFlush(context, state.errMessage ?? '');
             } else if (state.status == GeneralExpenseStatus.updateSuccess) {
-              showGreenFlush(context, "Expense updated successfully ✅");
+              showGreenFlush(context, LangKeys.ok.tr());
             } else if (state.status == GeneralExpenseStatus.updateFailure) {
               showRedFlush(context, state.errMessage ?? '');
             }
@@ -57,8 +59,8 @@ class GeneralExpenseViewBody extends StatelessWidget {
           }
 
           if (state.status == GeneralExpenseStatus.empty) {
-            return const Center(
-              child: Text('No Data', style: Styles.textStyle14),
+            return Center(
+              child: Text(LangKeys.notFound.tr(), style: Styles.textStyle14),
             );
           }
 

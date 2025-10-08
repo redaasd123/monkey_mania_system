@@ -80,6 +80,13 @@ import 'package:monkey_app/feature/school/domain/use_case/fetch_school_use_case.
 import 'package:monkey_app/feature/school/domain/use_case/post_school_use_case.dart';
 import 'package:monkey_app/feature/school/domain/use_case/update_school_use_case.dart';
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
+import 'package:monkey_app/feature/users/data/data_source/user_data_source.dart';
+import 'package:monkey_app/feature/users/data/impl/users_impl.dart';
+import 'package:monkey_app/feature/users/domain/repo/users_repo.dart';
+import 'package:monkey_app/feature/users/domain/use_case/create_user_use_case.dart';
+import 'package:monkey_app/feature/users/domain/use_case/fetch_user_use_case.dart';
+import 'package:monkey_app/feature/users/domain/use_case/update_user_use_case.dart';
+import 'package:monkey_app/feature/users/presentation/manager/user_cubit.dart';
 
 import '../../feature/expense/material_expense/data/repo_impl/material_repo_impl.dart';
 
@@ -276,4 +283,21 @@ void setUpServiceLocator() {
     () => AnalyticTypeUseCase(repo: getIt.get()),
   );
   getIt.registerLazySingleton<AnalyticRepo>(() => AnalyticTypeImpl());
+
+  getIt.registerLazySingleton<UserRemoteDataSource>(() => UserDataSourceImpl());
+  getIt.registerLazySingleton<UsersRepo>(
+    () => UsersRepoImpl(userRemoteDataSource: getIt.get()),
+  );
+  getIt.registerLazySingleton<FetchUserUseCase>(
+    () => FetchUserUseCase(usersRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<CreateUserUseCase>(
+    () => CreateUserUseCase(usersRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<UpdateUserUseCase>(
+    () => UpdateUserUseCase(usersRepo: getIt.get()),
+  );
+  getIt.registerLazySingleton<UserCubit>(
+    () => UserCubit(getIt.get(), getIt.get(), getIt.get()),
+  );
 }

@@ -31,11 +31,7 @@ Future<void> initializeSyncServices() async {
       },
     ).resendSavedData();
 
-    // toJson: (fetch_bills_param.dart) {
-    //         final jsonData = fetch_bills_param.dart.tojson();
-    //         print("📤 Sending JSON to API: $jsonData"); // ✅ اطبع هنا
-    //         return jsonData;
-    //       },
+
     await DataSyncService<CreateSchoolParam>(
       method: HttpMethod.post,
       boxName: kSaveCreateSchool,

@@ -8,6 +8,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_repo.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/param/create_bills_coffee_param.dart';
+
 import '../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../domain/entity/coffee_bills_page_entity.dart';
 
@@ -23,15 +24,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.fetchActiveBillsCoffee(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -42,15 +38,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.fetchBillsCoffee(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -61,15 +52,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.getOneBillsCoffee(id);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -80,15 +66,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.createBillsCoffee(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -99,15 +80,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.getLayerOne(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -118,15 +94,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.getLayerTow(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 
@@ -137,15 +108,10 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
     try {
       var result = await billsCoffeeDataSource.getAllLayers(param);
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        print('❌ Other Exception: $e');
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
     }
   }
 }

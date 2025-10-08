@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../core/utils/app_router.dart';
@@ -87,19 +89,17 @@ class _SplashViewBodyState extends State<SplashViewBody>
               ),
               const SizedBox(height: 30),
 
-              // ✨ عنوان التطبيق
               _showShimmer
                   ? Shimmer.fromColors(
-                      baseColor: Colors.brown, // بني فاتح
-                      highlightColor: Colors.green, // بني أفتح
+                      baseColor: Colors.brown,
+                      highlightColor: Colors.green,
                       period: const Duration(milliseconds: 1200),
                       child: Text(
-                        'Monkey Mania',
+                        LangKeys.appName.tr(),
                         style: TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.w600,
-                          color: colorScheme
-                              .primary, // يفضل تسيبها كده علشان التيكست يكون واضح لما الشيمر ينتهي
+                          color: colorScheme.primary,
                         ),
                       ),
                     )
@@ -114,7 +114,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
                         totalRepeatCount: 1,
                         animatedTexts: [
                           TyperAnimatedText(
-                            'Monkey Mania',
+                            LangKeys.appName.tr(),
                             speed: const Duration(milliseconds: 120),
                           ),
                         ],

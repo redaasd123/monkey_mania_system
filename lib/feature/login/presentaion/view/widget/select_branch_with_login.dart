@@ -1,16 +1,30 @@
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 
 import '../../../../../core/utils/styles.dart';
 import '../../../../../core/widget/widget/custom_flush.dart';
 import '../../../../branch/presentation/manager/branch_cubit.dart';
 
-class SelectBranchWithLogin extends StatelessWidget {
-   SelectBranchWithLogin({super.key});
+class SelectBranchWithLogin extends StatefulWidget {
+  SelectBranchWithLogin({super.key});
 
-   int? selectIndex;
+  @override
+  State<SelectBranchWithLogin> createState() => _SelectBranchWithLoginState();
+}
+
+class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
+  int? selectIndex;
+  dynamic? currentBranch;
+
+  @override
+  void initState() {
+    currentBranch = AuthHelper.getBranch();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +33,11 @@ class SelectBranchWithLogin extends StatelessWidget {
       builder: (context, state) {
         if (state is BranchSuccessState) {
           final branches = state.branch;
-
+          for (int i = 0; i < branches.length; i++) {
+            if (branches[i].id == currentBranch) {
+              selectIndex = i;
+            }
+          }
           return StatefulBuilder(
             builder: (context, setState) {
               return Container(
@@ -32,7 +50,9 @@ class SelectBranchWithLogin extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
@@ -46,7 +66,6 @@ class SelectBranchWithLogin extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Handle صغير أعلى البوتوم شيت
                       Container(
                         width: 50,
                         height: 5,
@@ -57,9 +76,8 @@ class SelectBranchWithLogin extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
 
-                      // عنوان
                       Text(
-                        'اختيار الفروع',
+                        LangKeys.selectBranch.tr(),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -68,32 +86,39 @@ class SelectBranchWithLogin extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
 
-                      // قائمة الفروع
                       Flexible(
                         child: ListView.separated(
                           shrinkWrap: true,
                           itemCount: branches.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 8),
                           itemBuilder: (context, index) {
-                            final isSelected = selectIndex==index;
+                            final isSelected = selectIndex == index;
+                            final isCurrent = currentBranch == index;
                             return InkWell(
                               onTap: () {
                                 setState(() {
                                   if (isSelected) {
-                                    selectIndex==null;
+                                    selectIndex == null;
                                   } else {
-                                    selectIndex=index;
+                                    selectIndex = index;
                                   }
                                 });
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 14,
+                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16),
                                   gradient: LinearGradient(
                                     colors: isSelected
                                         ? [Colors.greenAccent, Colors.green]
-                                        : [Colors.grey.shade200, Colors.grey.shade300],
+                                        : [
+                                            Colors.grey.shade200,
+                                            Colors.grey.shade300,
+                                          ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -111,14 +136,27 @@ class SelectBranchWithLogin extends StatelessWidget {
                                       child: Text(
                                         branches[index].name ?? '',
                                         style: TextStyle(
-                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                          color: isSelected ? Colors.white : Colors.black87,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black87,
                                         ),
                                       ),
                                     ),
+                                    if (isCurrent)
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
                                     Icon(
-                                      isSelected ? Icons.check_circle : Icons.circle_outlined,
-                                      color: isSelected ? Colors.white : Colors.grey,
+                                      isSelected
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey,
                                     ),
                                   ],
                                 ),
@@ -143,17 +181,19 @@ class SelectBranchWithLogin extends StatelessWidget {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            if (selectIndex==null) {
-                              showRedFlush(context, 'من فضلك اختر فرع على الأقل');
+                            if (selectIndex == null) {
+                              showRedFlush(
+                                context,
+                                LangKeys.chooseAtLeastOneBranch.tr(),
+                              );
                               return;
                             }
                             final selectedBranch = branches[selectIndex!].id;
 
-
                             Navigator.pop(context, selectedBranch);
                           },
                           child: Text(
-                            'تم',
+                            LangKeys.ok.tr(),
                             style: Styles.textStyle20.copyWith(
                               color: color.onPrimary,
                               fontWeight: FontWeight.bold,
@@ -169,7 +209,9 @@ class SelectBranchWithLogin extends StatelessWidget {
             },
           );
         } else if (state is BranchInitial) {
-          return  Center(child: SpinKitFadingCircle(size: 60,color: Colors.blue,));
+          return Center(
+            child: SpinKitFadingCircle(size: 60, color: Colors.blue),
+          );
         } else {
           return const Center(child: SizedBox());
         }

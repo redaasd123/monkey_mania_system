@@ -13,22 +13,19 @@ class AnalyticTypeImpl extends AnalyticRepo {
   Future<Either<Failure, List<AnalyticTypeEntity>>> fetchAnalyticType() async {
     try {
       var result = await getIt.get<Api>().get(
-          endPoint: 'csv_analytics/allowed_types/');
+        endPoint: 'csv_analytics/allowed_types/',
+      );
       List<AnalyticTypeEntity> data = [];
-      for(var item in result){
+      for (var item in result) {
         data.add(AnalyticTypeModel.fromJson(item).toEntity());
       }
       return right(data);
     } on Exception catch (e) {
       if (e is DioException) {
-        print('❌ DioException: ${e.message}');
-        print('❌ API Error: $e');
         return left(ServerFailure.fromDioError(e));
       } else {
-        print('❌ Other Exception: $e');
         return left(ServerFailure(errMessage: e.toString()));
       }
     }
   }
-
 }

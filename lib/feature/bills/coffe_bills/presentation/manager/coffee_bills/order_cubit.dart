@@ -40,7 +40,7 @@ class OrdersCubit extends Cubit<List<OrderItem>> {
   }
 
   void clearOrders() {
-    emit([]); // يمسح كل العناصر
+    emit([]); //
   }
 
 

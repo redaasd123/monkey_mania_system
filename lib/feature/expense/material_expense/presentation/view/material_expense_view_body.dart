@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/feature/expense/material_expense/presentation/manager/material_expense_cubit.dart';
 import 'package:monkey_app/feature/expense/material_expense/presentation/view/material_expense_list_view.dart';
 
+import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/utils/styles.dart';
 import '../../../../../core/widget/widget/custom_flush.dart';
 import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
@@ -28,11 +30,11 @@ class MaterialExpenseViewBody extends StatelessWidget {
         BlocListener<MaterialExpenseCubit, MaterialExpenseState>(
           listener: (context, state) {
             if (state.status == MaterialExpenseStatus.createSuccess) {
-              showGreenFlush(context, "Expense created successfully ✅");
+              showGreenFlush(context, LangKeys.ok.tr());
             } else if (state.status == MaterialExpenseStatus.createFailure) {
               showRedFlush(context, state.errMessage ?? '');
             } else if (state.status == MaterialExpenseStatus.updateSuccess) {
-              showGreenFlush(context, "Expense updated successfully ✅");
+              showGreenFlush(context, LangKeys.ok.tr());
             } else if (state.status == MaterialExpenseStatus.updateFailure) {
               showRedFlush(context, state.errMessage ?? '');
             }
@@ -54,8 +56,8 @@ class MaterialExpenseViewBody extends StatelessWidget {
           }
 
           if (state.status == MaterialExpenseStatus.empty) {
-            return const Center(
-              child: Text('No Data', style: Styles.textStyle14),
+            return  Center(
+              child: Text(LangKeys.notFound.tr(), style: Styles.textStyle14),
             );
           }
 
@@ -77,7 +79,7 @@ class MaterialExpenseViewBody extends StatelessWidget {
               state.status == MaterialExpenseStatus.updateFailure) {
             return MaterialExpenseListView(items: state.items ?? []);
           } else if (state.status == MaterialExpenseStatus.failure) {
-            return Center(child: Text(state.errMessage ?? 'reda'));
+            return Center(child: Text(state.errMessage ?? LangKeys.notFound.tr()));
           } else {
             return const Center(
               child: SpinKitFadingCircle(color: Colors.blue, size: 60),

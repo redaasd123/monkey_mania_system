@@ -76,7 +76,7 @@ class CustomDetailSchoolCard extends StatelessWidget {
                           Icon(
                             Icons.location_on_rounded,
                             size: 18,
-                            color: colorScheme.secondary,
+                            color: colorScheme.primary,
                           ),
                           const SizedBox(width: 6),
                           Flexible(
@@ -100,7 +100,7 @@ class CustomDetailSchoolCard extends StatelessWidget {
                           Icon(
                             Icons.notes_rounded,
                             size: 18,
-                            color: colorScheme.tertiary,
+                            color: colorScheme.primary,
                           ),
                           const SizedBox(width: 6),
                           Flexible(

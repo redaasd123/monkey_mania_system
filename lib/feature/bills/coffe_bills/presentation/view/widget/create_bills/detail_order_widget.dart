@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../../../manager/coffee_bills/order_cubit.dart';
 import 'create_order_bottom_sheet.dart';
 
@@ -12,8 +11,10 @@ class DetailOrderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox(
-      height: 230,
+      height: 180, // smaller height
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: state.length,
@@ -21,22 +22,20 @@ class DetailOrderWidget extends StatelessWidget {
           final order = state[index];
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 InkWell(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(24),
-                        ),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                       ),
-                      builder: (context) {
+                      builder: (_) {
                         return OrderBottomSheet(
                           initialNotes: order.notes,
                           initialQuantity: order.quantity,
@@ -58,67 +57,53 @@ class DetailOrderWidget extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: 170,
+                    width: 140, // smaller width
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        //0xFF481B5E
-                        colors: [Color(0xFF141E30), Color(0xFF243B55)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
+                      color: theme.colorScheme.primaryContainer.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.35),
-                          blurRadius: 10,
-                          offset: const Offset(0, 6),
+                          color: Colors.black26,
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 16),
-
-                        // صورة المنتج مع الكمية
+                        // ✅ Image with quantity overlay
                         Stack(
                           children: [
                             CircleAvatar(
-                              radius: 46,
+                              radius: 30,
                               backgroundColor: Colors.white.withOpacity(0.1),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(46),
+                                borderRadius: BorderRadius.circular(30),
                                 child: Image.asset(
                                   order.imagePath,
-                                  height: 92,
-                                  width: 92,
+                                  height: 60,
+                                  width: 60,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                             Positioned(
                               bottom: 0,
-                              right: 8,
+                              right: 2,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Colors.purple,
-                                      Colors.deepPurpleAccent,
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
                                   "×${order.quantity}",
                                   style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
                                     color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -126,9 +111,9 @@ class DetailOrderWidget extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 6),
 
-                        // اسم المنتج
+                        // ✅ Product name
                         Text(
                           order.product.product ?? '',
                           maxLines: 1,
@@ -136,72 +121,47 @@ class DetailOrderWidget extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: 13,
                             color: Colors.white,
                           ),
                         ),
 
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
 
-                        // السعر × الكمية
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Colors.green, Colors.lightGreen],
+                        // ✅ Price × Quantity
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(FontAwesomeIcons.moneyBill, size: 12, color: Colors.white70),
+                            const SizedBox(width: 3),
+                            Text(
+                              "${order.product.price ?? 0} × ${order.quantity}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.moneyBill,
-                                size: 14,
-                                color: Colors.white,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                "${order.product.price ?? 0} × ${order.quantity}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
 
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
 
-                        // الملاحظات
+                        // ✅ Notes (if any)
                         if ((order.notes ?? '').isNotEmpty)
                           Container(
-                            width: 130,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 3,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 0.8,
-                              ),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               order.notes!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
                               style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
                                 color: Colors.white70,
                               ),
                             ),
@@ -211,23 +171,16 @@ class DetailOrderWidget extends StatelessWidget {
                   ),
                 ),
 
-                // زر الإلغاء
+                // ✅ Small delete button
                 Positioned(
-                  top: -8,
-                  right: -8,
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.redAccent,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.close,
-                        size: 16,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        context.read<OrdersCubit>().removeOrder(index);
-                      },
+                  top: -6,
+                  right: -6,
+                  child: GestureDetector(
+                    onTap: () => context.read<OrdersCubit>().removeOrder(index),
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.redAccent,
+                      child: const Icon(Icons.close, size: 14, color: Colors.white),
                     ),
                   ),
                 ),

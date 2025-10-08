@@ -67,7 +67,7 @@ class BillsCubit extends Cubit<BillsState> {
 
   // 🔹 جلب الفواتير مع Pagination
   Future<void> fetchBills(FetchBillsParam param) async {
-    if (state.isLoading || !state.hasMore) return;
+    if (state.isLoading ) return;
 
     final pageNumber = param.page ?? state.currentPage;
 

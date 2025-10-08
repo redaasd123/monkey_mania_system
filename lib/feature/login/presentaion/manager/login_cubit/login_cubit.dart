@@ -13,7 +13,6 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> loginUser({required String number, required String pass}) async {
     emit(LoginLoadingState());
 
-    print('🔐 Logging in user: $number');
 
     var result = await loginRepoUseCase.call(
       LoginParam(pass: pass, number: number),
@@ -21,11 +20,9 @@ class LoginCubit extends Cubit<LoginState> {
 
     result.fold(
       (failure) {
-        print('❌ Login failed: ${failure.errMessage}');
         emit(LoginFailureState(errMessage: failure.errMessage));
       },
       (login) {
-        print('✅ Login success');
         emit(LoginSuccessState());
       },
     );

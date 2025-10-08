@@ -63,35 +63,8 @@ class AuthHelper {
   }
 
 
-// static Future<String?> refreshAccessToken() async {
-//   final refreshToken = getRefreshToken();
-//   if (refreshToken == null) return null;
-//
-//
-//   try {
-//     final response = await getIt<Api>().post(
-//       endPoint: "token/refresh/",
-//       body: {'refresh': refreshToken},
-//       token: null,
-//     );
-//
-//     final data = response.data;
-//     if (data == null || data['access'] == null) {
-//       return null;
-//     }
-//
-//     await _authBox.put(AuthKeys.accessToken, data['access']);
-//
-//     if (data['refresh'] != null) {
-//       await _authBox.put(AuthKeys.refreshToken, data['refresh']);
-//     }
-//
-//     return data['access'];
-//   } catch (e, st) {
-//     debugPrint("❌ Failed to refresh token: $e\n$st");
-//     return null;
-//   }
-// }
+
+
 
 
   static Future<String?> refreshAccessToken() async {
@@ -101,7 +74,7 @@ class AuthHelper {
     try {
       final response = await getIt<Api>().post(
         endPoint: "token/refresh/",
-        body: {'refresh': refreshToken}, // ✅ التصحيح هنا
+        body: {'refresh': refreshToken},
         token: null,
       );
 
@@ -124,34 +97,3 @@ class AuthHelper {
   }
 }
 
-//static Future<String?> refreshAccessToken() async {
-//   final refreshToken = getRefreshToken();
-//   if (refreshToken == null) return null;
-//
-//   try {
-//     final response = await getIt<Api>().post(
-//       endPoint: "token/refresh/",
-//       body: {'refresh': refreshToken},
-//       token: null,
-//     );
-//
-//     final data = response.data;
-//
-//     // ✅ معظم السيرفرات بترجع access فقط
-//     if (data == null || data['access'] == null) {
-//       return null;
-//     }
-//
-//     await _authBox.put(AuthKeys.accessToken, data['access']);
-//
-//     // ✅ لو السيرفر بيرجع refresh جديد خزّنه، لو مش بيرجع تجاهل
-//     if (data['refresh'] != null) {
-//       await _authBox.put(AuthKeys.refreshToken, data['refresh']);
-//     }
-//
-//     return data['access'];
-//   } catch (e, st) {
-//     debugPrint("❌ Failed to refresh token: $e\n$st");
-//     return null;
-//   }
-// }

@@ -20,15 +20,16 @@ class MyAppDrawer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Drawer(
+      width: MediaQuery.of(context).size.width * 0.70,
       child: Column(
         children: [
           // ---------- HEADER ----------
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [colorScheme.primary, colorScheme.secondary],
+                colors: [colorScheme.primary, colorScheme.primary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -53,17 +54,17 @@ class MyAppDrawer extends StatelessWidget {
                     ],
                   ),
                   child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Colors.white,
-                    child: Image.asset(kTest, height: 60),
+                    radius: 40,
+                    backgroundColor: colorScheme.onPrimary,
+                    child: Image.asset(kTest, height: 100),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
                   LangKeys.appName.tr(),
                   style: GoogleFonts.montserrat(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -71,7 +72,7 @@ class MyAppDrawer extends StatelessWidget {
                   "Smart Management".tr(),
                   style: GoogleFonts.roboto(
                     color: Colors.white70,
-                    fontSize: 14,
+                    fontSize: 13,
                   ),
                 ),
               ],
@@ -81,16 +82,16 @@ class MyAppDrawer extends StatelessWidget {
           // ---------- MENU ----------
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.school.tr(),
                   icon: FontAwesomeIcons.school,
                   color: Colors.teal,
                   onTap: () => GoRouter.of(context).push(AppRouter.kSchoolView),
                 ),
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.children.tr(),
                   icon: FontAwesomeIcons.child,
@@ -98,89 +99,81 @@ class MyAppDrawer extends StatelessWidget {
                   onTap: () =>
                       GoRouter.of(context).push(AppRouter.kChildrenSchool),
                 ),
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.mainBills.tr(),
                   icon: FontAwesomeIcons.receipt,
                   color: Colors.blue,
-                  onTap: () =>
-                      GoRouter.of(context).push(AppRouter.kGetAllBillsView),
-                  extraActions: [
-                    _buildChipAction(
-                      context,
-                      text: LangKeys.allBills.tr(),
-                      onTap: () =>
+                  popupItems: [
+                    {
+                      'title': LangKeys.allBills.tr(),
+                      'onTap': () =>
                           GoRouter.of(context).push(AppRouter.kGetAllBillsView),
-                    ),
-                    _buildChipAction(
-                      context,
-                      text: LangKeys.allActiveBills.tr(),
-                      onTap: () => GoRouter.of(
+                    },
+                    {
+                      'title': LangKeys.allActiveBills.tr(),
+                      'onTap': () => GoRouter.of(
                         context,
                       ).push(AppRouter.kGetAllActiveBillsView),
-                    ),
+                    },
                   ],
                 ),
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.coffeeBills.tr(),
                   icon: FontAwesomeIcons.coffee,
                   color: Colors.brown,
-                  onTap: () =>
-                      GoRouter.of(context).push(AppRouter.kCoffeeBills),
-                  extraActions: [
-                    _buildChipAction(
-                      context,
-                      text: LangKeys.allBills.tr(),
-                      onTap: () =>
+                  popupItems: [
+                    {
+                      'title': LangKeys.allBills.tr(),
+                      'onTap': () =>
                           GoRouter.of(context).push(AppRouter.kCoffeeBills),
-                    ),
-                    _buildChipAction(
-                      context,
-                      text: LangKeys.allActiveBills.tr(),
-                      onTap: () => GoRouter.of(
+                    },
+                    {
+                      'title': LangKeys.allActiveBills.tr(),
+                      'onTap': () => GoRouter.of(
                         context,
                       ).push(AppRouter.kActiveCoffeeBills),
-                    ),
+                    },
                   ],
                 ),
-
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
-                  title: 'Expense',
+                  title: LangKeys.expense.tr(),
                   icon: FontAwesomeIcons.receipt,
                   color: Colors.blue,
-                  onTap: () =>
-                      GoRouter.of(context).push(AppRouter.kGeneralExpenseView),
-                  extraActions: [
-                    _buildChipAction(
-                      context,
-                      text: 'material',
-                      onTap: () => GoRouter.of(
+                  popupItems: [
+                    {
+                      'title': LangKeys.material.tr(),
+                      'onTap': () => GoRouter.of(
                         context,
                       ).push(AppRouter.kMaterialExpenseView),
-                    ),
-                    _buildChipAction(
-                      context,
-                      text: 'general',
-                      onTap: () => GoRouter.of(
+                    },
+                    {
+                      'title': LangKeys.general.tr(),
+                      'onTap': () => GoRouter.of(
                         context,
                       ).push(AppRouter.kGeneralExpenseView),
-                    ),
+                    },
                   ],
                 ),
-
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
-                  title: 'analytics',
+                  title: LangKeys.users.tr(),
+                  icon: FontAwesomeIcons.users,
+                  color: Colors.red,
+                  onTap: () =>
+                      GoRouter.of(context).pushReplacement(AppRouter.kUsers),
+                ),
+                _buildDrawerItem(
+                  context,
+                  title: LangKeys.analytics.tr(),
                   icon: FontAwesomeIcons.android,
                   color: Colors.red,
-                  onTap: () async {
-                    GoRouter.of(context).pushReplacement(AppRouter.kAnalytic);
-                  },
+                  onTap: () =>
+                      GoRouter.of(context).pushReplacement(AppRouter.kAnalytic),
                 ),
-
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.changeLanguage.tr(),
                   icon: FontAwesomeIcons.language,
@@ -192,8 +185,7 @@ class MyAppDrawer extends StatelessWidget {
                     context.setLocale(newLocale);
                   },
                 ),
-
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.nightMode.tr(),
                   icon: FontAwesomeIcons.moon,
@@ -203,9 +195,9 @@ class MyAppDrawer extends StatelessWidget {
                     Navigator.pop(context);
                   },
                 ),
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
-                  title: "Select Branch",
+                  title: LangKeys.selectBranch.tr(),
                   icon: FontAwesomeIcons.codeBranch,
                   color: Colors.green,
                   onTap: () {
@@ -219,7 +211,7 @@ class MyAppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                _buildCardItem(
+                _buildDrawerItem(
                   context,
                   title: LangKeys.logOut.tr(),
                   icon: FontAwesomeIcons.rightFromBracket,
@@ -253,71 +245,84 @@ class MyAppDrawer extends StatelessWidget {
     );
   }
 
-  // ---- CARD ITEM ----
-  Widget _buildCardItem(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-    List<Widget>? extraActions,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme; // ⬅️ جبت ألوان الثيم
+  // ---- DRAWER ITEM ----
+  Widget _buildDrawerItem(
+      BuildContext context, {
+        required String title,
+        required IconData icon,
+        required Color color,
+        VoidCallback? onTap,
+        List<Map<String, dynamic>>? popupItems,
+      }) {
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      elevation: 5,
-      color: colorScheme.surface,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: color.withOpacity(0.15),
-                    child: Icon(icon, color: color),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (extraActions != null) ...[
-                const SizedBox(height: 10),
-                Wrap(spacing: 8, children: extraActions),
-              ],
-            ],
+    return Column(
+      children: [
+        ListTile(
+          leading: CircleAvatar(
+            backgroundColor: color.withOpacity(0.15),
+            radius: 16,
+            child: Icon(icon, color: color, size: 18),
           ),
+          title: Text(
+            title,
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          trailing: popupItems != null
+              ? PopupMenuButton<int>(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[900]!.withOpacity(0.95)
+                : Colors.white.withOpacity(0.95),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.settings, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 4),
+                const Icon(Icons.arrow_drop_down, size: 20),
+              ],
+            ),
+            itemBuilder: (context) {
+              return popupItems.asMap().entries.map((entry) {
+                final idx = entry.key;
+                final item = entry.value;
+                return PopupMenuItem<int>(
+                  value: idx,
+                  child: Row(
+                    children: [
+                      if (item['icon'] != null)
+                        Icon(item['icon'], color: colorScheme.primary),
+                      if (item['icon'] != null) const SizedBox(width: 8),
+                      Text(
+                        item['title'],
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  onTap: item['onTap'],
+                );
+              }).toList();
+            },
+          )
+              : null,
+          onTap: onTap,
         ),
-      ),
+        Divider(
+          height: 1,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Color(0xFF424242)
+              : const Color(0xFFE0E0E0),
+        ),
+
+      ],
     );
   }
 
-  // ---- CHIP ACTION ----
-  Widget _buildChipAction(
-    BuildContext context, {
-    required String text,
-    required VoidCallback onTap,
-  }) {
-    return ActionChip(
-      label: Text(text, style: const TextStyle(fontSize: 13)),
-      backgroundColor: Colors.grey.shade200,
-      onPressed: onTap,
-      avatar: const Icon(Icons.arrow_forward_ios, size: 14),
-    );
-  }
 }

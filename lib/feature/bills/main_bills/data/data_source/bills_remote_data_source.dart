@@ -3,8 +3,8 @@ import 'package:monkey_app/core/utils/service_locator.dart';
 import 'package:monkey_app/feature/bills/main_bills/data/model/mapper.dart';
 import 'package:monkey_app/feature/bills/main_bills/domain/entity/bills_page_entity.dart';
 import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/update_calculations_param.dart';
-
 import '../../../../../core/utils/api_serviece.dart';
+import '../../../../../core/utils/extract_page.dart';
 import '../../domain/entity/Bills_entity.dart';
 import '../../domain/entity/get_one_bills_entity.dart';
 import '../../domain/use_case/param/close_bills_param.dart';
@@ -34,28 +34,11 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   @override
   Future<BillsPageEntity> fetchBills(FetchBillsParam param) async {
     final url = 'bill/all?${param.toQueryParams()}';
-
-    // ✅ اطبع الـ param والـ URL قبل إرسال الريكوست
-    print('📌 Fetching Bills with param: ${param.toQueryParams()}');
-    print('📌 Full URL: $url');
-
     var result = await getIt.get<Api>().get(endPoint: url);
-    print('✅ API Response Received');
 
     List<BillsEntity> listBills = (result['results'] as List)
         .map((item) => GetAllBillsModel.fromJson(item as Map<String, dynamic>))
         .toList();
-
-    int? extractPage(String? url) {
-      if (url == null) return null;
-      final uri = Uri.parse(url);
-      return int.tryParse(uri.queryParameters['page'] ?? '');
-    }
-
-    print('📦 Parsed Bills List: $listBills');
-    print(
-      '➡️ Next Page: ${extractPage(result['next'])}, Previous Page: ${extractPage(result['previous'])}',
-    );
 
     return BillsPageEntity(
       bills: listBills,
@@ -71,13 +54,12 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
       body: param.toJson(),
     );
 
-    var result = response.data;
-    return GetAllBillsModel.fromJson(result);
+    return GetAllBillsModel.fromJson(response.data);
   }
 
   @override
   Future applyDiscount(ApplyDiscountParams param) async {
-    var result = await getIt.get<Api>().put(
+    await getIt.get<Api>().put(
       endPoint: 'bill/${param.id}/apply_discount/',
       body: param.toJson(),
     );
@@ -85,19 +67,6 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
   @override
   Future<List<BillsEntity>> fetchActiveBills(FetchBillsParam param) async {
-    // final queryParams = param.toQueryParams();
-    //
-    // print('🔧 [FetchBills] Preparing API Request...');
-    // print('🔗 Endpoint: bill/active/all');
-    // print('📦 Query Params: $queryParams');
-    //
-    // final baseUrl =
-    //     'https://monkey-mania-production.up.railway.app/bill/active/all?branch_id=1';
-    // final endpoint = 'bill/all';
-    // final fullUrl = Uri.parse(
-    //   baseUrl,
-    // ).replace(path: endpoint, queryParameters: queryParams);
-    // print('🌐 Full Request URL: $fullUrl');
     final url = 'bill/active/all?${param.toQueryParams()}';
     var result = await getIt.get<Api>().get(endPoint: url);
 
@@ -110,11 +79,10 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
   @override
   Future closeBills(CloseBillsParam param) async {
-    var result = await getIt.get<Api>().put(
+    return await getIt.get<Api>().put(
       endPoint: 'bill/${param.id}/close/',
       body: param.toJon(),
     );
-    return result;
   }
 
   @override
@@ -125,28 +93,11 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
 
   @override
   Future<dynamic> updateCalculation(UpdateCalculationsParam param) async {
-    try {
-      print("📤 Sending Update Calculation Request...");
-      print("➡️ Endpoint: bill/${param.id}/update_calculations/");
-      print("➡️ Body: ${param.toJson()}");
+    var result = await getIt.get<Api>().put(
+      endPoint: 'bill/${param.id}/update_calculations/',
+      body: param.toJson(),
+    );
 
-      var result = await getIt.get<Api>().put(
-        endPoint: 'bill/${param.id}/update_calculations/',
-        body: param.toJson(),
-      );
-
-      print("✅ Response Received:");
-      print("📦 Data: ${result.data}");
-      print("📦 StatusCode: ${result.statusCode}");
-      print("📦 Headers: ${result.headers}");
-
-      return result.data; // لاحظ هنا Unit مش هينفع تطبعها زي الداتا، ممكن ترجع result.data لو API بيرجع حاجة
-    } catch (e, stack) {
-      print("❌ ERROR in updateCalculation:");
-      print("   🔹 Error: $e");
-      print("   🔹 Stacktrace: $stack");
-      rethrow; // عشان ما نخفيش الخطأ عن الـ Bloc أو الكولر
-    }
+    return result.data;
   }
-
 }

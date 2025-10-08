@@ -1,17 +1,20 @@
-import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../domain/entity/get_all_layers_entity.dart';
 
 class OrderBottomSheet extends StatefulWidget {
   final GetAllLayerEntity item;
   final String imagePath;
   final void Function(
-      int quantity,
-      String notes,
-      GetAllLayerEntity item,
-      String imagePath,
-      ) onAdd;
+    int quantity,
+    String notes,
+    GetAllLayerEntity item,
+    String imagePath,
+  )
+  onAdd;
 
   final int? initialQuantity;
   final String? initialNotes;
@@ -57,7 +60,7 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
       builder: (_, controller) => Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFF141E30), Color(0xFF243B55)], // خلفية محترفة
+            colors: [Color(0xFF141E30), Color(0xFF243B55)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -92,7 +95,6 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                   ),
                 ),
 
-                // صورة المنتج
                 CircleAvatar(
                   radius: 65,
                   backgroundColor: Colors.white.withOpacity(0.1),
@@ -109,43 +111,38 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
 
                 const SizedBox(height: 14),
 
-                // اسم المنتج
                 Text(
                   widget.item.product ?? '',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(color: Colors.black54, blurRadius: 6),
-                    ],
+                    shadows: [Shadow(color: Colors.black54, blurRadius: 6)],
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                // السعر والكمية
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _infoChip(
                       icon: FontAwesomeIcons.tag,
                       text: "${widget.item.price ?? 0} ج.م",
-                      colors: [Colors.purple, Colors.deepPurpleAccent],
+                      colors: [Color(0xFF1B5E20), Color(0xFF1B5E20)],
                     ),
                     _infoChip(
                       icon: FontAwesomeIcons.boxOpen,
                       text: "المتاح: ${widget.item.availableUnits}",
-                      colors: [Colors.blue, Colors.lightBlueAccent],
+                      colors: [Colors.blue, Color(0xFF004953)],
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 24),
 
-                // الكمية
                 Text(
-                  'الكمية',
+                  LangKeys.quantity.tr(),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -159,12 +156,17 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                   children: [
                     IconButton(
                       onPressed: () => setState(() => counter++),
-                      icon: const Icon(FontAwesomeIcons.plusCircle,
-                          color: Colors.greenAccent, size: 34),
+                      icon: const Icon(
+                        FontAwesomeIcons.plusCircle,
+                        color: Colors.greenAccent,
+                        size: 34,
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 8),
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(14),
@@ -185,37 +187,42 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                           if (counter > 1) counter--;
                         });
                       },
-                      icon: const Icon(FontAwesomeIcons.minusCircle,
-                          color: Colors.redAccent, size: 34),
+                      icon: const Icon(
+                        FontAwesomeIcons.minusCircle,
+                        color: Colors.redAccent,
+                        size: 34,
+                      ),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 24),
 
-                // الملاحظات
                 TextField(
                   controller: notesController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: "ملاحظات إضافية",
+                    labelText: LangKeys.notes.tr(),
                     labelStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.8), fontSize: 14),
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 14,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.1),
-                    prefixIcon: const Icon(FontAwesomeIcons.noteSticky,
-                        color: Colors.amber),
+                    prefixIcon: const Icon(
+                      FontAwesomeIcons.noteSticky,
+                      color: Colors.amber,
+                    ),
                   ),
                   maxLines: 3,
                 ),
 
                 const SizedBox(height: 24),
 
-                // الأزرار
                 Row(
                   children: [
                     Expanded(
@@ -224,10 +231,11 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                           backgroundColor: Colors.redAccent,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18)),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
                         ),
                         icon: const Icon(FontAwesomeIcons.xmark),
-                        label: const Text('إلغاء'),
+                        label: Text(LangKeys.cansel.tr()),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
@@ -238,12 +246,15 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18)),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
                         ),
                         icon: const Icon(FontAwesomeIcons.cartPlus),
-                        label: Text(widget.initialQuantity == null
-                            ? 'إضافة الطلب'
-                            : 'تعديل الطلب'),
+                        label: Text(
+                          widget.initialQuantity == null
+                              ? LangKeys.save.tr()
+                              : LangKeys.edit.tr(),
+                        ),
                         onPressed: () {
                           if (counter >= 1) {
                             widget.onAdd(
@@ -267,11 +278,11 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
     );
   }
 
-  // Widget Chip Info
-  Widget _infoChip(
-      {required IconData icon,
-        required String text,
-        required List<Color> colors}) {
+  Widget _infoChip({
+    required IconData icon,
+    required String text,
+    required List<Color> colors,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
       decoration: BoxDecoration(

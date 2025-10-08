@@ -18,6 +18,8 @@ import 'package:monkey_app/feature/expense/material_expense/presentation/view/ma
 import 'package:monkey_app/feature/login/presentaion/view/login_view.dart';
 import 'package:monkey_app/feature/school/presintation/view/school_view.dart';
 import 'package:monkey_app/feature/splash/presentation/views/splash_view.dart';
+import 'package:monkey_app/feature/users/presentation/manager/user_cubit.dart';
+import 'package:monkey_app/feature/users/presentation/view/user_view.dart';
 
 import '../../feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
 import '../../feature/bills/coffe_bills/presentation/manager/get_one_bills/get_one_bills_coffee_cubit.dart';
@@ -31,7 +33,8 @@ import '../../feature/home/presentation/view/home_view.dart';
 import '../../main.dart';
 
 abstract class AppRouter {
-  static const kAnalytic  = '/kAnalytic';
+  static const kUsers = '/kUsers';
+  static const kAnalytic = '/kAnalytic';
   static const kGeneralExpenseView = '/kGeneralExpenseView';
   static const kMaterialExpenseView = '/kMaterialExpenseView';
   static const kLoginView = '/login';
@@ -51,6 +54,17 @@ abstract class AppRouter {
   static final router = GoRouter(
     navigatorKey: navigatorKey,
     routes: [
+      GoRoute(
+        path: kUsers,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) =>
+                getIt<UserCubit>()..fetchUsers(FetchBillsParam()),
+            child: UserView(),
+          );
+        },
+      ),
+
       GoRoute(
         path: kShowDetailCoffeeBills,
         builder: (context, state) {
@@ -141,20 +155,15 @@ abstract class AppRouter {
         },
       ),
 
-
       GoRoute(
         path: kAnalytic,
         builder: (context, state) {
           return BlocProvider(
-            create: (context) =>
-            getIt<AnalyticCubit>()..fetchAnalyticType(),
+            create: (context) => getIt<AnalyticCubit>()..fetchAnalyticType(),
             child: const AnalyticView(),
           );
-
         },
       ),
-
-
 
       GoRoute(
         path: kMaterialExpenseView,
@@ -170,17 +179,6 @@ abstract class AppRouter {
           );
         },
       ),
-      // GoRoute(
-      //   path: kMaterialExpenseView,
-      //   builder: (context, state) {
-      //     return BlocProvider(
-      //       create: (context) =>
-      //       getIt<MaterialExpenseCubit>()
-      //         ..fetchAllMaterialExpense(FetchBillsParam(branch: ['all'])),
-      //       child: const MaterialExpenseView(),
-      //     );
-      //   },
-      // ),
     ],
   );
 }

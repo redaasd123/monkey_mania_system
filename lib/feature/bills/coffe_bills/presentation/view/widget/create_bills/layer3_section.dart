@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/create_bills/send_order_button.dart';
 
 import '../../../../../../../core/widget/widget/custom_text_field.dart';
@@ -118,56 +120,7 @@ class Layer3Section extends StatelessWidget {
               },
             );
 
-            // return GridView.builder(
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   padding: const EdgeInsets.all(12),
-            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //     crossAxisCount: 1,
-            //     crossAxisSpacing: 12,
-            //     mainAxisSpacing: 12,
-            //     //childAspectRatio: 0.75,
-            //   ),
-            //   itemCount: state.layer3.length,
-            //   itemBuilder: (context, index) {
-            //     final item = state.layer3[index];
-            //     final imagePath = images[index % images.length];
-            //     return InkWell(
-            //       borderRadius: BorderRadius.circular(16),
-            //       onTap: () {
-            //         showModalBottomSheet(
-            //           context: context,
-            //           isScrollControlled: true,
-            //           shape: const RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.vertical(
-            //               top: Radius.circular(24),
-            //             ),
-            //           ),
-            //           builder: (_) {
-            //             return OrderBottomSheet(
-            //               item: item,
-            //               imagePath: imagePath,
-            //               onAdd: (quantity, notes, selectedItem, imagePath) {
-            //                 context.read<OrdersCubit>().addOrder(
-            //                   OrderItem(
-            //                     product: selectedItem,
-            //                     quantity: quantity,
-            //                     notes: notes,
-            //                     imagePath: imagePath,
-            //                   ),
-            //                 );
-            //               },
-            //             );
-            //           },
-            //         );
-            //       },
-            //       child: CardLayer3Widget(
-            //         imagePath: imagePath,
-            //         item: item,
-            //       ),
-            //     );
-            //   },
-            // );
+
           },
         ),
         const SizedBox(height: 16),
@@ -182,7 +135,7 @@ class Layer3Section extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal, Colors.black45],
+                  colors: [Color(0xFF004953), Color(0xFF004953)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -252,8 +205,8 @@ class _OrdersFormSection extends StatelessWidget {
         Expanded(
           flex: 2,
           child: CustomTextField(
-            label: 'table',
-            hint: 'Enter Table Number',
+            label: LangKeys.tableNumber.tr(),
+            hint: LangKeys.tableNumber.tr(),
             controller: tableNumberController,
             keyboardType: TextInputType.phone,
           ),
@@ -263,8 +216,8 @@ class _OrdersFormSection extends StatelessWidget {
           flex: 2,
           child: Column(
             children: [
-              const Text(
-                'Take Away',
+               Text(
+                LangKeys.takeAway.tr(),
                 style: TextStyle(color: Colors.teal, fontSize: 14),
               ),
               Switch(value: takeAway, onChanged: onTakeAwayChanged),

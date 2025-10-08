@@ -64,7 +64,6 @@ class _BillsListViewState extends State<BillsListView> {
     super.dispose();
   }
 
-  /// 🔹 Helper: احسب المجموع الحالي من كل الحقول
   double get currentSum {
     final visa = double.tryParse(visaCtrl.text) ?? 0;
     final cash = double.tryParse(cashCtrl.text) ?? 0;

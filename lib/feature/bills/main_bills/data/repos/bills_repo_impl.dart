@@ -27,9 +27,6 @@ class BillsRepoImpl extends BillsRepo {
       return right(result);
     } on Exception catch (e) {
       if (e is DioException) {
-        // if(e.response?.statusCode==404){
-        //   return right([]);
-        // }
         print('❌ DioException: ${e.message}');
         print('❌ API Error: $e');
         return left(ServerFailure.fromDioError(e));

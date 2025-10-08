@@ -6,7 +6,6 @@ import '../../domain/entity/children/children_entity.dart';
 import '../../domain/entity/children/children_page_entity.dart';
 
 abstract class ChildrenLocalDataSource {
-  /// يرجع قائمة من ChildrenEntities حسب الصفحة المطلوبة
   ChildrenPageEntity fetchChildren(FetchChildrenParam? param);
 }
 
@@ -16,7 +15,6 @@ class ChildrenLocalDataSourceImpl extends ChildrenLocalDataSource {
     final box = Hive.box<ChildrenEntity>(kChildrenBox);
     final allChildren = box.values.toList();
 
-    // لو param == null خلي الصفحة 1 بشكل افتراضي
     final pageNumber = param?.pageNumber ?? 1;
     const pageSize = 10;
 

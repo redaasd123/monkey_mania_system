@@ -25,7 +25,6 @@ void setupInterceptors(Dio dio) {
         if (error.response?.statusCode == 401) {
           final requestPath = error.requestOptions.path;
 
-          // دالة تعرض رسالة
           void showSessionExpiredMessage(String msg) {
             final context = navigatorKey.currentContext;
             if (context != null) {
@@ -35,7 +34,6 @@ void setupInterceptors(Dio dio) {
             }
           }
 
-          // ✅ لو refresh token نفسه خلص
           if (requestPath.contains("token/refresh/")) {
             showSessionExpiredMessage("⏰ انتهت الجلسة، من فضلك سجل الدخول مرة أخرى");
             await AuthHelper.clearAuthData();

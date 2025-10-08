@@ -5,7 +5,7 @@ String formatDateOnly(String date) {
     final parsedDate = DateTime.parse(date);
     return DateFormat(
       'yyyy-MM-dd',
-    ).format(parsedDate); // أو 'dd MMM yyyy' لو عايز صيغة زي 27 Jul 2025
+    ).format(parsedDate);
   } catch (e) {
     return 'غير محدد';
   }

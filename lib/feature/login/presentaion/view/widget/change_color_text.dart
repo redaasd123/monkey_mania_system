@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ColorChangingShimmerText extends StatefulWidget {
@@ -51,8 +53,8 @@ class _ColorChangingShimmerTextState extends State<ColorChangingShimmerText>
       baseColor: colors[0],
       highlightColor: colors[1],
       period: const Duration(seconds: 2),
-      child: const Text(
-        'Monkey Mania',
+      child:  Text(
+        LangKeys.appName.tr(),
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.bold,

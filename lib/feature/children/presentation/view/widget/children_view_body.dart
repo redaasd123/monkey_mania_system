@@ -26,88 +26,77 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
     return BlocBuilder<ChildrenCubit, ChildrenState>(
       builder: (context, state) {
         return Scaffold(
-            floatingActionButton: ReseveDataChildrenActionButton(context),
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              title: BlocBuilder<ChildrenCubit, ChildrenState>(
-                builder: (context, state) {
-                  final cubit = context.read<ChildrenCubit>();
-                  return state.isSearching
-                      ? TextField(
-                    autofocus: true,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                    cursorColor: colorScheme.onPrimary,
-                    decoration: InputDecoration(
-                      hintText: LangKeys.children.tr(),
-                      hintStyle: TextStyle(
-                        color: colorScheme.onPrimary.withOpacity(0.6),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      filled: true,
-                      fillColor: colorScheme.primary,
-                    ),
-                    onChanged: (val) {
-                      cubit.searchChildren(val);
-                    },
-                  )
-                      : Text(
-                    LangKeys.children.tr(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  );
+          floatingActionButton: ReseveDataChildrenActionButton(context),
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
+            title: BlocBuilder<ChildrenCubit, ChildrenState>(
+              builder: (context, state) {
+                final cubit = context.read<ChildrenCubit>();
+                return state.isSearching
+                    ? TextField(
+                        autofocus: true,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                        cursorColor: colorScheme.onPrimary,
+                        decoration: InputDecoration(
+                          hintText: LangKeys.children.tr(),
+                          hintStyle: TextStyle(
+                            color: colorScheme.onPrimary.withOpacity(0.6),
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                          filled: true,
+                          fillColor: colorScheme.primary,
+                        ),
+                        onChanged: (val) {
+                          cubit.searchChildren(val);
+                        },
+                      )
+                    : Text(
+                        LangKeys.children.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      );
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: BlocBuilder<ChildrenCubit, ChildrenState>(
+                  builder: (context, state) {
+                    return Icon(state.isSearching ? Icons.close : Icons.search);
+                  },
+                ),
+                onPressed: () {
+                  setState(() {
+                    context.read<ChildrenCubit>().toggleSearch();
+                  });
                 },
               ),
-              actions: [
-                IconButton(
-                  icon: BlocBuilder<ChildrenCubit, ChildrenState>(
-                    builder: (context, state) {
-                      return Icon(
-                        state.isSearching ? Icons.close : Icons.search,
-                      );
-                    },
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      context.read<ChildrenCubit>().toggleSearch();
-                    });
-                  },
-                ),
-                CustomPopupMenu(
-                  onDownload: () async {
-                    final cubit = context.read<ChildrenCubit>().state;
-                    await requestStoragePermission();
-                    final downloader = FileDownloaderUI();
-                    final param = FetchBillsParam(
-                      query: cubit.searchQuery
-                    );
-                    final url =
-                        '${kBaseUrl}child/all/?is_csv_response=true&${param.toQueryParams()}';
-                    print("📤 Download Started");
-                    print("🔍 Search Query: ${cubit.searchQuery}");
-                    print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-                    print("🌍 URL: $url");
-                    print("📂 File Name: allBills.csv");
-                    await downloader.downloadFile(context, url, ',children.csv');
-                  },
-                ),
-              ],
-            ),
-            body: const ChildrenBlocBuilderListView(),
-
+              CustomPopupMenu(
+                onDownload: () async {
+                  final cubit = context.read<ChildrenCubit>().state;
+                  await requestStoragePermission();
+                  final downloader = FileDownloaderUI();
+                  final param = FetchBillsParam(query: cubit.searchQuery);
+                  final url =
+                      '${kBaseUrl}child/all/?is_csv_response=true&${param.toQueryParams()}';
+                  await downloader.downloadFile(context, url, ',children.csv');
+                },
+              ),
+            ],
+          ),
+          body: const ChildrenBlocBuilderListView(),
         );
       },
     );
 
-      //();
+    //();
   }
 }
-

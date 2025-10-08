@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/my_app_drwer.dart';
 import 'package:monkey_app/feature/expense/general_expense/domain/use_case/param/create_param.dart';
@@ -10,7 +9,6 @@ import 'package:monkey_app/feature/expense/general_expense/presentation/view/wid
 import 'package:monkey_app/feature/expense/general_expense/presentation/view/widget/show_general_expense_bottom_sheet.dart';
 
 import '../../../../../core/download_fiels/download_file.dart';
-import '../../../../../core/helper/auth_helper.dart';
 import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/utils/poppup_menu_button.dart';
 import '../../../../branch/presentation/view/show_branch_bottom_sheet.dart';
@@ -31,7 +29,10 @@ class _GeneralExpenseViewState extends State<GeneralExpenseView> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          final data = await showGeneralExpenseBottomSheet(context, 'create ');
+          final data = await showGeneralExpenseBottomSheet(
+            context,
+            LangKeys.appName.tr(),
+          );
           if (data != null) {
             BlocProvider.of<GeneralExpenseCubit>(context).createGeneralExpense(
               CreateExpenseParam(
@@ -57,7 +58,7 @@ class _GeneralExpenseViewState extends State<GeneralExpenseView> {
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                     cursorColor: colorScheme.onPrimary,
                     decoration: InputDecoration(
-                      hintText: LangKeys.school.tr(),
+                      hintText: LangKeys.search.tr(),
                       hintStyle: TextStyle(
                         color: colorScheme.onPrimary.withOpacity(0.6),
                       ),
@@ -67,11 +68,11 @@ class _GeneralExpenseViewState extends State<GeneralExpenseView> {
                       fillColor: colorScheme.primary,
                     ),
                     onChanged: (val) {
-                       cubit.searchBills(val);
+                      cubit.searchBills(val);
                     },
                   )
                 : Text(
-                    LangKeys.bills.tr(),
+                    LangKeys.general.tr(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -117,12 +118,11 @@ class _GeneralExpenseViewState extends State<GeneralExpenseView> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}general_expense/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
-              await downloader.downloadFile(context, url, 'general_expense.csv');
+              await downloader.downloadFile(
+                context,
+                url,
+                'general_expense.csv',
+              );
             },
           ),
         ],

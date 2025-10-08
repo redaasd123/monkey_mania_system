@@ -25,46 +25,26 @@ class GeneralExpenseRemoteDataSourceImpl
     extends GeneralExpenseRemoteDataSource {
   @override
   Future<GeneralExpenseEntity> fetchGeneralExpense(
-      FetchBillsParam param,
-      ) async {
-    try {
-      final url = 'general_expense/all?${param.toQueryParams()}';
-      print("🚀 API Request URL: $url");
+    FetchBillsParam param,
+  ) async {
+    final url = 'general_expense/all?${param.toQueryParams()}';
 
-      var results = await getIt.get<Api>().get(
-        endPoint: url,
-      );
+    var results = await getIt.get<Api>().get(endPoint: url);
+    List<GeneralExpenseItemEntity> expenseItems = [];
 
-      print("📥 Full API Response (Raw): $results");
-
-      List<GeneralExpenseItemEntity> expenseItems = [];
-
-      if (results['results'] != null) {
-        for (var item in results['results']) {
-          print("🔹 Single Item (Raw): $item");
-          expenseItems.add(
-            ResultsGeneralExpenseModel.fromJson(item).toEntity(),
-          );
-        }
-      } else {
-        print("⚠️ Response has no 'results' key");
+    if (results['results'] != null) {
+      for (var item in results['results']) {
+        expenseItems.add(ResultsGeneralExpenseModel.fromJson(item).toEntity());
       }
-
-      final entity = GeneralExpenseEntity(
-        next: results['next'] ?? '',
-        previous: results['previous'] ?? '',
-        results: expenseItems,
-      );
-
-      print("✅ Final Parsed Entity: $entity");
-      return entity;
-    } catch (e, st) {
-      print("❌ API Error: $e");
-      print("🛠️ StackTrace: $st");
-      rethrow;
     }
-  }
 
+    final entity = GeneralExpenseEntity(
+      next: results['next'] ?? '',
+      previous: results['previous'] ?? '',
+      results: expenseItems,
+    );
+    return entity;
+  }
 
   @override
   Future<GeneralExpenseItemEntity> createGeneralExpense(

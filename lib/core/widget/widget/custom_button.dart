@@ -8,11 +8,9 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final gradient = LinearGradient(
-      colors: isDark
-          ? [Colors.purple, Colors.brown]
-          : [Colors.brown, Colors.brown],
+      colors:
+           [Color(0xFF004953),Color(0xFF004953)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -42,7 +40,7 @@ class CustomButton extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.white, // ثابتة هنا لأن الجريدينت غامق
+                color: Colors.white,
               ),
             ),
           ),

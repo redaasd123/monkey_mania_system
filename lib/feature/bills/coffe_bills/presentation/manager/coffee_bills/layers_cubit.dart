@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_all_layers_use_case.dart';
-
 import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../domain/use_case/get_layer_one.dart';
 import '../../../domain/use_case/get_layer_tow.dart';
@@ -19,14 +18,12 @@ class LayersCubit extends Cubit<LayersState> {
   final GetAllLayersUseCase allLayersUseCase;
 
   Future<void> getLayerOne(FetchBillsParam param) async {
-    print("📤 [getLayerOne] started with param: ${param.toQueryParams()}");
     emit(state.copyWith(status: LayersStatus.getLayerOneLoading));
 
     var result = await layerOne.call(param);
 
     result.fold(
           (failure) {
-        print("❌ [getLayerOne] failed: ${failure.errMessage}");
         emit(
           state.copyWith(
             status: LayersStatus.getLayerOneFailure,
@@ -35,13 +32,11 @@ class LayersCubit extends Cubit<LayersState> {
         );
       },
           (category) {
-        print("✅ [getLayerOne] success, count = ${category.length}");
         emit(
           state.copyWith(
             cashedLayerOne: category,
             status: LayersStatus.getLayerOneSuccess,
             layer1: category,
-
           ),
         );
       },
@@ -49,14 +44,12 @@ class LayersCubit extends Cubit<LayersState> {
   }
 
   Future<void> getLayerTow(FetchBillsParam param) async {
-    print("📤 [getLayerTow] started with param: ${param.toQueryParams()}");
     emit(state.copyWith(status: LayersStatus.getLayerTowLoading));
 
     var result = await layerTow.call(param);
 
     result.fold(
           (failure) {
-        print("❌ [getLayerTow] failed: ${failure.errMessage}");
         emit(
           state.copyWith(
             status: LayersStatus.getLayerTowFailure,
@@ -65,7 +58,6 @@ class LayersCubit extends Cubit<LayersState> {
         );
       },
           (category) {
-        print("✅ [getLayerTow] success, count = ${category.length}, selectedLayer1 = ${param.layer1}");
         emit(
           state.copyWith(
             cashedLayerTow: category,
@@ -79,14 +71,12 @@ class LayersCubit extends Cubit<LayersState> {
   }
 
   Future<void> getAllLayer(FetchBillsParam param) async {
-    print("📤 [getAllLayer] started with param: ${param.toQueryParams()}");
     emit(state.copyWith(status: LayersStatus.layer3Loading));
 
     var result = await allLayersUseCase.call(param);
 
     result.fold(
           (failure) {
-        print("❌ [getAllLayer] failed: ${failure.errMessage}");
         emit(
           state.copyWith(
             status: LayersStatus.layer3Failure,
@@ -95,7 +85,6 @@ class LayersCubit extends Cubit<LayersState> {
         );
       },
           (allLayers) {
-        print("✅ [getAllLayer] success, count = ${allLayers.length}, selectedLayer2 = ${param.layer2}");
         emit(
           state.copyWith(
             status: LayersStatus.layer3Success,
@@ -128,13 +117,10 @@ class LayersCubit extends Cubit<LayersState> {
         state.copyWith(
           status: LayersStatus.cashedLayerTow,
           layer2: state.cashedLayerTow,
-          // ❌ متشيلش الاختيارات
           selectedLayer1: state.selectedLayer1,
           selectedLayer2: state.selectedLayer2,
         ),
       );
     }
   }
-
-
 }

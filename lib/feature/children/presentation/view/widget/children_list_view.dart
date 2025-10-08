@@ -24,7 +24,7 @@ class _ChildrenListViewState extends State<ChildrenListView> {
 
   @override
   void initState() {
-    super.initState(); // ✅ ناسي دي
+    super.initState();
     scrollController = ScrollController();
     scrollController.addListener(scrollListener);
   }

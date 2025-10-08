@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import '../../../../../../core/utils/langs_key.dart';
 
 class HomeViewBodyItem extends StatelessWidget {
   final HomeEntity data;
@@ -12,59 +15,59 @@ class HomeViewBodyItem extends StatelessWidget {
     final dashboardItems = [
       DashboardItem(
         icon: FontAwesomeIcons.child,
-        title: "الأطفال",
+        title: LangKeys.children.tr(),
         value: data.childrenCount,
         note: "+${data.childrenCountDifferenceFromYesterday}",
-        colors: [Colors.pink.shade200, Colors.purple.shade300],
+        color: Colors.pinkAccent,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.cartShopping,
-        title: "الاشتراكات",
+        title: LangKeys.isSubscription.tr(),
         value: "US\$ ${data.subscriptionsSales}",
-        note: "${data.subscriptionsCount} اشتراك",
-        colors: [Colors.blue.shade200, Colors.indigo.shade300],
+        note: "${data.subscriptionsCount} ${LangKeys.isSubscription.tr()}",
+        color: Colors.blueAccent,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.coffee,
-        title: "الكافيه",
+        title: LangKeys.coffeeBills.tr(),
         value: "US\$ ${data.cafeSales}",
         note: "+${data.cafeSalesDifferenceFromYesterday}",
-        colors: [Colors.teal.shade200, Colors.green.shade300],
+        color: Colors.brown,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.sackDollar,
-        title: "مبيعات الأطفال",
+        title: LangKeys.kidsSales.tr(), // You can add it in LangKeys if not exists
         value: "US\$ ${data.kidsSales}",
         note: "+${data.kidsSalesDifferenceFromYesterday}",
-        colors: [Colors.green.shade200, Colors.lightGreen.shade300],
+        color: Colors.green,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.wallet,
-        title: "سحب الموظفين",
+        title: LangKeys.staffWithdraws.tr(), // Add to LangKeys if missing
         value: "US\$ ${data.staffWithdrawsTotal}",
-        note: "${data.staffRequestedWithdrawCount} طلب",
-        colors: [Colors.orange.shade200, Colors.red.shade300],
+        note: "${data.staffRequestedWithdrawCount} ${LangKeys.actions.tr()}",
+        color: Colors.orange,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.creditCard,
-        title: "الدفع بالفيزا",
+        title: LangKeys.visa.tr(),
         value: "US\$ ${data.visa}",
         note: "VISA",
-        colors: [Colors.orange.shade100, Colors.orange.shade300],
+        color: Colors.deepPurple,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.moneyBill,
-        title: "الدفع بالكاش",
+        title: LangKeys.cash.tr(),
         value: "US\$ ${data.cash}",
         note: "CASH",
-        colors: [Colors.green.shade100, Colors.green.shade300],
+        color: Colors.teal,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.mobileScreen,
-        title: "انستا باي",
+        title: LangKeys.instapay.tr(),
         value: "US\$ ${data.instapay}",
-        note: "INSTAPAY",
-        colors: [Colors.blue.shade100, Colors.blue.shade300],
+        note: LangKeys.instapay.tr(),
+        color: Colors.indigo,
       ),
     ];
 
@@ -81,7 +84,7 @@ class HomeViewBodyItem extends StatelessWidget {
           title: item.title,
           value: item.value,
           note: item.note,
-          colors: item.colors,
+          color: item.color,
         );
       },
     );
@@ -93,14 +96,14 @@ class DashboardItem {
   final String title;
   final String value;
   final String note;
-  final List<Color> colors;
+  final Color color;
 
   DashboardItem({
     required this.icon,
     required this.title,
     required this.value,
     required this.note,
-    required this.colors,
+    required this.color,
   });
 }
 
@@ -109,7 +112,7 @@ class DashboardCard extends StatelessWidget {
   final String title;
   final String value;
   final String note;
-  final List<Color> colors;
+  final Color color;
 
   const DashboardCard({
     super.key,
@@ -117,59 +120,64 @@ class DashboardCard extends StatelessWidget {
     required this.title,
     required this.value,
     required this.note,
-    required this.colors,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // عرض كامل الشاشة
-      height: 75, // ارتفاع أصغر
+      width: double.infinity,
+      height: 75,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: colors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: color,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 5,
+            color: color.withOpacity(0.4),
+            blurRadius: 6,
             offset: const Offset(0, 3),
           )
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // تقليل padding
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 18, // أصغر شوية
+            radius: 18,
             backgroundColor: Colors.white.withOpacity(0.3),
-            child: FaIcon(icon, color: Colors.white, size: 18), // أصغر
+            child: FaIcon(icon, color: Colors.white, size: 18),
           ),
-          const SizedBox(width: 12), // تقليل المسافة
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 13, // أصغر
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                const SizedBox(height: 2), // تقليل المسافة
-                Text(value,
-                    style: const TextStyle(
-                        fontSize: 14, // أصغر
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white)),
-                const SizedBox(height: 1), // أصغر
-                Text(note,
-                    style: const TextStyle(
-                        fontSize: 10, // أصغر
-                        color: Colors.white70)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 1),
+                Text(
+                  note,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Colors.white70,
+                  ),
+                ),
               ],
             ),
           ),

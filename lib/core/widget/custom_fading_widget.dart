@@ -18,13 +18,13 @@ class _CustomFadingWidgetState extends State<CustomFadingWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 2), // ⬅️ أبطأ من 800 ms
+    duration: const Duration(seconds: 2),
   )..repeat(reverse: true);
 
   late final Animation<double> _fade = CurvedAnimation(
     parent: _ctrl,
-    curve: Curves.easeInOut, // ⬅️ انتقال ناعم
-  ).drive(Tween(begin: 0.2, end: 0.8)); // مدى الشفافية
+    curve: Curves.easeInOut,
+  ).drive(Tween(begin: 0.2, end: 0.8));
 
   @override
   void initState() {
