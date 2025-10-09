@@ -118,5 +118,5 @@ You can view the app screens below 👇
 ## 🧑‍💻 Developer
 **Reda Hassan Khattab**  
 📍 New Damietta, Egypt  
-📧 [YourEmail@example.com]  
+📧 [redah4142@gmail.com]  
 📱 +20 01016254773  
