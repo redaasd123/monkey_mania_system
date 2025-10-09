@@ -12,8 +12,10 @@ const kSaveUpdateSchool = 'kSaveUpdateSchool';
 const kSaveCreateSchool = 'kSaveCreateSchool';
 
 /// 🌍 Base URL
-const kBaseUrl = 'https://monkey-mania-production.up.railway.app/';
+const kBaseUrl = 'https://new.monkey-mania.com/';
 
+//https://new.monkey-mania.com/
+//https://monkey-mania-production.up.railway.app/
 
 /// 🖼️ Main App Images
 const kTest = 'assets/image/monkey_white.png';
@@ -56,6 +58,3 @@ const List<String> kProductImages = [
   kImage4,
   kImage9,
 ];
-
-//https://new.monkey-mania.com/
-//https://monkey-mania-production.up.railway.app/

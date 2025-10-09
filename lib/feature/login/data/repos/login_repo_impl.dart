@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:monkey_app/core/errors/failure.dart';
@@ -16,17 +18,23 @@ class LoginRepoImpl extends LoginRepo {
     required String phone,
   }) async {
     try {
-      var result = await loginRemoteDataSource.LoginUser(
+      final result = await loginRemoteDataSource.loginUser(
         pass: pass,
         phone: phone,
       );
       return right(result);
-    } on Exception catch (e) {
-      if (e is DioException) {
-        return left(ServerFailure.fromDioError(e));
-      } else {
-        return left(ServerFailure(errMessage: e.toString()));
-      }
+    } on TimeoutException {
+      return left(
+        ServerFailure(
+          errMessage: '⏱ انتهت مهلة الاتصال بالخادم. حاول مرة أخرى.',
+        ),
+      );
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(
+        ServerFailure(errMessage: '⚠️ خطأ غير معروف: ${e.toString()}'),
+      );
     }
   }
 }

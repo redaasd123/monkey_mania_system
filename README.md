@@ -8,6 +8,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ## 🚀 Main Features
 
 ### 👶 Children & Subscriptions
+
 - Create and update child profiles easily.
 - Add multiple phone numbers per child (e.g., father, mother).
 - Manage and renew monthly subscriptions automatically.
@@ -15,6 +16,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 💰 Billing & Daily Sales
+
 - Create invoices that can include multiple children.
 - Download invoices directly as **PDF files**.
 - Automatically calculate total daily sales.
@@ -23,6 +25,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 🏪 Branch & Role Management
+
 - Manage **multiple branches** with ease.
 - Owners/Admins can select **specific branches** or **view all**.
 - Role-based access (Owner, Admin, Employee).
@@ -31,6 +34,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 👥 Users & Permissions
+
 - Admins can add new users and assign roles.
 - Dynamic permission control for full flexibility.
 - Secure authentication and access management.
@@ -38,6 +42,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 📊 Analytics & Reports
+
 - Real-time analytics for invoices, subscriptions, and sales.
 - Reports by branch or global overview.
 - Data visualization for better insights.
@@ -45,6 +50,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 🔄 Offline Mode
+
 - Works **without internet** using **Hive** local storage.
 - Automatically syncs with the server once connected.
 - Provides a reliable offline-first experience.
@@ -52,6 +58,7 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ### 🌗 Modern UI/UX
+
 - Fully **responsive and elegant** Flutter design.
 - **Dark & Light Mode** support.
 - Available in **Arabic & English**.
@@ -60,19 +67,21 @@ It’s a **large-scale, production-ready Flutter app** currently used in real en
 ---
 
 ## 🧱 Technologies Used
-| Category | Tools / Packages |
-|-----------|------------------|
-| Language | Flutter & Dart |
-| State Management | BLoC / Cubit |
-| Architecture | Clean Architecture |
-| Database | Hive (Offline) |
-| Networking | REST API, Dio |
-| Utils | Equatable, CopyWith-Dartz |
-| Navigation | GoRouter |
+
+| Category         | Tools / Packages          |
+|------------------|---------------------------|
+| Language         | Flutter & Dart            |
+| State Management | BLoC / Cubit              |
+| Architecture     | Clean Architecture        |
+| Database         | Hive (Offline)            |
+| Networking       | REST API, Dio             |
+| Utils            | Equatable, CopyWith-Dartz |
+| Navigation       | GoRouter                  |
 
 ---
 
 ## 🧩 Technical Highlights
+
 - Structured with **Clean Architecture principles**.
 - Real backend integration with authentication.
 - Optimized for performance and scalability.
@@ -91,11 +100,12 @@ You can view the app screens below 👇
 ---
 
 ### 📸 App Preview
-| | | |
-|--|--|--|
-| ![1](assets/screenshot/monke_app%20(1).jpeg) | ![2](assets/screenshot/monke_app%20(2).jpeg) | ![3](assets/screenshot/monke_app%20(3).jpeg) |
-| ![4](assets/screenshot/monke_app%20(4).jpeg) | ![5](assets/screenshot/monke_app%20(5).jpeg) | ![6](assets/screenshot/monke_app%20(6).jpeg) |
-| ![7](assets/screenshot/monke_app%20(7).jpeg) | ![8](assets/screenshot/monke_app%20(8).jpeg) | ![9](assets/screenshot/monke_app%20(9).jpeg) |
+
+|                                                |                                                |                                                |
+|------------------------------------------------|------------------------------------------------|------------------------------------------------|
+| ![1](assets/screenshot/monke_app%20(1).jpeg)   | ![2](assets/screenshot/monke_app%20(2).jpeg)   | ![3](assets/screenshot/monke_app%20(3).jpeg)   |
+| ![4](assets/screenshot/monke_app%20(4).jpeg)   | ![5](assets/screenshot/monke_app%20(5).jpeg)   | ![6](assets/screenshot/monke_app%20(6).jpeg)   |
+| ![7](assets/screenshot/monke_app%20(7).jpeg)   | ![8](assets/screenshot/monke_app%20(8).jpeg)   | ![9](assets/screenshot/monke_app%20(9).jpeg)   |
 | ![10](assets/screenshot/monke_app%20(10).jpeg) | ![11](assets/screenshot/monke_app%20(11).jpeg) | ![12](assets/screenshot/monke_app%20(12).jpeg) |
 | ![13](assets/screenshot/monke_app%20(13).jpeg) | ![14](assets/screenshot/monke_app%20(14).jpeg) | ![15](assets/screenshot/monke_app%20(15).jpeg) |
 | ![16](assets/screenshot/monke_app%20(16).jpeg) | ![17](assets/screenshot/monke_app%20(17).jpeg) | ![18](assets/screenshot/monke_app%20(18).jpeg) |
@@ -106,16 +116,18 @@ You can view the app screens below 👇
 | ![31](assets/screenshot/monke_app%20(31).jpeg) | ![32](assets/screenshot/monke_app%20(32).jpeg) | ![33](assets/screenshot/monke_app%20(33).jpeg) |
 | ![34](assets/screenshot/monke_app%20(34).jpeg) | ![35](assets/screenshot/monke_app%20(35).jpeg) | ![36](assets/screenshot/monke_app%20(36).jpeg) |
 | ![37](assets/screenshot/monke_app%20(37).jpeg) | ![38](assets/screenshot/monke_app%20(38).jpeg) | ![39](assets/screenshot/monke_app%20(39).jpeg) |
-| ![40](assets/screenshot/monke_app%20(40).jpeg) | | |
+| ![40](assets/screenshot/monke_app%20(40).jpeg) |                                                |                                                |
 
 ---
 
 ## 🔗 GitHub Repository
+
 👉 [**View Project on GitHub**](https://github.com/RedaHassanKhattab/monkey_mania)
 
 ---
 
 ## 🧑‍💻 Developer
+
 **Reda Hassan Khattab**  
 📍 New Damietta, Egypt  
 📧 [redah4142@gmail.com]  

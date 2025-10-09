@@ -10,26 +10,36 @@ void setupInterceptors(Dio dio) {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final token = AuthHelper.getAccessToken();
+        final token = await AuthHelper.getAccessToken();
 
         options.headers['Accept-Language'] =
             navigatorKey.currentContext?.locale.languageCode ?? 'en';
 
-        if (token != null) {
+        if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
 
         handler.next(options);
       },
+
       onError: (error, handler) async {
+        final context = navigatorKey.currentContext;
+
+        final currentToken = await AuthHelper.getAccessToken();
+        if (currentToken == null || currentToken.isEmpty) {
+          return handler.next(error);
+        }
+
         if (error.response?.statusCode == 401) {
           final requestPath = error.requestOptions.path;
 
           void showSessionExpiredMessage(String msg) {
-            final context = navigatorKey.currentContext;
-            if (context != null) {
+            if (context != null && context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(msg)),
+                SnackBar(
+                  content: Text(msg),
+                  backgroundColor: Colors.redAccent,
+                ),
               );
             }
           }
@@ -43,10 +53,15 @@ void setupInterceptors(Dio dio) {
 
           final newToken = await AuthHelper.refreshAccessToken();
 
-          if (newToken != null) {
+          if (newToken != null && newToken.isNotEmpty) {
             error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-            final clonedRequest = await dio.fetch(error.requestOptions);
-            return handler.resolve(clonedRequest);
+
+            try {
+              final clonedRequest = await dio.fetch(error.requestOptions);
+              return handler.resolve(clonedRequest);
+            } catch (_) {
+              showSessionExpiredMessage("فشل في إعادة تنفيذ الطلب، حاول مرة أخرى");
+            }
           } else {
             showSessionExpiredMessage("⏰ انتهت الجلسة، من فضلك سجل الدخول مرة أخرى");
             await AuthHelper.clearAuthData();
@@ -55,7 +70,18 @@ void setupInterceptors(Dio dio) {
           }
         }
 
-        return handler.next(error);
+        if (error.type == DioErrorType.connectionError ||
+            error.type == DioErrorType.connectionTimeout) {
+          if (context != null && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("❌ فشل الاتصال بالخادم، تأكد من الإنترنت."),
+              ),
+            );
+          }
+        }
+
+        handler.next(error);
       },
     ),
   );

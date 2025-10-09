@@ -57,5 +57,5 @@ flutter:
   assets:
     - assets/image/
     - assets/translations/
-    - assets/screenshot
+    - assets/screenshot/
 

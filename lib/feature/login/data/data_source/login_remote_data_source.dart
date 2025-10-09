@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:monkey_app/core/utils/api_serviece.dart';
 import 'package:monkey_app/feature/login/data/model/login_model.dart';
-
 import '../../../../core/helper/auth_helper.dart';
 
 abstract class LoginRemoteDataSource {
-  Future<LoginModel> LoginUser({required String pass, required String phone});
+  Future<LoginModel> loginUser({required String pass, required String phone});
 }
 
 class LoginRemoteDataSourceImpl extends LoginRemoteDataSource {
@@ -15,27 +13,31 @@ class LoginRemoteDataSourceImpl extends LoginRemoteDataSource {
   LoginRemoteDataSourceImpl(this.api);
 
   @override
-  Future<LoginModel> LoginUser({
+  Future<LoginModel> loginUser({
     required String pass,
     required String phone,
   }) async {
-    final response = await api
-        .post(
-          endPoint: 'token/obtain/',
-          body: {'phone_number': phone, 'password': pass},
-          token: null,
-        )
-        .timeout(const Duration(seconds: 10));
 
-    final authModel = LoginModel.fromJson(response.data);
 
-    await AuthHelper.saveTokens(
-      branch: authModel.branch,
-      accessToken: authModel.access,
-      refreshToken: authModel.reFresh,
-      username: authModel.username,
-      role: authModel.role,
-    );
-    return authModel;
+      final response = await api
+          .post(
+        endPoint: 'token/obtain/',
+        body: {'phone_number': phone, 'password': pass},
+        token: null,
+      )
+          .timeout(const Duration(seconds: 15));
+
+      final authModel = LoginModel.fromJson(response.data);
+
+
+      await AuthHelper.saveTokens(
+        branch: authModel.branch,
+        accessToken: authModel.access,
+        refreshToken: authModel.reFresh,
+        username: authModel.username,
+        role: authModel.role,
+      );
+      return authModel;
+    }
   }
-}
+
