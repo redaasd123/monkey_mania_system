@@ -9,25 +9,34 @@ import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
 
 Future<CreateUserParam?> showUserBottomSheet(
-  BuildContext context,
-  String title,
-    bool isCreate,{
-  UserDataEntity? data,
-
-}) {
+    BuildContext context,
+    String title,
+    bool isCreate, {
+      UserDataEntity? data,
+    }) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: context,
-    builder: (_) => UserBottomSheet(title: title, data: data,isCreate:isCreate ,),
+    builder: (_) => UserBottomSheet(
+      title: title,
+      data: data,
+      isCreate: isCreate,
+    ),
   );
 }
 
 class UserBottomSheet extends StatefulWidget {
-  const UserBottomSheet({super.key, required this.title, this.data, required this.isCreate});
+  const UserBottomSheet({
+    super.key,
+    required this.title,
+    this.data,
+    required this.isCreate,
+  });
 
   final String title;
   final UserDataEntity? data;
   final bool isCreate;
+
   @override
   State<UserBottomSheet> createState() => _UserBottomSheetState();
 }
@@ -40,16 +49,20 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
   final phoneCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   String selectRole = 'waiter';
-  final List<String> options = ['waiter', 'owner', 'admin', 'reception'];
+  final List<String> options = [
+    'waiter',
+    'owner',
+    'admin',
+    'reception',
+    'manager'
+  ];
 
-  @override
   @override
   void initState() {
     super.initState();
 
     if (widget.data != null) {
       final user = widget.data!;
-
       nameCtrl.text = user.name ?? '';
       phoneCtrl.text = user.phoneNumber ?? '';
       emailCtrl.text = user.email ?? '';
@@ -57,14 +70,13 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
       if (!options.contains(selectRole)) {
         options.add(selectRole);
       }
-    } else {
-      selectRole = 'waiter';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -77,24 +89,32 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 16,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHandle(),
-              const SizedBox(height: 8),
-              _buildHeader(colorScheme),
-              const SizedBox(height: 20),
-              _buildForm(context),
-            ],
+      child: MediaQuery.removeViewInsets(
+        removeBottom: true,
+        context: context,
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHandle(),
+                  const SizedBox(height: 8),
+                  _buildHeader(colorScheme),
+                  const SizedBox(height: 20),
+                  _buildForm(context),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -153,7 +173,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildField(nameCtrl, TextInputType.name, LangKeys.name.tr(), Icons.person),
-              const SizedBox(height: 12),
+            const SizedBox(height: 12),
             _buildField(
               passCtrl,
               TextInputType.visiblePassword,
@@ -178,16 +198,18 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             ),
             const SizedBox(height: 12),
             _buildField(
-              isRequired: false,
               emailCtrl,
-              TextInputType.name,
+              TextInputType.emailAddress,
               LangKeys.email.tr(),
               Icons.email,
+              isRequired: false,
             ),
-
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: selectRole,
+              onTap: () {
+                FocusScope.of(context).unfocus(); // يقفل الكيبورد
+              },
               decoration: InputDecoration(
                 hintText: "Select Role",
                 hintStyle: TextStyle(
@@ -225,6 +247,9 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                   case 'waiter':
                     roleIcon = Icons.restaurant;
                     break;
+                  case 'manager':
+                    roleIcon = Icons.manage_accounts;
+                    break;
                   case 'owner':
                     roleIcon = Icons.business_center;
                     break;
@@ -251,7 +276,6 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                 });
               },
             ),
-
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
@@ -263,7 +287,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                       userName: nameCtrl.text,
                       branch: AuthHelper.getBranch(),
                       password: passCtrl.text,
-                      confirmPass:  confirmPassCtrl.text,
+                      confirmPass: confirmPassCtrl.text,
                       phoneNumber: phoneCtrl.text,
                       role: selectRole,
                       email: emailCtrl.text.trim(),
@@ -273,7 +297,6 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
                 },
               ),
             ),
-
           ],
         ),
       ),
@@ -281,13 +304,13 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
   }
 
   Widget _buildField(
-    TextEditingController controller,
-    TextInputType keyboardType,
-    String label,
-    IconData icon, {
-    bool obscureText = false,
-    bool isRequired = true,
-  }) {
+      TextEditingController controller,
+      TextInputType keyboardType,
+      String label,
+      IconData icon, {
+        bool obscureText = false,
+        bool isRequired = true,
+      }) {
     final colorScheme = Theme.of(context).colorScheme;
     bool isObscured = obscureText;
 
@@ -302,7 +325,6 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             if (widget.isCreate && isRequired && (value == null || value.trim().isEmpty)) {
               return '$label ${LangKeys.nameRequired.tr()}';
             }
-
             return null;
           },
           decoration: InputDecoration(
@@ -318,16 +340,16 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             ),
             suffixIcon: obscureText
                 ? IconButton(
-                    icon: Icon(
-                      isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isObscured = !isObscured;
-                      });
-                    },
-                  )
+              icon: Icon(
+                isObscured ? Icons.visibility : Icons.visibility_off,
+                color: colorScheme.onSurface.withOpacity(0.7),
+              ),
+              onPressed: () {
+                setState(() {
+                  isObscured = !isObscured;
+                });
+              },
+            )
                 : null,
           ),
         );

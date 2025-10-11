@@ -27,12 +27,17 @@ class _UserListViewState extends State<UserListView> {
     super.initState();
     scrollController = ScrollController();
     scrollController.addListener(scrollListener);
+
+    // ✅ تأكد إن الصفحة لسه mounted قبل تشغيل autoFetch
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       _autoFetchMore();
     });
   }
 
   void _autoFetchMore() {
+    if (!mounted) return;
+
     final cubit = BlocProvider.of<UserCubit>(context);
     final state = cubit.state;
 
@@ -42,14 +47,19 @@ class _UserListViewState extends State<UserListView> {
         state.hasMore &&
         !state.isLoading) {
       cubit.fetchUsers(FetchBillsParam(page: state.currentPage));
-      WidgetsBinding.instance.addPostFrameCallback((_) => _autoFetchMore());
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _autoFetchMore();
+      });
     }
   }
 
-
   void scrollListener() {
+    if (!mounted) return;
     final cubit = BlocProvider.of<UserCubit>(context);
     final state = cubit.state;
+
     if (!scrollController.hasClients) return;
     final maxScroll = scrollController.position.maxScrollExtent;
     final currentScroll = scrollController.position.pixels;
@@ -61,6 +71,8 @@ class _UserListViewState extends State<UserListView> {
 
   @override
   void dispose() {
+    scrollController.removeListener(scrollListener);
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -80,10 +92,11 @@ class _UserListViewState extends State<UserListView> {
                 onTap: () async {
                   final data = await showUserBottomSheet(
                     context,
-                    LangKeys.edit.tr(),false,
+                    LangKeys.edit.tr(),
+                    false,
                     data: model,
                   );
-                  if (data != null) {
+                  if (data != null && mounted) {
                     final cubit = context.read<UserCubit>();
                     cubit.updateUser(
                       UpdateUserParam(

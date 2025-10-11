@@ -36,11 +36,7 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
       builder: (context, state) {
         if (state is BranchSuccessState) {
           final branches = state.branch;
-          for (int i = 0; i < branches.length; i++) {
-            if (branches[i].id == selectBranch) {
-              selectIndex.add(i);
-            }
-          }
+
           return StatefulBuilder(
             builder: (context, setState) {
               return Container(
@@ -149,11 +145,7 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                         ),
                                       ),
                                     ),
-                                      if (isCurrent)
-                                      const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
+
                                     Icon(
                                       isSelected
                                           ? Icons.check_circle

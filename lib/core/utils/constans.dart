@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 /// 🧠 Hive Boxes
 const kChildrenBox = 'kChildrenBox';
 const kAuthBox = 'kAuthBox';
@@ -12,7 +10,7 @@ const kSaveUpdateSchool = 'kSaveUpdateSchool';
 const kSaveCreateSchool = 'kSaveCreateSchool';
 
 /// 🌍 Base URL
-const kBaseUrl = 'https://new.monkey-mania.com/';
+const kBaseUrl = 'https://monkey-mania-production.up.railway.app/';
 
 //https://new.monkey-mania.com/
 //https://monkey-mania-production.up.railway.app/

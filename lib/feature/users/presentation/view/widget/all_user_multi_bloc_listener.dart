@@ -29,10 +29,14 @@ class AllUserMultiBlocListener extends StatelessWidget {
                 break;
 
               case UserStatus.addSuccess:
-              case UserStatus.updateSuccess:
                 hideLoader(context);
                 showGreenFlush(context, LangKeys.createdSuccessfully.tr());
                 break;
+              case UserStatus.updateSuccess:
+                hideLoader(context);
+                showGreenFlush(context, LangKeys.updatedSuccessfully.tr());
+                break;
+
 
               case UserStatus.addLoading:
                 showLoader(context);
@@ -74,14 +78,14 @@ class AllUserMultiBlocListener extends StatelessWidget {
             case UserStatus.loading:
               return Stack(
                 children: [
-                  Center(
-                    child: SpinKitFadingCircle(color: Colors.blue, size: 60),
-                  ),
                   const Align(
                     alignment: Alignment.topCenter,
                     child: LinearProgressIndicator(minHeight: 3),
                   ),
                   UserListView(data: state.data ?? []),
+                  Center(
+                    child: SpinKitFadingCircle(color: Colors.blue, size: 60),
+                  ),
                 ],
               );
 

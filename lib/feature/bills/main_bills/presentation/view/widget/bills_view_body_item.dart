@@ -27,20 +27,50 @@ class BillsViewBodyItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.all(14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 👤 صورة الطفل
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: colorScheme.primary.withOpacity(0.15),
-              child: Icon(Icons.person, color: colorScheme.primary, size: 26),
-            ),
+            bills.isActive == true?
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: colorScheme.primary.withOpacity(0.15),
+                  child: Icon(
+                    Icons.person,
+                    color: colorScheme.primary,
+                    size: 26,
+                  ),
+                ),
+                Positioned(
+                  bottom: 2,
+                  right: 2,
+                  child: Container(
+                    width: 20,
+                    height: 15,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+                : CircleAvatar(
+                    radius: 24,
+                    backgroundColor: colorScheme.primary.withOpacity(0.15),
+                    child: Icon(
+                      Icons.person,
+                      color: colorScheme.primary,
+                      size: 26,
+                    ),
+                  ),
             const SizedBox(width: 12),
 
             Expanded(
@@ -62,7 +92,6 @@ class BillsViewBodyItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
 
-                  // أرقام التليفونات
                   Text(
                     (bills.children != null && bills.children!.isNotEmpty)
                         ? bills.children!.first.phoneNumbers
@@ -79,7 +108,6 @@ class BillsViewBodyItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
 
-                  // سعر + عدد أطفال
                   Row(
                     children: [
                       Flexible(
@@ -113,8 +141,7 @@ class BillsViewBodyItem extends StatelessWidget {
 
             SizedBox(
               width: 50,
-              child:
-              Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildActionButton(

@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../../../core/utils/langs_key.dart';
 
@@ -36,14 +36,16 @@ class HomeViewBodyItem extends StatelessWidget {
       ),
       DashboardItem(
         icon: FontAwesomeIcons.sackDollar,
-        title: LangKeys.kidsSales.tr(), // You can add it in LangKeys if not exists
+        title: LangKeys.kidsSales.tr(),
+        // You can add it in LangKeys if not exists
         value: "US\$ ${data.kidsSales}",
         note: "+${data.kidsSalesDifferenceFromYesterday}",
         color: Colors.green,
       ),
       DashboardItem(
         icon: FontAwesomeIcons.wallet,
-        title: LangKeys.staffWithdraws.tr(), // Add to LangKeys if missing
+        title: LangKeys.staffWithdraws.tr(),
+        // Add to LangKeys if missing
         value: "US\$ ${data.staffWithdrawsTotal}",
         note: "${data.staffRequestedWithdrawCount} ${LangKeys.actions.tr()}",
         color: Colors.orange,
@@ -127,7 +129,7 @@ class DashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 75,
+      constraints: const BoxConstraints(minHeight: 75),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(16),
@@ -136,7 +138,7 @@ class DashboardCard extends StatelessWidget {
             color: color.withOpacity(0.4),
             blurRadius: 6,
             offset: const Offset(0, 3),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -152,9 +154,11 @@ class DashboardCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   title,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
@@ -164,6 +168,7 @@ class DashboardCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   value,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -171,11 +176,12 @@ class DashboardCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 1),
-                Text(
-                  note,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.white70,
+                Flexible(
+                  child: Text(
+                    note,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(fontSize: 10, color: Colors.white70),
                   ),
                 ),
               ],
