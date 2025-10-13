@@ -15,6 +15,7 @@ extension GetCoffeeBillMapper on BillsCoffeeModel {
       totalPrice: totalPrice ?? 0,
       tableNumber: tableNumber ?? 0,
       billNumber: billNumber ?? 0,
+
     );
   }
 }

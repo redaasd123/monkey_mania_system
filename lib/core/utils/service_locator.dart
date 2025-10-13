@@ -12,6 +12,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_all_lay
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_one.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_layer_tow.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/get_one_coffee_bills_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/return_products_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/layers_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/order_cubit.dart';
@@ -200,6 +201,9 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton(
     () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
+  getIt.registerLazySingleton<ReturnProductsUseCase>(
+    () => ReturnProductsUseCase(coffeeBillsRepo: getIt.get()),
+  );
   getIt.registerLazySingleton(
     () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
@@ -209,7 +213,9 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton<GetLayerTowUseCase>(
     () => GetLayerTowUseCase(billsRepo: getIt.get()),
   );
-  getIt.registerFactory(() => CoffeeBillsCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory(
+    () => CoffeeBillsCubit(getIt(), getIt(), getIt(), getIt()),
+  );
   getIt.registerLazySingleton<GetAllLayersUseCase>(
     () => GetAllLayersUseCase(coffeeBillsRepo: getIt.get()),
   );

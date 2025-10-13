@@ -23,3 +23,19 @@ Widget CustombuildHeader(ColorScheme colorScheme, String title, Color color) {
     ],
   );
 }
+
+Widget buildHandle() => Center(
+  child: Container(
+    width: 48,
+    height: 4,
+    margin: const EdgeInsets.only(bottom: 14),
+    decoration: BoxDecoration(
+      color: Colors.white54,
+      borderRadius: BorderRadius.circular(4),
+    ),
+  ),
+);
+
+
+
+

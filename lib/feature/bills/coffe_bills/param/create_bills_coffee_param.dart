@@ -41,7 +41,6 @@ class Products {
       'quantity': quantity,
     };
 
-    // ✅ ضيف المفتاح فقط لو فيه قيمة
     if (notes != null && notes!.isNotEmpty) {
       map['notes'] = notes!;
     }

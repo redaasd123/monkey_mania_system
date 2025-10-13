@@ -7,6 +7,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layer
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills_coffee_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_repo.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/param/return_product_param.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/param/create_bills_coffee_param.dart';
 
 import '../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
@@ -107,6 +108,20 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
   ) async {
     try {
       var result = await billsCoffeeDataSource.getAllLayers(param);
+      return right(result);
+    } on DioException catch (e) {
+      return left(ServerFailure.fromDioError(e));
+    } catch (e) {
+      return left(ServerFailure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BillsCoffeeEntity>> returnProduct(
+    ReturnProductsParam param,
+  ) async {
+    try {
+      final result = await billsCoffeeDataSource.returnProducts(param);
       return right(result);
     } on DioException catch (e) {
       return left(ServerFailure.fromDioError(e));

@@ -94,7 +94,7 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHandle(),
+              buildHandle(),
               CustombuildHeader(colorScheme, widget.title, colorScheme.onPrimary),
               const SizedBox(height: 20),
               _buildForm(context),
@@ -105,39 +105,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
     );
   }
 
-  Widget _buildHandle() => Center(
-    child: Container(
-      width: 48,
-      height: 4,
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        borderRadius: BorderRadius.circular(4),
-      ),
-    ),
-  );
-
-  Widget _buildHeader(ColorScheme colorScheme) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 23,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage(kTest),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          widget.title,
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

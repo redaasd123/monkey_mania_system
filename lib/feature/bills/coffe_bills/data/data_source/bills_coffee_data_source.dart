@@ -9,6 +9,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills_coffee_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/param/return_product_param.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/param/create_bills_coffee_param.dart';
 
 import '../../../../../core/utils/extract_page.dart';
@@ -18,7 +19,11 @@ import '../../domain/entity/coffee_bills_page_entity.dart';
 abstract class BillsCoffeeDataSource {
   Future<BillsCoffeePageEntity> fetchBillsCoffee(RequestParameters param);
 
-  Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(RequestParameters param);
+  Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(
+    RequestParameters param,
+  );
+
+  Future<BillsCoffeeEntity> returnProducts(ReturnProductsParam param);
 
   Future<GetOneBillsCoffeeEntity> getOneBillsCoffee(int id);
 
@@ -49,7 +54,9 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<BillsCoffeePageEntity> fetchBillsCoffee(RequestParameters param) async {
+  Future<BillsCoffeePageEntity> fetchBillsCoffee(
+    RequestParameters param,
+  ) async {
     final url = 'product_bill/all?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
 
@@ -60,7 +67,6 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
       ).toEntity();
       bills.add(entity);
     }
-
 
     return BillsCoffeePageEntity(
       billsCoffeeEntity: bills,
@@ -129,5 +135,14 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
     }
 
     return layers;
+  }
+
+  @override
+  Future<BillsCoffeeEntity> returnProducts(ReturnProductsParam param) async {
+    final result = await getIt.get<Api>().put(
+      endPoint: 'product_bill/${param.id}/update/',
+      body: param.toJson(),
+    );
+    return BillsCoffeeModel.fromJson(result.data).toEntity();
   }
 }

@@ -10,6 +10,7 @@ import '../../../../../core/param/create_children_params/create_children_params.
 import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/utils/selected_item_text_field.dart';
+import '../../../../../core/widget/widget/custom_build_header_sheet_.dart';
 import '../../../../school/domain/entity/school_entity.dart';
 
 class AddChildBottomSheet extends StatefulWidget {
@@ -103,8 +104,8 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHandle(),
-              _buildHeader(colorScheme),
+              buildHandle(),
+              CustombuildHeader(colorScheme, LangKeys.appName.tr(), colorScheme.onPrimary),
               const SizedBox(height: 20),
               _buildForm(context),
             ],
@@ -114,39 +115,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
     );
   }
 
-  Widget _buildHandle() => Center(
-    child: Container(
-      width: 48,
-      height: 4,
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        borderRadius: BorderRadius.circular(4),
-      ),
-    ),
-  );
 
-  Widget _buildHeader(ColorScheme colorScheme) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 23,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage(kTest),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          widget.title,
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

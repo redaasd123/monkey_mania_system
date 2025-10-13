@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_entity.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/param/return_product_param.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/manager/coffee_bills/coffee_bills_cubit.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffe_bills_item.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/show_return_product_bottom_sheet.dart';
 
 import '../../../../../../core/utils/app_router.dart';
 import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
@@ -42,7 +43,7 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
       cubit.fetchBillsCoffee(
-        RequestParameters(page: state.currentPage,branch: ['all']),
+        RequestParameters(page: state.currentPage, branch: ['all']),
       );
     }
   }
@@ -69,13 +70,19 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
             itemCount: bills.length,
             itemBuilder: (context, index) {
               final modal = bills[index];
-              return GestureDetector(
-                onTap: () {
-                  GoRouter.of(
-                    context,
-                  ).push(AppRouter.kShowDetailCoffeeBills, extra: modal.id);
+              return InkWell(
+                onTap: (){
+                  showReturnProductBottomSheet(context);
+                  final cubit = context.read<CoffeeBillsCubit>();
                 },
-                child: CoffeeBillsItem(billsCoffeeEntity: modal),
+                child: CoffeeBillsItem(
+                  onTap: () {
+                    GoRouter.of(
+                      context,
+                    ).push(AppRouter.kShowDetailCoffeeBills, extra: modal.id);
+                  },
+                  billsCoffeeEntity: modal,
+                ),
               );
             },
           ),

@@ -4,6 +4,8 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/bills_coffee_
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/create_bills_coffee_use_case.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_active_bills_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/fetch_bills_coffee_use_case.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/param/return_product_param.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/domain/use_case/return_products_use_case.dart';
 
 import '../../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../domain/entity/get_one_bills_coffee_entity.dart';
@@ -16,10 +18,12 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     this.fetchBillsCoffeeUSeCase,
     this.fetchActiveBillsCoffeeUSeCase,
     this.createBillsCoffeeUSeCase,
+    this.returnProductsUseCase,
   ) : super((BillsCoffeeState()));
   final FetchBillsCoffeeUSeCase fetchBillsCoffeeUSeCase;
   final FetchActiveBillsCoffeeUSeCase fetchActiveBillsCoffeeUSeCase;
   final CreateBillsCoffeeUSeCase createBillsCoffeeUSeCase;
+  final ReturnProductsUseCase returnProductsUseCase;
 
   Future<void> fetchBillsCoffee(RequestParameters param) async {
     if (state.isLoading) return;
@@ -140,6 +144,35 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     );
   }
 
+  Future<void> returnProducts(ReturnProductsParam param) async {
+    emit(state.copyWith(status: CoffeeBillsStatus.returnProductLoading));
+    final result = await returnProductsUseCase.call(param);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: CoffeeBillsStatus.returnProductFailure,
+          errorMessage: failure.errMessage,
+        ),
+      ),
+      (bill) {
+        final updatedList = List<BillsCoffeeEntity>.from(state.bills);
+        final index = updatedList.indexWhere((e)=>e.id==bill.id);
+        if(index!=1){
+          updatedList[index]=bill;
+        }else{
+          updatedList..insert(0, bill);
+        }
+
+        emit(
+          state.copyWith(
+            status: CoffeeBillsStatus.returnProductSuccess,
+            bills: updatedList,
+          ),
+        );
+      },
+    );
+  }
+
   void toggleSearch() {
     if (state.isSearching) {
       emit(state.copyWith(isSearching: false, searchQuery: ''));
@@ -161,7 +194,9 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.loading,
         ),
       );
-      fetchBillsCoffee(RequestParameters(page: 1, query: null,branch: ['all']));
+      fetchBillsCoffee(
+        RequestParameters(page: 1, query: null, branch: ['all']),
+      );
       return;
     }
 
@@ -177,7 +212,9 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.searchLoading,
         ),
       );
-      fetchBillsCoffee(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchBillsCoffee(
+        RequestParameters(page: 1, query: trimmedQuery, branch: ['all']),
+      );
     }
   }
 
@@ -194,7 +231,9 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.activeLoading,
         ),
       );
-      fetchActiveBillsCoffee(RequestParameters(page: 1, query: null,branch: ['all']));
+      fetchActiveBillsCoffee(
+        RequestParameters(page: 1, query: null, branch: ['all']),
+      );
       return;
     }
 
@@ -210,7 +249,9 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.searchLoading,
         ),
       );
-      fetchActiveBillsCoffee(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchActiveBillsCoffee(
+        RequestParameters(page: 1, query: trimmedQuery, branch: ['all']),
+      );
     }
   }
 
@@ -225,7 +266,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
       ),
     );
 
-    await fetchBillsCoffee(RequestParameters(page: 1,branch: ['all']));
+    await fetchBillsCoffee(RequestParameters(page: 1, branch: ['all']));
   }
 
   Future<void> onRefreshActive() async {
@@ -239,9 +280,10 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
       ),
     );
 
-    await fetchActiveBillsCoffee(RequestParameters(page: 1,branch: ['all']));
+    await fetchActiveBillsCoffee(RequestParameters(page: 1, branch: ['all']));
   }
-  void setParam(RequestParameters param){
+
+  void setParam(RequestParameters param) {
     emit(state.copyWith(filters: param));
   }
 }

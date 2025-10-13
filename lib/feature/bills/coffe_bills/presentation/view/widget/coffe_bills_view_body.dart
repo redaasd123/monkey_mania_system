@@ -105,11 +105,6 @@ class _CoffeeBillsViewBodyState extends State<CoffeeBillsViewBody> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}product_bill/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
               await downloader.downloadFile(context, url, 'allCoffeeBills.csv');
             },
           ),
@@ -147,6 +142,7 @@ class CoffeeBillsBuilder extends StatelessWidget {
           listener: (context, state) {
             if (state.status == CoffeeBillsStatus.failure ||
                 state.status == CoffeeBillsStatus.activeFailure ||
+                state.status == CoffeeBillsStatus.returnProductFailure ||
                 state.status == CoffeeBillsStatus.createFailure) {
               hideLoader(context);
               showRedFlush(context, state.errorMessage ?? "حدث خطأ");
@@ -159,6 +155,7 @@ class CoffeeBillsBuilder extends StatelessWidget {
           switch (state.status) {
             case CoffeeBillsStatus.loading:
             case CoffeeBillsStatus.activeLoading:
+            case CoffeeBillsStatus.returnProductLoading:
               return Stack(
                 children: [
                   const Center(
@@ -171,6 +168,7 @@ class CoffeeBillsBuilder extends StatelessWidget {
             case CoffeeBillsStatus.success:
             case CoffeeBillsStatus.createSuccess:
             case CoffeeBillsStatus.activeSuccess:
+            case CoffeeBillsStatus.returnProductSuccess:
               if (state.bills.isEmpty) {
                 return const Center(child: Text("empty"));
               }

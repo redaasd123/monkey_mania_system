@@ -73,7 +73,7 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHandle(),
+              buildHandle(),
               CustombuildHeader(
                 colorScheme,
                 widget.text,
@@ -87,18 +87,6 @@ class _AddSchoolBottomSheetState extends State<AddSchoolBottomSheet> {
       ),
     );
   }
-
-  Widget _buildHandle() => Center(
-    child: Container(
-      width: 48,
-      height: 4,
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        borderRadius: BorderRadius.circular(4),
-      ),
-    ),
-  );
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
