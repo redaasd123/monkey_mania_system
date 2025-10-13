@@ -7,7 +7,7 @@ import 'package:monkey_app/feature/users/domain/repo/create_user_param.dart';
 import 'package:monkey_app/feature/users/domain/repo/update_user_param.dart';
 
 abstract class UsersRepo {
-  Future<Either<Failure, UserEntity>> fetchUsers(FetchBillsParam param);
+  Future<Either<Failure, UserEntity>> fetchUsers(RequestParameters param);
 
   Future<Either<Failure, UserDataEntity>> createUsers(CreateUserParam param);
 

@@ -5,5 +5,5 @@ import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
 import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 
 abstract class HomeRepo{
- Future<Either<Failure,HomeEntity>>fetchDashBoardData(FetchBillsParam param);
+ Future<Either<Failure,HomeEntity>>fetchDashBoardData(RequestParameters param);
 }

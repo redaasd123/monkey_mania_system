@@ -10,7 +10,7 @@ import '../../../general_expense/domain/use_case/param/update_param.dart';
 
 abstract class MaterialExpenseRepo {
   Future<Either<Failure, MaterialExpenseEntity>> fetchMaterialExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, MaterialExpenseItemEntity>> createMaterialExpense(
@@ -22,6 +22,6 @@ abstract class MaterialExpenseRepo {
   );
 
   Future<Either<Failure, List<MaterialsEntity>>> fetchMaterials(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 }

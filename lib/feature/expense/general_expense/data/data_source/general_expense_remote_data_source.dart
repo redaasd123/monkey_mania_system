@@ -10,7 +10,7 @@ import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dar
 import '../../domain/use_case/param/update_param.dart';
 
 abstract class GeneralExpenseRemoteDataSource {
-  Future<GeneralExpenseEntity> fetchGeneralExpense(FetchBillsParam param);
+  Future<GeneralExpenseEntity> fetchGeneralExpense(RequestParameters param);
 
   Future<GeneralExpenseItemEntity> createGeneralExpense(
     CreateExpenseParam param,
@@ -25,7 +25,7 @@ class GeneralExpenseRemoteDataSourceImpl
     extends GeneralExpenseRemoteDataSource {
   @override
   Future<GeneralExpenseEntity> fetchGeneralExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     final url = 'general_expense/all?${param.toQueryParams()}';
 

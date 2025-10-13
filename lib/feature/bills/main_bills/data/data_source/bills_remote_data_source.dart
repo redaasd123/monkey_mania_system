@@ -15,11 +15,11 @@ import '../model/all_bills_model/get_all_bills_model.dart';
 import '../model/get_one_bills_model.dart';
 
 abstract class BillsRemoteDataSource {
-  Future<BillsPageEntity> fetchBills(FetchBillsParam param);
+  Future<BillsPageEntity> fetchBills(RequestParameters param);
 
   Future<GetOneBillsEntity> getOneBills(num id);
 
-  Future<List<BillsEntity>> fetchActiveBills(FetchBillsParam param);
+  Future<List<BillsEntity>> fetchActiveBills(RequestParameters param);
 
   Future<BillsEntity> createBills(CreateBillsParam param);
 
@@ -32,7 +32,7 @@ abstract class BillsRemoteDataSource {
 
 class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   @override
-  Future<BillsPageEntity> fetchBills(FetchBillsParam param) async {
+  Future<BillsPageEntity> fetchBills(RequestParameters param) async {
     final url = 'bill/all?${param.toQueryParams()}';
     var result = await getIt.get<Api>().get(endPoint: url);
 
@@ -66,7 +66,7 @@ class BillsRemoteDataSourceImpl extends BillsRemoteDataSource {
   }
 
   @override
-  Future<List<BillsEntity>> fetchActiveBills(FetchBillsParam param) async {
+  Future<List<BillsEntity>> fetchActiveBills(RequestParameters param) async {
     final url = 'bill/active/all?${param.toQueryParams()}';
     var result = await getIt.get<Api>().get(endPoint: url);
 

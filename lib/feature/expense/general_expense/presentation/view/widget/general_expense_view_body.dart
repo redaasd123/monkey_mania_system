@@ -23,7 +23,7 @@ class GeneralExpenseViewBody extends StatelessWidget {
           listener: (context, state) {
             if (state is BranchSelectedState) {
               context.read<GeneralExpenseCubit>().fetchAllGeneralExpense(
-                FetchBillsParam(branch: [state.branchId]),
+                RequestParameters(branch: [state.branchId]),
               );
             }
           },

@@ -81,7 +81,7 @@ class _SchoolViewState extends State<SchoolView> {
               final cubit = context.read<BillsCubit>().state;
               await requestStoragePermission();
                   final downloader = FileDownloaderUI();
-                  final FetchBillsParam param = FetchBillsParam(
+                  final RequestParameters param = RequestParameters(
                     query: cubit.searchQuery,
                   );
                   print('${param.query} 🔍🔍🔍');

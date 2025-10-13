@@ -17,7 +17,7 @@ class GeneralExpenseImpl extends GeneralExpenseRepo {
 
   @override
   Future<Either<Failure, GeneralExpenseEntity>> fetchAllGeneralExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await remoteDataSource.fetchGeneralExpense(param);

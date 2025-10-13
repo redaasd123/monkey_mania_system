@@ -8,14 +8,14 @@ import 'package:monkey_app/feature/expense/material_expense/domain/entity/materi
 import 'package:monkey_app/feature/expense/material_expense/domain/repo/material_repo.dart';
 
 class MaterialExpenseUseCase
-    extends MyUseCase<MaterialExpenseEntity, FetchBillsParam> {
+    extends MyUseCase<MaterialExpenseEntity, RequestParameters> {
   @override
   final MaterialExpenseRepo materialExpenseRepo;
 
   MaterialExpenseUseCase({required this.materialExpenseRepo});
 
   Future<Either<Failure,MaterialExpenseEntity>> call(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     return await materialExpenseRepo.fetchMaterialExpense(param);
   }

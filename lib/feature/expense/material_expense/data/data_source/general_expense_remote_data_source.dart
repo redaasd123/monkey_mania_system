@@ -12,7 +12,7 @@ import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dar
 import '../../../general_expense/domain/use_case/param/update_param.dart';
 
 abstract class MaterialExpenseRemoteDataSource {
-  Future<MaterialExpenseEntity> fetchMaterialExpense(FetchBillsParam param);
+  Future<MaterialExpenseEntity> fetchMaterialExpense(RequestParameters param);
 
   Future<MaterialExpenseItemEntity> createMaterialExpense(
     CreateExpenseParam param,
@@ -22,14 +22,14 @@ abstract class MaterialExpenseRemoteDataSource {
     UpdateExpenseParam param,
   );
 
-  Future<List<MaterialsEntity>> fetchMaterials(FetchBillsParam param);
+  Future<List<MaterialsEntity>> fetchMaterials(RequestParameters param);
 }
 
 class MaterialExpenseRemoteDataSourceImpl
     extends MaterialExpenseRemoteDataSource {
   @override
   Future<MaterialExpenseEntity> fetchMaterialExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     var results = await getIt.get<Api>().get(
       endPoint: 'material_expense/all?${param.toQueryParams()}',
@@ -74,7 +74,7 @@ class MaterialExpenseRemoteDataSourceImpl
   }
 
   @override
-  Future<List<MaterialsEntity>> fetchMaterials(FetchBillsParam param) async {
+  Future<List<MaterialsEntity>> fetchMaterials(RequestParameters param) async {
     final result = await getIt.get<Api>().get(
       endPoint: 'branch_material/all?${param.toQueryParams()}',
     );

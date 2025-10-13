@@ -2,6 +2,7 @@ import 'package:monkey_app/core/utils/api_serviece.dart';
 
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
+import '../../../../core/utils/extract_page.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../domain/entity/children/children_entity.dart';
 import '../../domain/entity/children/children_page_entity.dart';
@@ -32,16 +33,6 @@ class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
         final child = ChildrenModel.fromJson(item);
         childrenList.add(child);
       }
-    }
-
-    /*
-      saveChildrenData(childrenList, kChildrenBox);
-*/
-
-    int? extractPage(String? url) {
-      if (url == null) return null;
-      final uri = Uri.parse(url);
-      return int.tryParse(uri.queryParameters['page'] ?? '');
     }
 
     final entity = ChildrenPageEntity(

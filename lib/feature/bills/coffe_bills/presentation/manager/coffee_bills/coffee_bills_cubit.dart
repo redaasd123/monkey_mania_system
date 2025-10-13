@@ -21,7 +21,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
   final FetchActiveBillsCoffeeUSeCase fetchActiveBillsCoffeeUSeCase;
   final CreateBillsCoffeeUSeCase createBillsCoffeeUSeCase;
 
-  Future<void> fetchBillsCoffee(FetchBillsParam param) async {
+  Future<void> fetchBillsCoffee(RequestParameters param) async {
     if (state.isLoading) return;
 
     final pageNumber = param.page ?? state.currentPage;
@@ -77,7 +77,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
     );
   }
 
-  Future<void> fetchActiveBillsCoffee(FetchBillsParam param) async {
+  Future<void> fetchActiveBillsCoffee(RequestParameters param) async {
     if (state.isLoading) return;
 
     emit(
@@ -161,7 +161,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.loading,
         ),
       );
-      fetchBillsCoffee(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchBillsCoffee(RequestParameters(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -177,7 +177,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.searchLoading,
         ),
       );
-      fetchBillsCoffee(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchBillsCoffee(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
 
@@ -194,7 +194,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.activeLoading,
         ),
       );
-      fetchActiveBillsCoffee(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchActiveBillsCoffee(RequestParameters(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -210,7 +210,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
           status: CoffeeBillsStatus.searchLoading,
         ),
       );
-      fetchActiveBillsCoffee(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchActiveBillsCoffee(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
 
@@ -225,7 +225,7 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
       ),
     );
 
-    await fetchBillsCoffee(FetchBillsParam(page: 1,branch: ['all']));
+    await fetchBillsCoffee(RequestParameters(page: 1,branch: ['all']));
   }
 
   Future<void> onRefreshActive() async {
@@ -239,9 +239,9 @@ class CoffeeBillsCubit extends Cubit<BillsCoffeeState> {
       ),
     );
 
-    await fetchActiveBillsCoffee(FetchBillsParam(page: 1,branch: ['all']));
+    await fetchActiveBillsCoffee(RequestParameters(page: 1,branch: ['all']));
   }
-  void setParam(FetchBillsParam param){
+  void setParam(RequestParameters param){
     emit(state.copyWith(filters: param));
   }
 }

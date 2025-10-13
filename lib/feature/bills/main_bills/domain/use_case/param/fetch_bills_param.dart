@@ -1,4 +1,4 @@
-class FetchBillsParam {
+class RequestParameters {
   final List<dynamic>? branch;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -8,7 +8,7 @@ class FetchBillsParam {
   final String? layer2;
   final String analyticsType;
 
-  const FetchBillsParam({
+  const RequestParameters({
     this.analyticsType = 'phone_number',
     this.layer2,
     this.layer1,
@@ -19,7 +19,7 @@ class FetchBillsParam {
     this.query,
   });
 
-  FetchBillsParam copyWith({
+  RequestParameters copyWith({
     String? analyticsType,
     List<dynamic>? branch,
     DateTime? startDate,
@@ -29,7 +29,7 @@ class FetchBillsParam {
     String? layer1,
     String? layer2,
   }) {
-    return FetchBillsParam(
+    return RequestParameters(
       analyticsType: analyticsType ?? this.analyticsType,
       branch: branch ?? this.branch,
       startDate: startDate ?? this.startDate,
@@ -41,7 +41,6 @@ class FetchBillsParam {
     );
   }
 
-  /// يحول كل البيانات إلى query string جاهز للـ URL بنفس اسم الدالة
   String toQueryParams() {
     List<String> parts = [];
 

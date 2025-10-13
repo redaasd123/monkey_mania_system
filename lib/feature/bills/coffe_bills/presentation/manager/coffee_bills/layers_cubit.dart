@@ -17,7 +17,7 @@ class LayersCubit extends Cubit<LayersState> {
   final GetLayerTowUseCase layerTow;
   final GetAllLayersUseCase allLayersUseCase;
 
-  Future<void> getLayerOne(FetchBillsParam param) async {
+  Future<void> getLayerOne(RequestParameters param) async {
     emit(state.copyWith(status: LayersStatus.getLayerOneLoading));
 
     var result = await layerOne.call(param);
@@ -43,7 +43,7 @@ class LayersCubit extends Cubit<LayersState> {
     );
   }
 
-  Future<void> getLayerTow(FetchBillsParam param) async {
+  Future<void> getLayerTow(RequestParameters param) async {
     emit(state.copyWith(status: LayersStatus.getLayerTowLoading));
 
     var result = await layerTow.call(param);
@@ -70,7 +70,7 @@ class LayersCubit extends Cubit<LayersState> {
     );
   }
 
-  Future<void> getAllLayer(FetchBillsParam param) async {
+  Future<void> getAllLayer(RequestParameters param) async {
     emit(state.copyWith(status: LayersStatus.layer3Loading));
 
     var result = await allLayersUseCase.call(param);

@@ -41,7 +41,7 @@ class HomeListView extends StatelessWidget {
           listener: (context, state) {
             if (state is BranchSelectedState) {
               context.read<HomeCubit>().fetchDashBoardData(
-                FetchBillsParam(branch: [state.branchId]),
+                RequestParameters(branch: [state.branchId]),
               );
             }
           },
@@ -57,7 +57,7 @@ class HomeListView extends StatelessWidget {
                   onSelected: (selectedBranch) {
                     Hive.box(kAuthBox).put(AuthKeys.branch, selectedBranch);
                     BlocProvider.of<HomeCubit>(context).fetchDashBoardData(
-                      FetchBillsParam(branch: [selectedBranch]),
+                      RequestParameters(branch: [selectedBranch]),
                     );
                   },
                 );

@@ -46,7 +46,7 @@ class _UserListViewState extends State<UserListView> {
     if (scrollController.position.maxScrollExtent <= 0 &&
         state.hasMore &&
         !state.isLoading) {
-      cubit.fetchUsers(FetchBillsParam(page: state.currentPage));
+      cubit.fetchUsers(RequestParameters(page: state.currentPage));
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -65,7 +65,7 @@ class _UserListViewState extends State<UserListView> {
     final currentScroll = scrollController.position.pixels;
 
     if (currentScroll >= 0.6 * maxScroll && state.hasMore && !state.isLoading) {
-      cubit.fetchUsers(FetchBillsParam(page: state.currentPage));
+      cubit.fetchUsers(RequestParameters(page: state.currentPage));
     }
   }
 

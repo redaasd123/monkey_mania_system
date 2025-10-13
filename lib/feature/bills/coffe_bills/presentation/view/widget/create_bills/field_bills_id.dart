@@ -54,7 +54,7 @@ class _TextFieldBillsIDState extends State<TextFieldBillsID> {
               );
             },
           );
-          await cubit.fetchActiveBills(FetchBillsParam(branch: [AuthHelper.getBranch()]));
+          await cubit.fetchActiveBills(RequestParameters(branch: [AuthHelper.getBranch()]));
           hasFetched = true;
 
           Navigator.of(context, rootNavigator: true).pop();

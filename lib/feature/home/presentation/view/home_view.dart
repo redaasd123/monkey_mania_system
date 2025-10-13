@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
         BlocProvider(
           create: (context) =>
           getIt<HomeCubit>()
-            ..fetchDashBoardData(FetchBillsParam(branch: ['all'])),
+            ..fetchDashBoardData(RequestParameters(branch: ['all'])),
         ),
       ],
       child: HomeViewBody(),

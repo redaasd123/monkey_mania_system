@@ -9,7 +9,7 @@ import '../use_case/param/update_param.dart';
 
 abstract class GeneralExpenseRepo {
   Future<Either<Failure, GeneralExpenseEntity>> fetchAllGeneralExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, GeneralExpenseItemEntity>> createGeneralExpense(

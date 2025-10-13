@@ -10,11 +10,11 @@ import '../entity/coffee_bills_page_entity.dart';
 
 abstract class CoffeeBillsRepo {
   Future<Either<Failure, BillsCoffeePageEntity>> fetchAllCoffeeBills(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, List<BillsCoffeeEntity>>> fetchActiveCoffeeBills(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, GetOneBillsCoffeeEntity>> getOneCoffeeBills(int id);
@@ -24,14 +24,14 @@ abstract class CoffeeBillsRepo {
   );
 
   Future<Either<Failure, List<LayersEntity>>> getLayerOne(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, List<LayersEntity>>> getLayerTow(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 
   Future<Either<Failure, List<GetAllLayerEntity>>> getAllLayers(
-    FetchBillsParam param,
+    RequestParameters param,
   );
 }

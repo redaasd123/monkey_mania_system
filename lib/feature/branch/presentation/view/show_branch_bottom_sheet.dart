@@ -7,7 +7,7 @@ import 'branch_bottom_sheet_body.dart';
 
 Future<void> showBranchBottomSheet(
   BuildContext context, {
-  required void Function(FetchBillsParam) onSelected,
+  required void Function(RequestParameters) onSelected,
 }) async {
   BlocProvider.of<BranchCubit>(context).fetchBranch();
 

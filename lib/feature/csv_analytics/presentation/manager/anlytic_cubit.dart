@@ -27,7 +27,7 @@ class AnalyticCubit extends Cubit<AnalyticState> {
     );
 
   }
-  void setParam(FetchBillsParam param){
+  void setParam(RequestParameters param){
     emit(state.copyWith(filters: param));
   }
 }

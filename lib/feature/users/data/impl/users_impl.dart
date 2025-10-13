@@ -31,7 +31,7 @@ class UsersRepoImpl extends UsersRepo {
 
 
   @override
-  Future<Either<Failure, UserEntity>> fetchUsers(FetchBillsParam param) async {
+  Future<Either<Failure, UserEntity>> fetchUsers(RequestParameters param) async {
     try {
       final result = await userRemoteDataSource.fetchUsers(param);
       return right(result);

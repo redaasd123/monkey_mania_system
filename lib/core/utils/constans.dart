@@ -56,5 +56,4 @@ const List<String> kProductImages = [
   kImage4,
   kImage9,
 ];
-const kOfflineFailure = 'لم يتوفر اتصال بالانترنت وتم الحفظ مؤقتا وسيتم الارسال عند توفر الاتصال.';
 

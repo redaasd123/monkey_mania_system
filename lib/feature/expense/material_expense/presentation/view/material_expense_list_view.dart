@@ -40,7 +40,7 @@ class _MaterialExpenseListViewState extends State<MaterialExpenseListView> {
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
       cubit.fetchAllMaterialExpense(
-        FetchBillsParam(page: state.currentPage, branch: ['all']),
+        RequestParameters(page: state.currentPage, branch: ['all']),
       );
     }
   }
@@ -61,7 +61,7 @@ class _MaterialExpenseListViewState extends State<MaterialExpenseListView> {
           scrollController.position.maxScrollExtent == 0 &&
           state.hasMore &&
           !state.isLoading) {
-        cubit.fetchAllMaterialExpense(FetchBillsParam(
+        cubit.fetchAllMaterialExpense(RequestParameters(
             branch: ['all'],
             page: state.currentPage));
       }

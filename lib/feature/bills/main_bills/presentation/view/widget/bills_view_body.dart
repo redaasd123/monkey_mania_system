@@ -200,7 +200,7 @@ class AllBillsBlocConsumer extends StatelessWidget {
           listener: (context, state) {
             if (state is BranchSelectedState) {
               context.read<BillsCubit>().fetchBills(
-                FetchBillsParam(branch: [state.branchId]),
+                RequestParameters(branch: [state.branchId]),
               );
             }
           },

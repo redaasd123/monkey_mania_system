@@ -12,7 +12,7 @@ class HomeRepoImpl extends HomeRepo{
 
   HomeRepoImpl({required this.homeRemoteDataSource});
   @override
-  Future<Either<Failure, HomeEntity>> fetchDashBoardData(FetchBillsParam param)async {
+  Future<Either<Failure, HomeEntity>> fetchDashBoardData(RequestParameters param)async {
     try {
       final result = await homeRemoteDataSource.fetchDashBoardData(param);
       return right(result);

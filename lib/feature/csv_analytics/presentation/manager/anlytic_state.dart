@@ -6,17 +6,17 @@ class AnalyticState extends Equatable {
   final AnalyticStatus status;
   final String? errMessage;
   final List<AnalyticTypeEntity> data;
-  final FetchBillsParam filters;
+  final RequestParameters filters;
 
   const AnalyticState({
-    this.filters =const FetchBillsParam(),
+    this.filters =const RequestParameters(),
     this.errMessage,
     this.data = const [],
     this.status = AnalyticStatus.initial,
   });
 
   AnalyticState copyWith({
-    FetchBillsParam? filters,
+    RequestParameters? filters,
     AnalyticStatus? status,
     String? errMessage, List<AnalyticTypeEntity>? data}) {
     return AnalyticState(

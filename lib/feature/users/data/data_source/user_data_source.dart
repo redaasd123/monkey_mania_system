@@ -11,7 +11,7 @@ import '../../../../core/utils/extract_page.dart';
 import '../../../../core/utils/service_locator.dart';
 
 abstract class UserRemoteDataSource {
-  Future<UserEntity> fetchUsers(FetchBillsParam param);
+  Future<UserEntity> fetchUsers(RequestParameters param);
 
   Future<UserDataEntity> createUser(CreateUserParam param);
 
@@ -29,7 +29,7 @@ class UserDataSourceImpl extends UserRemoteDataSource {
   }
 
   @override
-  Future<UserEntity> fetchUsers(FetchBillsParam param) async {
+  Future<UserEntity> fetchUsers(RequestParameters param) async {
     var result = await getIt.get<Api>().get(
       endPoint: 'user/all/?${param.toQueryParams()}',
     );

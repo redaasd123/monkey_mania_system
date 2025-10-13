@@ -51,7 +51,7 @@ class _BillsListViewState extends State<BillsListView> {
     final currentScroll = scrollController.position.pixels;
 
     if (currentScroll >= 0.6 * maxScroll && state.hasMore && !state.isLoading) {
-      cubit.fetchBills(FetchBillsParam(page: state.currentPage));
+      cubit.fetchBills(RequestParameters(page: state.currentPage));
     }
   }
 

@@ -39,7 +39,7 @@ class _GeneralExpenseListViewState extends State<GeneralExpenseListView> {
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
       cubit.fetchAllGeneralExpense(
-        FetchBillsParam(page: state.currentPage, branch: ['all']),
+        RequestParameters(page: state.currentPage, branch: ['all']),
       );
     }
   }
@@ -61,7 +61,7 @@ class _GeneralExpenseListViewState extends State<GeneralExpenseListView> {
           state.hasMore &&
           !state.isLoading) {
         cubit.fetchAllGeneralExpense(
-          FetchBillsParam(page: state.currentPage, branch: ['all']),
+          RequestParameters(page: state.currentPage, branch: ['all']),
         );
       }
     });

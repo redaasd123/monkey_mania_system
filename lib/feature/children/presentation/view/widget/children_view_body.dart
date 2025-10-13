@@ -84,7 +84,7 @@ class _ChildrenViewBodyState extends State<ChildrenViewBody> {
                   final cubit = context.read<ChildrenCubit>().state;
                   await requestStoragePermission();
                   final downloader = FileDownloaderUI();
-                  final param = FetchBillsParam(query: cubit.searchQuery);
+                  final param = RequestParameters(query: cubit.searchQuery);
                   final url =
                       '${kBaseUrl}child/all/?is_csv_response=true&${param.toQueryParams()}';
                   await downloader.downloadFile(context, url, ',children.csv');

@@ -31,7 +31,7 @@ class BillsCubit extends Cubit<BillsState> {
   // 🔹 إنشاء فاتورة
 
   // 🔹 جلب فواتير Active
-  Future<void> fetchActiveBills(FetchBillsParam param) async {
+  Future<void> fetchActiveBills(RequestParameters param) async {
     if (state.isLoading) return;
 
     emit(state.copyWith(isLoading: true, status: BillsStatus.activeLoading));
@@ -66,7 +66,7 @@ class BillsCubit extends Cubit<BillsState> {
   }
 
   // 🔹 جلب الفواتير مع Pagination
-  Future<void> fetchBills(FetchBillsParam param) async {
+  Future<void> fetchBills(RequestParameters param) async {
     if (state.isLoading ) return;
 
     final pageNumber = param.page ?? state.currentPage;
@@ -186,7 +186,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.loading,
         ),
       );
-      fetchBills(FetchBillsParam(page: 1, query: null, branch: ['all']));
+      fetchBills(RequestParameters(page: 1, query: null, branch: ['all']));
       return;
     }
 
@@ -203,7 +203,7 @@ class BillsCubit extends Cubit<BillsState> {
         ),
       );
       fetchBills(
-        FetchBillsParam(page: 1, query: trimmedQuery, branch: ['all']),
+        RequestParameters(page: 1, query: trimmedQuery, branch: ['all']),
       );
     }
   }
@@ -221,7 +221,7 @@ class BillsCubit extends Cubit<BillsState> {
           status: BillsStatus.activeLoading,
         ),
       );
-      fetchActiveBills(FetchBillsParam(page: 1, query: null, branch: ['all']));
+      fetchActiveBills(RequestParameters(page: 1, query: null, branch: ['all']));
       return;
     }
 
@@ -238,7 +238,7 @@ class BillsCubit extends Cubit<BillsState> {
         ),
       );
       fetchActiveBills(
-        FetchBillsParam(page: 1, query: trimmedQuery, branch: ['all']),
+        RequestParameters(page: 1, query: trimmedQuery, branch: ['all']),
       );
     }
   }
@@ -254,7 +254,7 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchBills(FetchBillsParam(page: 1, branch: ['all']));
+    await fetchBills(RequestParameters(page: 1, branch: ['all']));
   }
 
   Future<void> onRefreshActiveBills() async {
@@ -268,10 +268,10 @@ class BillsCubit extends Cubit<BillsState> {
       ),
     );
 
-    await fetchActiveBills(FetchBillsParam(page: 1, branch: ['all']));
+    await fetchActiveBills(RequestParameters(page: 1, branch: ['all']));
   }
 
-  void setParam(FetchBillsParam param) {
+  void setParam(RequestParameters param) {
     emit(state.copyWith(filters: param));
   }
 }

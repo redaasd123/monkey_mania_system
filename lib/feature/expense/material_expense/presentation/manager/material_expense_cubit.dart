@@ -27,7 +27,7 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
   final UpdateMaterialExpenseUseCase updateMaterialExpenseUseCase;
   final MaterialsUseCase materialsUseCase;
 
-  Future<void> fetchAllMaterialExpense(FetchBillsParam param) async {
+  Future<void> fetchAllMaterialExpense(RequestParameters param) async {
     final currentPage = param.page ?? state.currentPage;
     if (state.isLoading) return;
     if (currentPage == 1) {
@@ -171,7 +171,7 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
           status: MaterialExpenseStatus.loading,
         ),
       );
-      fetchAllMaterialExpense(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchAllMaterialExpense(RequestParameters(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -187,11 +187,11 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
           status: MaterialExpenseStatus.searchLoading,
         ),
       );
-      fetchAllMaterialExpense(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchAllMaterialExpense(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
 
-  Future<void> fetchMaterials(FetchBillsParam param)async{
+  Future<void> fetchMaterials(RequestParameters param)async{
     emit(state.copyWith(status: MaterialExpenseStatus.materialsLoading));
     final result = await materialsUseCase.call(param);
     result.fold((failure){
@@ -211,7 +211,7 @@ class MaterialExpenseCubit extends Cubit<MaterialExpenseState> {
       );
     });
   }
-  void setParam(FetchBillsParam param){
+  void setParam(RequestParameters param){
     emit(state.copyWith(filters: param));
   }
 }

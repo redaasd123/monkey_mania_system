@@ -6,12 +6,12 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_re
 import '../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../entity/coffee_bills_page_entity.dart';
 
-class FetchBillsCoffeeUSeCase extends MyUseCase<BillsCoffeePageEntity,FetchBillsParam>{
+class FetchBillsCoffeeUSeCase extends MyUseCase<BillsCoffeePageEntity,RequestParameters>{
   final CoffeeBillsRepo coffeeBillsRepo;
 
   FetchBillsCoffeeUSeCase({required this.coffeeBillsRepo});
   @override
-  Future<Either<Failure, BillsCoffeePageEntity>> call(FetchBillsParam param) async{
+  Future<Either<Failure, BillsCoffeePageEntity>> call(RequestParameters param) async{
 return await  coffeeBillsRepo.fetchAllCoffeeBills(param);
   }
 

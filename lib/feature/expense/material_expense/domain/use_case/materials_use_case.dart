@@ -5,12 +5,12 @@ import '../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dar
 import 'package:monkey_app/feature/expense/material_expense/domain/entity/materials.dart';
 import 'package:monkey_app/feature/expense/material_expense/domain/repo/material_repo.dart';
 
-class MaterialsUseCase extends MyUseCase<List<MaterialsEntity>,FetchBillsParam>{
+class MaterialsUseCase extends MyUseCase<List<MaterialsEntity>,RequestParameters>{
   final MaterialExpenseRepo repo;
 
   MaterialsUseCase({required this.repo});
   @override
-  Future<Either<Failure, List<MaterialsEntity>>> call(FetchBillsParam param)async {
+  Future<Either<Failure, List<MaterialsEntity>>> call(RequestParameters param)async {
 return await repo.fetchMaterials(param);
   }
 }

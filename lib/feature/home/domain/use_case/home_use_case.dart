@@ -5,12 +5,12 @@ import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/home/domain/entity/home_entity.dart';
 import 'package:monkey_app/feature/home/domain/repo/home_repo.dart';
 
-class HomeUseCase extends MyUseCase<HomeEntity,FetchBillsParam>{
+class HomeUseCase extends MyUseCase<HomeEntity,RequestParameters>{
   final HomeRepo homeRepo;
 
   HomeUseCase({required this.homeRepo});
   @override
-  Future<Either<Failure,HomeEntity>> call(FetchBillsParam param)async {
+  Future<Either<Failure,HomeEntity>> call(RequestParameters param)async {
 return await  homeRepo.fetchDashBoardData(param);
   }
 }

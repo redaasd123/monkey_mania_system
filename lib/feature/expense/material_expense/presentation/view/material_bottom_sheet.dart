@@ -107,7 +107,7 @@ class _GeneralExpenseBottomSheetState
               colorScheme: Theme.of(context).colorScheme,
               label: LangKeys.material.tr(),
               fetchItems: () async {
-                await context.read<MaterialExpenseCubit>().fetchMaterials(FetchBillsParam(branch: ['all']));
+                await context.read<MaterialExpenseCubit>().fetchMaterials(RequestParameters(branch: ['all']));
                 return context.read<MaterialExpenseCubit>().state.materials??[];
               },
               itemTitle: (material) => material.name,

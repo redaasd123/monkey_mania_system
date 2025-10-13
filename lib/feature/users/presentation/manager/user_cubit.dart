@@ -20,7 +20,7 @@ class UserCubit extends Cubit<UserState> {
   final CreateUserUseCase createUserUseCase;
   final UpdateUserUseCase updateUserUseCase;
 
-  Future<void> fetchUsers(FetchBillsParam param) async {
+  Future<void> fetchUsers(RequestParameters param) async {
     if (state.isLoading ) return;
 
     final pageNumber = param.page ?? state.currentPage;
@@ -140,7 +140,7 @@ class UserCubit extends Cubit<UserState> {
       ),
     );
 
-    await fetchUsers(FetchBillsParam(page: 1, branch: ['all']));
+    await fetchUsers(RequestParameters(page: 1, branch: ['all']));
 
 
 
@@ -158,7 +158,7 @@ class UserCubit extends Cubit<UserState> {
           status: UserStatus.loading,
         ),
       );
-      fetchUsers(FetchBillsParam(page: 1, query: null, branch: ['all']));
+      fetchUsers(RequestParameters(page: 1, query: null, branch: ['all']));
       return;
     }
 
@@ -174,7 +174,7 @@ class UserCubit extends Cubit<UserState> {
         ),
       );
       fetchUsers(
-        FetchBillsParam(page: 1, query: trimmedQuery, branch: ['all']),
+        RequestParameters(page: 1, query: trimmedQuery, branch: ['all']),
       );
     }
   }

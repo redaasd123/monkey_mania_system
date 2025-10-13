@@ -6,14 +6,14 @@ import 'package:monkey_app/feature/expense/general_expense/domain/entity/general
 import 'package:monkey_app/feature/expense/general_expense/domain/repo/general_repo.dart';
 
 class GeneralExpenseUseCase
-    extends MyUseCase<GeneralExpenseEntity, FetchBillsParam> {
+    extends MyUseCase<GeneralExpenseEntity, RequestParameters> {
   @override
   final GeneralExpenseRepo generalExpenseRepo;
 
   GeneralExpenseUseCase({required this.generalExpenseRepo});
 
   Future<Either<Failure,GeneralExpenseEntity>> call(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     return await generalExpenseRepo.fetchAllGeneralExpense(param);
   }

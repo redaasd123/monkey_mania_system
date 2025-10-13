@@ -174,7 +174,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
           listener: (context, state) {
             if (state is BranchSelectedState) {
               context.read<BillsCubit>().fetchActiveBills(
-                FetchBillsParam(branch: [state.branchId]),
+                RequestParameters(branch: [state.branchId]),
               );
             }
           },
@@ -204,7 +204,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
             } else if (state is CloseBillsSuccess) {
               await BlocProvider.of<BillsCubit>(
                 context,
-              ).fetchActiveBills(FetchBillsParam());
+              ).fetchActiveBills(RequestParameters());
               showGreenFlush(context, LangKeys.ok.tr());
               hideLoader(context);
             } else if (state is CloseBillsLoading) {

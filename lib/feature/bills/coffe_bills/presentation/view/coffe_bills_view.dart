@@ -18,7 +18,7 @@ class CoffeeBillsView extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               getIt<CoffeeBillsCubit>()
-                ..fetchBillsCoffee(FetchBillsParam(branch: ['all'])),
+                ..fetchBillsCoffee(RequestParameters(branch: ['all'])),
         ),
       ],
       child: CoffeeBillsViewBody(),

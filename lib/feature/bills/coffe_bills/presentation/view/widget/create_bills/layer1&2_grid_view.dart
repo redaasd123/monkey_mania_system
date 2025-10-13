@@ -53,14 +53,14 @@ class Layer1A2GridView extends StatelessWidget {
                   if (state.status == LayersStatus.getLayerOneSuccess ||
                       state.status == LayersStatus.cashedLayerOne) {
                     context.read<LayersCubit>().getLayerTow(
-                      FetchBillsParam(
+                      RequestParameters(
                         layer1: item.name,
                         branch: [branch],
                       ),
                     );
                   } else {
                     context.read<LayersCubit>().getAllLayer(
-                      FetchBillsParam(
+                      RequestParameters(
                         layer1: state.selectedLayer1,
                         layer2: item.name,
                         branch: [branch],

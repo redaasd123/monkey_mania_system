@@ -21,7 +21,7 @@ class MaterialExpenseViewBody extends StatelessWidget {
           listener: (context, state) {
             if (state is BranchSelectedState) {
               context.read<MaterialExpenseCubit>().fetchAllMaterialExpense(
-                FetchBillsParam(branch: [state.branchId]),
+                RequestParameters(branch: [state.branchId]),
               );
             }
           },

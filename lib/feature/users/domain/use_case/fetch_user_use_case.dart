@@ -5,12 +5,12 @@ import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/fetch_
 import 'package:monkey_app/feature/users/domain/entity/user_entity.dart';
 import 'package:monkey_app/feature/users/domain/repo/users_repo.dart';
 
-class FetchUserUseCase extends MyUseCase<UserEntity,FetchBillsParam>{
+class FetchUserUseCase extends MyUseCase<UserEntity,RequestParameters>{
   final UsersRepo usersRepo;
 
   FetchUserUseCase({required this.usersRepo});
   @override
-  Future<Either<Failure, UserEntity>> call(FetchBillsParam param)async{
+  Future<Either<Failure, UserEntity>> call(RequestParameters param)async{
   return await usersRepo.fetchUsers(param);
   }
 }

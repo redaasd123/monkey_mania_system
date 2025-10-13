@@ -19,7 +19,7 @@ enum BillsStatus {
 }
 
 class BillsState extends Equatable {
-  final FetchBillsParam filters;
+  final RequestParameters filters;
   final BillsStatus status;
   final List<BillsEntity> bills;
   final String? errorMessage;
@@ -30,7 +30,7 @@ class BillsState extends Equatable {
   final bool isLoading;
 
   const BillsState({
-    this.filters  = const FetchBillsParam(),
+    this.filters  = const RequestParameters(),
     this.status = BillsStatus.initial,
     this.bills = const [], // ✅統 واحد
     this.errorMessage,
@@ -42,7 +42,7 @@ class BillsState extends Equatable {
   });
 
   BillsState copyWith({
-    FetchBillsParam? filters,
+    RequestParameters? filters,
     BillsStatus? status,
     List<BillsEntity>? bills,
     String? errorMessage,

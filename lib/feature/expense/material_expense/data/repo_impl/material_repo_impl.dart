@@ -33,7 +33,7 @@ class MaterialExpenseImpl extends MaterialExpenseRepo {
 
   @override
   Future<Either<Failure, MaterialExpenseEntity>> fetchMaterialExpense(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await remoteDataSource.fetchMaterialExpense(param);
@@ -65,7 +65,7 @@ class MaterialExpenseImpl extends MaterialExpenseRepo {
 
   @override
   Future<Either<Failure, List<MaterialsEntity>>> fetchMaterials(
-    FetchBillsParam param,
+    RequestParameters param,
   )async {
     try {
       var result = await remoteDataSource.fetchMaterials(param);

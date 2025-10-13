@@ -11,29 +11,30 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/param/create_bills_coffee_param.dart';
 
+import '../../../../../core/utils/extract_page.dart';
 import '../../../main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../domain/entity/coffee_bills_page_entity.dart';
 
 abstract class BillsCoffeeDataSource {
-  Future<BillsCoffeePageEntity> fetchBillsCoffee(FetchBillsParam param);
+  Future<BillsCoffeePageEntity> fetchBillsCoffee(RequestParameters param);
 
-  Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(FetchBillsParam param);
+  Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(RequestParameters param);
 
   Future<GetOneBillsCoffeeEntity> getOneBillsCoffee(int id);
 
   Future<BillsCoffeeEntity> createBillsCoffee(CreateBillsPCoffeeParam param);
 
-  Future<List<LayersEntity>> getLayerOne(FetchBillsParam param);
+  Future<List<LayersEntity>> getLayerOne(RequestParameters param);
 
-  Future<List<LayersEntity>> getLayerTow(FetchBillsParam param);
+  Future<List<LayersEntity>> getLayerTow(RequestParameters param);
 
-  Future<List<GetAllLayerEntity>> getAllLayers(FetchBillsParam param);
+  Future<List<GetAllLayerEntity>> getAllLayers(RequestParameters param);
 }
 
 class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   @override
   Future<List<BillsCoffeeEntity>> fetchActiveBillsCoffee(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     final url = 'product_bill/active/all?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
@@ -48,7 +49,7 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<BillsCoffeePageEntity> fetchBillsCoffee(FetchBillsParam param) async {
+  Future<BillsCoffeePageEntity> fetchBillsCoffee(RequestParameters param) async {
     final url = 'product_bill/all?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
 
@@ -60,11 +61,6 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
       bills.add(entity);
     }
 
-    int? extractPage(String? url) {
-      if (url == null) return null;
-      final uri = Uri.parse(url);
-      return int.tryParse(uri.queryParameters['page'] ?? '');
-    }
 
     return BillsCoffeePageEntity(
       billsCoffeeEntity: bills,
@@ -93,7 +89,7 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<List<LayersEntity>> getLayerOne(FetchBillsParam param) async {
+  Future<List<LayersEntity>> getLayerOne(RequestParameters param) async {
     final url = 'branch_product/layer1?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
 
@@ -107,7 +103,7 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<List<LayersEntity>> getLayerTow(FetchBillsParam param) async {
+  Future<List<LayersEntity>> getLayerTow(RequestParameters param) async {
     final url = 'branch_product/layer2?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
 
@@ -121,7 +117,7 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
   }
 
   @override
-  Future<List<GetAllLayerEntity>> getAllLayers(FetchBillsParam param) async {
+  Future<List<GetAllLayerEntity>> getAllLayers(RequestParameters param) async {
     final url = 'branch_product/all?${param.toQueryParams()}';
     var response = await getIt.get<Api>().get(endPoint: url);
 

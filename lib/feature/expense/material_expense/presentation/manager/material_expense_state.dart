@@ -20,7 +20,7 @@ enum MaterialExpenseStatus {
 }
 
 class MaterialExpenseState extends Equatable {
-  final FetchBillsParam filters;
+  final RequestParameters filters;
   final List<MaterialExpenseItemEntity>? items;
   final List<MaterialsEntity>? materials;
   final MaterialExpenseStatus status;
@@ -34,7 +34,7 @@ class MaterialExpenseState extends Equatable {
   /////////////create
 
   const MaterialExpenseState({
-    this.filters = const FetchBillsParam(),
+    this.filters = const RequestParameters(),
     this.materials,
     this.searchQuery = '',
     this.isSearching = false,
@@ -47,7 +47,7 @@ class MaterialExpenseState extends Equatable {
   });
 
   MaterialExpenseState copyWith({
-    FetchBillsParam? filters,
+    RequestParameters? filters,
     String? searchQuery,
     bool? isSearching,
     List<MaterialsEntity>? materials,

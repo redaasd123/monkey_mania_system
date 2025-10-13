@@ -7,13 +7,13 @@ import '../entity/Bills_entity.dart';
 import '../entity/bills_page_entity.dart';
 import '../repo/bills_repo.dart';
 
-class BillsUseCase extends MyUseCase<BillsPageEntity, FetchBillsParam> {
+class BillsUseCase extends MyUseCase<BillsPageEntity, RequestParameters> {
   final BillsRepo billsRepo;
 
   BillsUseCase({required this.billsRepo});
 
   @override
-  Future<Either<Failure, BillsPageEntity>> call(FetchBillsParam param) async {
+  Future<Either<Failure, BillsPageEntity>> call(RequestParameters param) async {
     return await billsRepo.fetchBills(param);
   }
 }

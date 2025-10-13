@@ -11,7 +11,7 @@ class BillsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          getIt<BillsCubit>()..fetchBills(FetchBillsParam(branch: ['all'])),
+          getIt<BillsCubit>()..fetchBills(RequestParameters(branch: ['all'])),
       child: BillsViewBody(),
     );
   }

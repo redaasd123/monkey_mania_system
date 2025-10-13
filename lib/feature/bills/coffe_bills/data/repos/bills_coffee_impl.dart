@@ -19,7 +19,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
 
   @override
   Future<Either<Failure, List<BillsCoffeeEntity>>> fetchActiveCoffeeBills(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsCoffeeDataSource.fetchActiveBillsCoffee(param);
@@ -33,7 +33,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
 
   @override
   Future<Either<Failure, BillsCoffeePageEntity>> fetchAllCoffeeBills(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsCoffeeDataSource.fetchBillsCoffee(param);
@@ -75,7 +75,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
 
   @override
   Future<Either<Failure, List<LayersEntity>>> getLayerOne(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsCoffeeDataSource.getLayerOne(param);
@@ -89,7 +89,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
 
   @override
   Future<Either<Failure, List<LayersEntity>>> getLayerTow(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsCoffeeDataSource.getLayerTow(param);
@@ -103,7 +103,7 @@ class BillsCoffeeImpl extends CoffeeBillsRepo {
 
   @override
   Future<Either<Failure, List<GetAllLayerEntity>>> getAllLayers(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsCoffeeDataSource.getAllLayers(param);

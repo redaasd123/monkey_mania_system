@@ -21,7 +21,7 @@ class GeneralExpenseCubit extends Cubit<GeneralExpenseState> {
   final CreateGeneralExpenseUseCase createGeneralExpenseUseCase;
   final UpdateGeneralExpenseUseCase updateGeneralExpenseUseCase;
 
-  Future<void> fetchAllGeneralExpense(FetchBillsParam param) async {
+  Future<void> fetchAllGeneralExpense(RequestParameters param) async {
     final currentPage = param.page ?? state.currentPage;
     if (state.isLoading) return;
     if (currentPage == 1) {
@@ -165,7 +165,7 @@ class GeneralExpenseCubit extends Cubit<GeneralExpenseState> {
           status: GeneralExpenseStatus.loading,
         ),
       );
-      fetchAllGeneralExpense(FetchBillsParam(page: 1, query: null,branch: ['all']));
+      fetchAllGeneralExpense(RequestParameters(page: 1, query: null,branch: ['all']));
       return;
     }
 
@@ -181,10 +181,10 @@ class GeneralExpenseCubit extends Cubit<GeneralExpenseState> {
           status: GeneralExpenseStatus.searchLoading,
         ),
       );
-      fetchAllGeneralExpense(FetchBillsParam(page: 1, query: trimmedQuery,branch: ['all']));
+      fetchAllGeneralExpense(RequestParameters(page: 1, query: trimmedQuery,branch: ['all']));
     }
   }
-  void setParam(FetchBillsParam param) {
+  void setParam(RequestParameters param) {
     emit(state.copyWith(filters: param));
   }
 }

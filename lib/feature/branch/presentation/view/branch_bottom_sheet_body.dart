@@ -227,7 +227,7 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                               return;
                             }
 
-                            final param = FetchBillsParam(
+                            final param = RequestParameters(
                               branch: selectedBranch,
                               startDate: startDate,
                               endDate: endDate,

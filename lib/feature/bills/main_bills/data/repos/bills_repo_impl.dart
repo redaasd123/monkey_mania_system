@@ -20,7 +20,7 @@ class BillsRepoImpl extends BillsRepo {
 
   @override
   Future<Either<Failure, BillsPageEntity>> fetchBills(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsRemoteDataSource.fetchBills(param);
@@ -77,7 +77,7 @@ class BillsRepoImpl extends BillsRepo {
 
   @override
   Future<Either<Failure, List<BillsEntity>>> fetchActiveBills(
-    FetchBillsParam param,
+    RequestParameters param,
   ) async {
     try {
       var result = await billsRemoteDataSource.fetchActiveBills(param);

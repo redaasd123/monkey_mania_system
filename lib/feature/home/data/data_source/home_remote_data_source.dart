@@ -7,12 +7,12 @@ import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../domain/entity/home_entity.dart';
 
 abstract class HomeRemoteDataSource {
-  Future<HomeEntity> fetchDashBoardData(FetchBillsParam param);
+  Future<HomeEntity> fetchDashBoardData(RequestParameters param);
 }
 
 class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   @override
-  Future<HomeEntity> fetchDashBoardData(FetchBillsParam param) async {
+  Future<HomeEntity> fetchDashBoardData(RequestParameters param) async {
     var result = await getIt.get<Api>().get(
       endPoint: 'dashboard/statistics?${param.toQueryParams()}',
     );

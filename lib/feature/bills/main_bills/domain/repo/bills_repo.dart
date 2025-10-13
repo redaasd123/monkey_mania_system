@@ -12,7 +12,7 @@ import '../use_case/param/create_bills_param.dart';
 import '../use_case/param/fetch_bills_param.dart';
 
 abstract class BillsRepo {
-  Future<Either<Failure, BillsPageEntity>> fetchBills(FetchBillsParam param);
+  Future<Either<Failure, BillsPageEntity>> fetchBills(RequestParameters param);
 
   Future<Either<Failure, BillsEntity>> createBills(CreateBillsParam param);
 
@@ -21,7 +21,7 @@ abstract class BillsRepo {
   Future<Either<Failure, dynamic>> closeBills(CloseBillsParam param);
 
   Future<Either<Failure, List<BillsEntity>>> fetchActiveBills(
-    FetchBillsParam param,
+    RequestParameters param,
   );
   Future<Either<Failure, dynamic>> updateCalculations(UpdateCalculationsParam param);
 

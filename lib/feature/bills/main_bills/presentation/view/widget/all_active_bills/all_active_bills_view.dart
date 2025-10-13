@@ -20,7 +20,7 @@ class _GetAllActiveBillsViewState extends State<GetAllActiveBillsView> {
     return BlocProvider(
       create: (context) =>
           getIt<BillsCubit>()
-            ..fetchActiveBills(FetchBillsParam(branch: ['all'])),
+            ..fetchActiveBills(RequestParameters(branch: ['all'])),
       child: AllActiveBillsViewBody(),
     );
   }

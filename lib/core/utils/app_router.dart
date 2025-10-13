@@ -59,7 +59,7 @@ abstract class AppRouter {
         builder: (context, state) {
           return BlocProvider(
             create: (context) =>
-                getIt<UserCubit>()..fetchUsers(FetchBillsParam()),
+                getIt<UserCubit>()..fetchUsers(RequestParameters()),
             child: UserView(),
           );
         },
@@ -100,7 +100,7 @@ abstract class AppRouter {
               BlocProvider(
                 create: (context) =>
                     getIt<LayersCubit>()
-                      ..getLayerOne(FetchBillsParam(branch: [branch])),
+                      ..getLayerOne(RequestParameters(branch: [branch])),
               ),
             ],
 
@@ -149,7 +149,7 @@ abstract class AppRouter {
           return BlocProvider(
             create: (context) =>
                 getIt<GeneralExpenseCubit>()
-                  ..fetchAllGeneralExpense(FetchBillsParam(branch: ['all'])),
+                  ..fetchAllGeneralExpense(RequestParameters(branch: ['all'])),
             child: const GeneralExpenseView(),
           );
         },
@@ -172,7 +172,7 @@ abstract class AppRouter {
             providers: [
               BlocProvider(
                 create: (context) => getIt<MaterialExpenseCubit>()
-                  ..fetchAllMaterialExpense(FetchBillsParam(branch: ['all'])),
+                  ..fetchAllMaterialExpense(RequestParameters(branch: ['all'])),
               ),
             ],
             child: const MaterialExpenseView(),

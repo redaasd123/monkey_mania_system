@@ -18,7 +18,7 @@
    searchLoading,
  }
  class BillsCoffeeState extends Equatable {
-   final FetchBillsParam filters;
+   final RequestParameters filters;
    final CoffeeBillsStatus status;
    final List<BillsCoffeeEntity> bills;
    final String? errorMessage;
@@ -29,7 +29,7 @@
    final bool isLoading;
 
    const BillsCoffeeState({
-     this.filters = const FetchBillsParam(),
+     this.filters = const RequestParameters(),
      this.status = CoffeeBillsStatus.initial,
      this.bills = const [], // ✅統 واحد
      this.errorMessage,
@@ -41,7 +41,7 @@
    });
 
    BillsCoffeeState copyWith({
-     FetchBillsParam? filters,
+     RequestParameters? filters,
      GetOneBillsCoffeeEntity? getOneBills,
      CoffeeBillsStatus? status,
      List<BillsCoffeeEntity>? bills,

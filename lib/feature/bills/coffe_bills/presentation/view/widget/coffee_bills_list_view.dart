@@ -42,7 +42,7 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
 
     if (currentScroll >= 0.8 * maxScroll && state.hasMore && !state.isLoading) {
       cubit.fetchBillsCoffee(
-        FetchBillsParam(page: state.currentPage,branch: ['all']),
+        RequestParameters(page: state.currentPage,branch: ['all']),
       );
     }
   }

@@ -11,7 +11,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeUseCase) : super(HomeState());
   final HomeUseCase homeUseCase;
 
-  Future<void> fetchDashBoardData(FetchBillsParam param) async {
+  Future<void> fetchDashBoardData(RequestParameters param) async {
     emit(state.copyWith(status: HomeStatus.loading));
     final result = await homeUseCase.call(param);
     result.fold((failure) {
