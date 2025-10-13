@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 
 import '../../../../../core/errors/off_line_failure.dart';
 import '../../../../../core/param/create_school_param/create_school_param.dart';
@@ -68,8 +69,7 @@ class SchoolCubit extends Cubit<SchoolState> {
           emit(
             state.copyWith(
               status: SchoolStatus.offLineState,
-              errMessage:
-                  'لم يتوفر اتصال بالإنترنت وتم الحفظ مؤقتاً، وسيتم الإرسال تلقائياً عند توفر الاتصال. قد يستغرق هذا الأمر بضع دقائق.',
+              errMessage: LangKeys.messageFailureOffLine.tr(),
             ),
           );
         } else {
@@ -84,10 +84,12 @@ class SchoolCubit extends Cubit<SchoolState> {
       },
       (success) {
         final updatedList = List<SchoolEntity>.from(state.allSchool);
-        final index = updatedList.indexWhere((school)=>school.id==success.id);
-        if(index!=-1){
-          updatedList[index]=success;
-        }else{
+        final index = updatedList.indexWhere(
+          (school) => school.id == success.id,
+        );
+        if (index != -1) {
+          updatedList[index] = success;
+        } else {
           updatedList..insert(0, success);
         }
         emit(
@@ -109,8 +111,8 @@ class SchoolCubit extends Cubit<SchoolState> {
           emit(
             state.copyWith(
               status: SchoolStatus.offLineState,
-              errMessage:
-              LangKeys.messageFailureOffLine.tr(),            ),
+              errMessage: LangKeys.messageFailureOffLine.tr(),
+            ),
           );
         } else {
           if (!isClosed)

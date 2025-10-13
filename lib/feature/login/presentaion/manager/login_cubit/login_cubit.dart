@@ -1,7 +1,7 @@
+// login_cubit.dart
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 import 'package:monkey_app/feature/login/domain/use_case/login_repo_use_case.dart';
-
 import '../../../../../core/param/login_param/login_param.dart';
 
 part 'login_state.dart';
@@ -9,32 +9,36 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepoUseCase loginRepoUseCase;
 
-  LoginCubit(this.loginRepoUseCase) : super(LoginInitialState());
+  LoginCubit(this.loginRepoUseCase) : super(const LoginState());
 
-  Future<void> loginUser({required String number, required String pass}) async {
-    emit(LoginLoadingState());
+  Future<void> loginUser({
+    required String number,
+    required String pass,
+  }) async {
+    emit(state.copyWith(status: LoginStatus.loading));
 
     try {
-      final result = await loginRepoUseCase.call(
+      final result = await loginRepoUseCase(
         LoginParam(pass: pass, number: number),
       );
 
-      if (isClosed) return;
-
       result.fold(
-        (failure) {
-          if (isClosed) return;
-          emit(LoginFailureState(errMessage: failure.errMessage));
-        },
-        (login) {
-          if (isClosed) return;
-          emit(LoginSuccessState());
-        },
+            (failure) => emit(
+          state.copyWith(
+            status: LoginStatus.failure,
+            errMessage: failure.errMessage,
+          ),
+        ),
+            (_) => emit(
+          state.copyWith(status: LoginStatus.success),
+        ),
       );
     } catch (e) {
-      if (isClosed) return;
       emit(
-        LoginFailureState(errMessage: '⚠️ حدث خطأ غير متوقع: ${e.toString()}'),
+        state.copyWith(
+          status: LoginStatus.failure,
+          errMessage: '⚠️ حدث خطأ غير متوقع: ${e.toString()}',
+        ),
       );
     }
   }

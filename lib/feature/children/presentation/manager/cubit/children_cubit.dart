@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:monkey_app/core/utils/constans.dart';
 
 import '../../../../../core/errors/off_line_failure.dart';
 import '../../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../../core/param/update_children_param/update_children_param.dart';
+import '../../../../../core/utils/langs_key.dart';
 import '../../../domain/children_use_case/create_chil_use_case.dart';
 import '../../../domain/children_use_case/fetch_children_use_case.dart';
 import '../../../domain/children_use_case/update_children_use_case.dart';
@@ -27,7 +30,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
 
     final pageNumber = param.pageNumber ?? state.currentPage;
 
-    // تحديث حالة التحميل
     emit(
       state.copyWith(
         isLoading: true,
@@ -49,7 +51,6 @@ class ChildrenCubit extends Cubit<ChildrenState> {
         );
       },
       (childrenData) {
-        // لو الصفحة الأولى وفاضية
         if (childrenData.children.isEmpty && pageNumber == 1) {
           emit(
             state.copyWith(
@@ -62,12 +63,10 @@ class ChildrenCubit extends Cubit<ChildrenState> {
           return;
         }
 
-        // دمج البيانات الجديدة مع القديمة
         final updatedList = pageNumber == 1
             ? childrenData.children
             : [...state.allChildren, ...childrenData.children];
 
-        // هل يوجد صفحات لاحقة
         final more = childrenData.nextPage != null;
 
         emit(
@@ -134,8 +133,7 @@ class ChildrenCubit extends Cubit<ChildrenState> {
           emit(
             state.copyWith(
               status: ChildrenStatus.offLineState,
-              errMessage:
-                  'لم يتوفر اتصال بالانترنت وتم الحفظ مؤقتا وسيتم الارسال عند توفر الاتصال.',
+              errMessage: LangKeys.messageFailureOffLine.tr(),
             ),
           );
         } else {
@@ -172,8 +170,7 @@ class ChildrenCubit extends Cubit<ChildrenState> {
           emit(
             state.copyWith(
               status: ChildrenStatus.offLineState,
-              errMessage:
-                  'لم يتوفر اتصال بالانترنت وتم الحفظ مؤقتا وسيتم الارسال عند توفر الاتصال.',
+              errMessage: LangKeys.messageFailureOffLine.tr(),
             ),
           );
         } else {
@@ -187,10 +184,10 @@ class ChildrenCubit extends Cubit<ChildrenState> {
       },
       (success) {
         final updateList = List<ChildrenEntity>.from(state.allChildren);
-        final index = updateList.indexWhere((child)=>child.id==success.id);
-        if(index!=-1){
-          updateList[index]=success;
-        }else{
+        final index = updateList.indexWhere((child) => child.id == success.id);
+        if (index != -1) {
+          updateList[index] = success;
+        } else {
           updateList..insert(0, success);
         }
         emit(

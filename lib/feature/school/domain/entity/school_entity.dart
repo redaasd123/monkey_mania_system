@@ -14,7 +14,7 @@ class SchoolEntity {
   final String? notes;
   @HiveField(4)
   final DateTime created;
-  @HiveField(5) // ← DateTime بدل String
+  @HiveField(5)
   final DateTime updated;
   @HiveField(6)
   final String createdBy;

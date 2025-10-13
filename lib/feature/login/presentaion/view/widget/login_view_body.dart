@@ -23,25 +23,41 @@ class LoginViewBody extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) async {
         hideLoader(context);
-        if (state is LoginLoadingState) {
-          showLoader(context);
-        } else if (state is LoginSuccessState) {
-          final role = AuthHelper.getRole();
-          if (role == 'owner' || role == 'admin') {
-            showSelectBranchWithLoginBottomSheet(
-              context,
-              onSelected: (id) async {
-                 Hive.box(kAuthBox).put(AuthKeys.branch, id);
-                showGreenFlush(context, LangKeys.loginSuccess.tr());
-                await Future.delayed(const Duration(milliseconds: 1000));
-                if (context.mounted) {
-                  GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
-                }
-              },
-            );
-          }
-        } else if (state is LoginFailureState) {
-          showRedFlush(context, state.errMessage);
+
+        switch (state.status) {
+          case LoginStatus.loading:
+            showLoader(context);
+            break;
+
+          case LoginStatus.success:
+            final role = AuthHelper.getRole();
+            if (role == 'owner' || role == 'admin') {
+              showSelectBranchWithLoginBottomSheet(
+                context,
+                onSelected: (id) async {
+                  Hive.box(kAuthBox).put(AuthKeys.branch, id);
+                  showGreenFlush(context, LangKeys.loginSuccess.tr());
+                  await Future.delayed(const Duration(milliseconds: 1000));
+                  if (context.mounted) {
+                    GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
+                  }
+                },
+              );
+            } else {
+              showGreenFlush(context, LangKeys.loginSuccess.tr());
+              await Future.delayed(const Duration(milliseconds: 1000));
+              if (context.mounted) {
+                GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
+              }
+            }
+            break;
+
+          case LoginStatus.failure:
+            showRedFlush(context, state.errMessage ?? "حدث خطأ غير متوقع");
+            break;
+
+          case LoginStatus.initial:
+            break;
         }
       },
       child: const LoginPageItem(),

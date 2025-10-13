@@ -9,19 +9,16 @@ import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
 
 Future<CreateUserParam?> showUserBottomSheet(
-    BuildContext context,
-    String title,
-    bool isCreate, {
-      UserDataEntity? data,
-    }) {
+  BuildContext context,
+  String title,
+  bool isCreate, {
+  UserDataEntity? data,
+}) {
   return showModalBottomSheet(
     isScrollControlled: true,
     context: context,
-    builder: (_) => UserBottomSheet(
-      title: title,
-      data: data,
-      isCreate: isCreate,
-    ),
+    builder: (_) =>
+        UserBottomSheet(title: title, data: data, isCreate: isCreate),
   );
 }
 
@@ -54,7 +51,7 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
     'owner',
     'admin',
     'reception',
-    'manager'
+    'manager',
   ];
 
   @override
@@ -172,7 +169,12 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildField(nameCtrl, TextInputType.name, LangKeys.name.tr(), Icons.person),
+            _buildField(
+              nameCtrl,
+              TextInputType.name,
+              LangKeys.name.tr(),
+              Icons.person,
+            ),
             const SizedBox(height: 12),
             _buildField(
               passCtrl,
@@ -208,16 +210,14 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             DropdownButtonFormField<String>(
               value: selectRole,
               onTap: () {
-                FocusScope.of(context).unfocus(); // يقفل الكيبورد
+                FocusScope.of(context).unfocus();
               },
               decoration: InputDecoration(
                 hintText: "Select Role",
                 hintStyle: TextStyle(
-                  color: colorScheme.onSurface.withOpacity(0.6),
                   fontWeight: FontWeight.w500,
                 ),
                 filled: true,
-                fillColor: colorScheme.surfaceVariant.withOpacity(0.9),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 14,
@@ -304,13 +304,13 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
   }
 
   Widget _buildField(
-      TextEditingController controller,
-      TextInputType keyboardType,
-      String label,
-      IconData icon, {
-        bool obscureText = false,
-        bool isRequired = true,
-      }) {
+    TextEditingController controller,
+    TextInputType keyboardType,
+    String label,
+    IconData icon, {
+    bool obscureText = false,
+    bool isRequired = true,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     bool isObscured = obscureText;
 
@@ -322,7 +322,9 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
           obscureText: isObscured,
           style: TextStyle(color: colorScheme.onSurface),
           validator: (value) {
-            if (widget.isCreate && isRequired && (value == null || value.trim().isEmpty)) {
+            if (widget.isCreate &&
+                isRequired &&
+                (value == null || value.trim().isEmpty)) {
               return '$label ${LangKeys.nameRequired.tr()}';
             }
             return null;
@@ -340,16 +342,16 @@ class _UserBottomSheetState extends State<UserBottomSheet> {
             ),
             suffixIcon: obscureText
                 ? IconButton(
-              icon: Icon(
-                isObscured ? Icons.visibility : Icons.visibility_off,
-                color: colorScheme.onSurface.withOpacity(0.7),
-              ),
-              onPressed: () {
-                setState(() {
-                  isObscured = !isObscured;
-                });
-              },
-            )
+                    icon: Icon(
+                      isObscured ? Icons.visibility : Icons.visibility_off,
+                      color: colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isObscured = !isObscured;
+                      });
+                    },
+                  )
                 : null,
           ),
         );

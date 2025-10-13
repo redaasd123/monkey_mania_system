@@ -1,16 +1,26 @@
 part of 'login_cubit.dart';
 
-@immutable
-sealed class LoginState {}
+enum LoginStatus { initial, loading, success, failure }
 
-final class LoginInitialState extends LoginState {}
+class LoginState extends Equatable {
+  final LoginStatus status;
+  final String? errMessage;
 
-final class LoginFailureState extends LoginState {
-  final String errMessage;
+  const LoginState({
+    this.status = LoginStatus.initial,
+    this.errMessage,
+  });
 
-  LoginFailureState({required this.errMessage});
+  LoginState copyWith({
+    LoginStatus? status,
+    String? errMessage,
+  }) {
+    return LoginState(
+      status: status ?? this.status,
+      errMessage: errMessage ?? this.errMessage,
+    );
+  }
+
+  @override
+  List<Object?> get props => [status, errMessage];
 }
-
-final class LoginLoadingState extends LoginState {}
-
-final class LoginSuccessState extends LoginState {}
