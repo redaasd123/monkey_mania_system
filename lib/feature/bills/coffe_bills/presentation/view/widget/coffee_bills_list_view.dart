@@ -72,15 +72,16 @@ class _CoffeeBillsListViewState extends State<CoffeeBillsListView> {
               final modal = bills[index];
               return InkWell(
                 onTap: (){
-                  showReturnProductBottomSheet(context);
-                  final cubit = context.read<CoffeeBillsCubit>();
+                  GoRouter.of(
+                        context,
+                      ).push(AppRouter.kShowDetailCoffeeBills, extra: modal.id);
+                  //
+                  // showReturnProductBottomSheet(context);
+                  // final cubit = context.read<CoffeeBillsCubit>();
                 },
                 child: CoffeeBillsItem(
-                  onTap: () {
-                    GoRouter.of(
-                      context,
-                    ).push(AppRouter.kShowDetailCoffeeBills, extra: modal.id);
-                  },
+                  // onTap: () {
+                  //    // },
                   billsCoffeeEntity: modal,
                 ),
               );

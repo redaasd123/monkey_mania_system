@@ -9,8 +9,6 @@ class FetchChildrenParam{
     return{
       "page":pageNumber??1,
       "search":query??'',
-
-
   };
 
 }

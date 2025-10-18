@@ -9,7 +9,10 @@ Future<void> showSelectBranchWithLoginBottomSheet(
     BuildContext context, {
       required void Function(int) onSelected,
     }) async {
-  BlocProvider.of<BranchCubit>(context).fetchBranch();
+  final cubit = BlocProvider.of<BranchCubit>(context);
+  if (cubit.state.status != BranchStatus.success) {
+    await cubit.fetchBranches();
+  }
 
   final data = await showModalBottomSheet(
     context: context,

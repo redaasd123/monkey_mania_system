@@ -7,8 +7,8 @@ import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/coffee_bills_list_view.dart';
 
 import '../../../../../../core/download_fiels/download_file.dart';
+import '../../../../../../core/secret/secret.dart';
 import '../../../../../../core/utils/app_router.dart';
-import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/utils/my_app_drwer.dart';
 import '../../../../../../core/utils/poppup_menu_button.dart';
@@ -130,9 +130,10 @@ class CoffeeBillsBuilder extends StatelessWidget {
       listeners: [
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected &&
+                state.selectedBranchId != null) {
               context.read<CoffeeBillsCubit>().fetchBillsCoffee(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId!]),
               );
             }
           },

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:monkey_app/core/utils/constans.dart';
+import 'package:monkey_app/feature/children/domain/children_use_case/non_active.dart';
 
 import '../../../../../core/errors/off_line_failure.dart';
 import '../../../../../core/param/create_children_params/create_children_params.dart';
@@ -16,9 +16,11 @@ import 'children_state.dart';
 class ChildrenCubit extends Cubit<ChildrenState> {
   final FetchChildrenUseCase fetchChildrenUseCase;
   final CreateChildUseCase createChildUseCase;
+  final ChildrenNonActiveUseCase childrenNonActiveUseCase;
   final UpdateChildrenUseCase updateChildrenUseCase;
 
   ChildrenCubit({
+    required this.childrenNonActiveUseCase,
     required this.fetchChildrenUseCase,
     required this.createChildUseCase,
     required this.updateChildrenUseCase,
@@ -76,6 +78,29 @@ class ChildrenCubit extends Cubit<ChildrenState> {
             allChildren: updatedList,
             hasMore: more,
             currentPage: more ? pageNumber + 1 : pageNumber,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> childrenNonActive(FetchChildrenParam param) async {
+    emit(state.copyWith(status: ChildrenStatus.nonLoading));
+    final result = await childrenNonActiveUseCase.call(param);
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: ChildrenStatus.nonFailure,
+            errMessage: failure.errMessage,
+          ),
+        );
+      },
+      (children) {
+        emit(
+          state.copyWith(
+            status: ChildrenStatus.nonSuccess,
+            nonActiveChildren: children,
           ),
         );
       },

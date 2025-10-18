@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:monkey_app/feature/children/domain/entity/children/non_active.dart';
 import '../../../domain/entity/children/children_entity.dart';
 
 enum ChildrenStatus {
@@ -15,11 +16,14 @@ enum ChildrenStatus {
   searchLoading,
   offLineState,
   noResultSearch,
+  nonSuccess,
+  nonFailure,
+  nonLoading,
   empty,
-
 }
 
 class ChildrenState extends Equatable {
+  final List<ChildrenNonActiveEntity> nonActiveChildren;
   final List<ChildrenEntity> allChildren;
   final String? errMessage;
   final bool isLoading;
@@ -29,7 +33,8 @@ class ChildrenState extends Equatable {
   final bool isSearching;
   final ChildrenStatus status;
 
-  ChildrenState({
+  const ChildrenState({
+    this.nonActiveChildren = const[],
     this.errMessage,
     this.status = ChildrenStatus.initial,
     this.allChildren = const [],
@@ -41,6 +46,7 @@ class ChildrenState extends Equatable {
   });
 
   ChildrenState copyWith({
+    List<ChildrenNonActiveEntity>? nonActiveChildren,
     String? errMessage,
     List<ChildrenEntity>? allChildren,
     bool? isLoading,
@@ -51,6 +57,7 @@ class ChildrenState extends Equatable {
     ChildrenStatus? status,
   }) {
     return ChildrenState(
+      nonActiveChildren: nonActiveChildren??this.nonActiveChildren,
       errMessage: errMessage??this.errMessage,
       status: status ?? this.status,
       isSearching: isSearching ?? this.isSearching,
@@ -64,6 +71,7 @@ class ChildrenState extends Equatable {
 
   @override
   List<Object?> get props => [
+    nonActiveChildren,
     allChildren,
     searchQuery,
     status,

@@ -6,6 +6,7 @@ import 'package:monkey_app/core/widget/widget/custom_button.dart';
 import 'package:monkey_app/feature/csv_analytics/presentation/manager/anlytic_cubit.dart';
 
 import '../../../../../core/download_fiels/download_file.dart';
+import '../../../../../core/secret/secret.dart';
 import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
 
@@ -111,7 +112,7 @@ final colorScheme =Theme.of(context).colorScheme;
           await downloader.downloadFile(
             context,
             '${kBaseUrl}csv_analytics/file/?${param.toQueryParams()}',
-            'analytics',
+            'analytics.csv',
           );
         },)
         ],

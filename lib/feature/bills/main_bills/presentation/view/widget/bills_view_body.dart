@@ -8,6 +8,7 @@ import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/view/widget/show_bills_bottom_sheet.dart';
 
 import '../../../../../../core/download_fiels/download_file.dart';
+import '../../../../../../core/secret/secret.dart';
 import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../../core/utils/my_app_drwer.dart';
@@ -198,11 +199,12 @@ class AllBillsBlocConsumer extends StatelessWidget {
 
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected && state.selectedBranchId != null) {
               context.read<BillsCubit>().fetchBills(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId!]),
               );
             }
+
           },
         ),
       ],

@@ -10,6 +10,7 @@ import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/save_data.dart';
 import 'package:monkey_app/feature/children/data/data_source/children_remote_data_source.dart';
 import 'package:monkey_app/feature/children/domain/children_repo/children_repo.dart';
+import 'package:monkey_app/feature/children/domain/entity/children/non_active.dart';
 
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
@@ -23,9 +24,9 @@ class ChildrenRepoImpl extends ChildrenRepo {
   final ChildrenLocalDataSource childrenLocalDataSource;
 
   ChildrenRepoImpl(
-      this.childrenLocalDataSource, {
-        required this.childrenRemoteDataSource,
-      });
+    this.childrenLocalDataSource, {
+    required this.childrenRemoteDataSource,
+  });
 
   @override
   Future<Either<Failure, ChildrenPageEntity>> fetchChildren(
@@ -59,8 +60,8 @@ class ChildrenRepoImpl extends ChildrenRepo {
 
   @override
   Future<Either<Failure, ChildrenEntity>> createChildren(
-      CreateChildrenParam param,
-      ) async {
+    CreateChildrenParam param,
+  ) async {
     final box = Hive.box<CreateChildrenParam>(kSaveCreateChild);
 
     final isConnected = await checkInternet();
@@ -69,8 +70,9 @@ class ChildrenRepoImpl extends ChildrenRepo {
       try {
         var result = await childrenRemoteDataSource.createChildren(param);
 
-        final updatedList = await childrenRemoteDataSource
-            .fetchChildren(FetchChildrenParam(pageNumber: 1));
+        final updatedList = await childrenRemoteDataSource.fetchChildren(
+          FetchChildrenParam(pageNumber: 1),
+        );
         saveChildrenData(
           updatedList.children.cast<ChildrenEntity>(),
           kChildrenBox,
@@ -94,14 +96,16 @@ class ChildrenRepoImpl extends ChildrenRepo {
 
   @override
   Future<Either<Failure, ChildrenEntity>> updateChildren(
-      UpdateChildrenParam param,
-      ) async {
+    UpdateChildrenParam param,
+  ) async {
     final box = Hive.box<UpdateChildrenParam>(kSaveUpdateChild);
     final isConnected = await checkInternet();
     if (isConnected) {
       try {
         var result = await childrenRemoteDataSource.updateChildren(param);
-        final updatedList = await childrenRemoteDataSource.fetchChildren(FetchChildrenParam());
+        final updatedList = await childrenRemoteDataSource.fetchChildren(
+          FetchChildrenParam(),
+        );
         saveChildrenData(
           updatedList.children.cast<ChildrenEntity>(),
           kChildrenBox,
@@ -127,6 +131,22 @@ class ChildrenRepoImpl extends ChildrenRepo {
     if (result == ConnectivityResult.none) {
       return false; // لا يوجد اتصال بالإنترنت
     }
-    return true; // يوجد اتصال بالإنترنت
+    return true;
+  }
+
+  @override
+  Future<Either<Failure, List<ChildrenNonActiveEntity>>> childrenNonActive(
+    FetchChildrenParam param,
+  ) async{
+    try {
+      final result  = await childrenRemoteDataSource.childrenNonActive(param);
+      return right(result);
+    } on Exception catch (e) {
+      if(e is DioException){
+        return left(ServerFailure.fromDioError(e));
+      }else{
+        return left(ServerFailure(errMessage: e.toString()));
+      }
+    }
   }
 }

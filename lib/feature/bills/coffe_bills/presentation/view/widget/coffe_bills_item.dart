@@ -8,12 +8,12 @@ import '../../../domain/entity/bills_coffee_entity.dart';
 class CoffeeBillsItem extends StatelessWidget {
   const CoffeeBillsItem({
     super.key,
-    required this.onTap,
+   // required this.onTap,
     required this.billsCoffeeEntity,
   });
 
   final BillsCoffeeEntity billsCoffeeEntity;
-  final VoidCallback onTap;
+ // final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +88,17 @@ class CoffeeBillsItem extends StatelessWidget {
 
             const SizedBox(height: 14),
 
-            Align(
-              alignment: Alignment.center,
-              child:  InkWell(
-                onTap: onTap,
-                child: FaIcon(
-                  FontAwesomeIcons.eye,
-                  size: 26,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.center,
+            //   child:  InkWell(
+            //     onTap: onTap,
+            //     child: FaIcon(
+            //       FontAwesomeIcons.eye,
+            //       size: 26,
+            //       color: colorScheme.primary,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

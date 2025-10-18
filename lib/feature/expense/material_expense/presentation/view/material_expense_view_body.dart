@@ -19,11 +19,12 @@ class MaterialExpenseViewBody extends StatelessWidget {
       listeners: [
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected && state.selectedBranchId != null) {
               context.read<MaterialExpenseCubit>().fetchAllMaterialExpense(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId]),
               );
             }
+
           },
         ),
 

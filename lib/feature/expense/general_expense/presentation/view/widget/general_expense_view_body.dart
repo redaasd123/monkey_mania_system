@@ -21,11 +21,12 @@ class GeneralExpenseViewBody extends StatelessWidget {
         /// لو الفرع اتغير، اعمل fetch للـ coffee bills
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected && state.selectedBranchId != null) {
               context.read<GeneralExpenseCubit>().fetchAllGeneralExpense(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId!]),
               );
             }
+
           },
         ),
 

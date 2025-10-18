@@ -42,6 +42,7 @@ import 'package:monkey_app/feature/children/data/repos/children_repo_impl.dart';
 import 'package:monkey_app/feature/children/domain/children_repo/children_repo.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/create_chil_use_case.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/fetch_children_use_case.dart';
+import 'package:monkey_app/feature/children/domain/children_use_case/non_active.dart';
 import 'package:monkey_app/feature/children/domain/children_use_case/update_children_use_case.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 import 'package:monkey_app/feature/csv_analytics/data/impl/analytic_impl.dart';
@@ -138,12 +139,16 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton(
     () => FetchChildrenUseCase(childrenRepo: getIt()),
   );
+  getIt.registerLazySingleton<ChildrenNonActiveUseCase>(
+    () => ChildrenNonActiveUseCase(childrenRepo: getIt.get()),
+  );
   getIt.registerLazySingleton(() => CreateChildUseCase(childrenRepo: getIt()));
   getIt.registerLazySingleton(
     () => UpdateChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerFactory(
     () => ChildrenCubit(
+      childrenNonActiveUseCase: getIt.get(),
       fetchChildrenUseCase: getIt(),
       createChildUseCase: getIt(),
       updateChildrenUseCase: getIt(),

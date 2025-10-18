@@ -31,13 +31,18 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
     final color = Theme.of(context).colorScheme;
     return BlocBuilder<BranchCubit, BranchState>(
       builder: (context, state) {
-        if (state is BranchSuccessState) {
-          final branches = state.branch;
-          for (int i = 0; i < branches.length; i++) {
-            if (branches[i].id == currentBranch) {
-              selectIndex = i;
-            }
-          }
+        if (state.status == BranchStatus.loading) {
+          return const Center(
+            child: SpinKitFadingCircle(size: 60, color: Colors.blue),
+          );
+        }
+
+        if (state.status == BranchStatus.success && state.branches != null) {
+          final branches = state.branches!;
+          int? selectedIndex = branches.indexWhere(
+            (b) => b.id == state.selectedBranchId,
+          );
+
           return StatefulBuilder(
             builder: (context, setState) {
               return Container(
@@ -93,16 +98,13 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                           separatorBuilder: (_, __) =>
                               const SizedBox(height: 8),
                           itemBuilder: (context, index) {
-                            final isSelected = selectIndex == index;
-                            final isCurrent = currentBranch == index;
+                            final isSelected = selectedIndex == index;
+                            final branch = branches[index];
+
                             return InkWell(
                               onTap: () {
                                 setState(() {
-                                  if (isSelected) {
-                                    selectIndex == null;
-                                  } else {
-                                    selectIndex = index;
-                                  }
+                                  selectedIndex = index;
                                 });
                               },
                               child: Container(
@@ -134,7 +136,7 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        branches[index].name ?? '',
+                                        branch.name ?? '',
                                         style: TextStyle(
                                           fontWeight: isSelected
                                               ? FontWeight.bold
@@ -145,18 +147,13 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                                         ),
                                       ),
                                     ),
-                                    if (isCurrent)
-                                      const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
                                     Icon(
                                       isSelected
                                           ? Icons.check_circle
                                           : Icons.circle_outlined,
                                       color: isSelected
                                           ? Colors.white
-                                          : Colors.grey,
+                                          : Colors.grey[600],
                                     ),
                                   ],
                                 ),
@@ -168,7 +165,6 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
 
                       const SizedBox(height: 20),
 
-                      // زر تم
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -181,14 +177,19 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            if (selectIndex == null) {
+                            if (selectedIndex == null) {
                               showRedFlush(
                                 context,
                                 LangKeys.chooseAtLeastOneBranch.tr(),
                               );
                               return;
                             }
-                            final selectedBranch = branches[selectIndex!].id;
+
+                            final selectedBranch = branches[selectedIndex!].id;
+
+                            context.read<BranchCubit>().selectBranch(
+                              selectedBranch??1,
+                            );
 
                             Navigator.pop(context, selectedBranch);
                           },
@@ -208,13 +209,9 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
               );
             },
           );
-        } else if (state is BranchInitial) {
-          return Center(
-            child: SpinKitFadingCircle(size: 60, color: Colors.blue),
-          );
-        } else {
-          return const Center(child: SizedBox());
         }
+
+        return const SizedBox.shrink();
       },
     );
   }

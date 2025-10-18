@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
@@ -20,12 +19,10 @@ class BranchBottomSheetBody extends StatefulWidget {
 class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
   DateTime? startDate;
   DateTime? endDate;
-  final List<int> selectIndex = [];
-  int? selectBranch;
+  late List<int> selectIndex = [];
 
   @override
   void initState() {
-    selectBranch = AuthHelper.getBranch();
     super.initState();
   }
 
@@ -34,9 +31,8 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
     final color = Theme.of(context).colorScheme;
     return BlocBuilder<BranchCubit, BranchState>(
       builder: (context, state) {
-        if (state is BranchSuccessState) {
-          final branches = state.branch;
-
+        if (state.status == BranchStatus.success && state.branches != null) {
+          final branches = state.branches!;
           return StatefulBuilder(
             builder: (context, setState) {
               return Container(
@@ -90,11 +86,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                           shrinkWrap: true,
                           itemCount: branches.length,
                           separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final isSelected = selectIndex.contains(index);
-                            final isCurrent =
-                              branches[index].id == selectBranch;
                             return InkWell(
                               onTap: () {
                                 setState(() {
@@ -116,9 +110,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                     colors: isSelected
                                         ? [Colors.greenAccent, Colors.green]
                                         : [
-                                            Colors.grey.shade200,
-                                            Colors.grey.shade300,
-                                          ],
+                                      Colors.grey.shade200,
+                                      Colors.grey.shade300,
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -145,7 +139,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                         ),
                                       ),
                                     ),
-
                                     Icon(
                                       isSelected
                                           ? Icons.check_circle
@@ -202,9 +195,8 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            final selectedBranch = selectIndex
-                                .map((i) => branches[i].id)
-                                .toList();
+                            final selectedBranch =
+                            selectIndex.map((i) => branches[i].id).toList();
 
                             if (selectedBranch.isEmpty) {
                               showRedFlush(
@@ -251,15 +243,23 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
               );
             },
           );
-        } else if (state is BranchLoadingState) {
+        } else if (state.status == BranchStatus.loading) {
           return const Center(
             child: SpinKitFadingCircle(color: Colors.blue, size: 60),
           );
+        } else if (state.status == BranchStatus.failure) {
+          return Center(
+            child: Text(
+              state.errorMessage ?? 'حدث خطأ ما',
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
         } else {
-          return const Center(child: SizedBox());
+          return const SizedBox();
         }
       },
     );
+
   }
 
   Widget _buildDateField({
@@ -339,4 +339,3 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
     );
   }
 }
-

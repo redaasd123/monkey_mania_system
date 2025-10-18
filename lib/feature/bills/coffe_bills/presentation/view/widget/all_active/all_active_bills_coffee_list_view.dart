@@ -23,14 +23,19 @@ class AllActiveBillsCoffeeListView extends StatelessWidget {
           final cubit = BlocProvider.of<CoffeeBillsCubit>(context);
           final modal = bills[index];
           return GestureDetector(
-           onTap: (){},
+           onTap: (){
+             GoRouter.of(context).push(
+                     AppRouter.kShowDetailCoffeeBills,
+                     extra: modal.id,
+                   );
+           },
             child: CoffeeBillsItem(
-                onTap: () {
-                  GoRouter.of(context).push(
-                    AppRouter.kShowDetailCoffeeBills,
-                    extra: modal.id,
-                  );
-                },
+                // onTap: () {
+                //   GoRouter.of(context).push(
+                //     AppRouter.kShowDetailCoffeeBills,
+                //     extra: modal.id,
+                //   );
+                // },
                 billsCoffeeEntity: modal),
           );
         },

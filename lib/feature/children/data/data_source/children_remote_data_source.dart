@@ -1,4 +1,7 @@
 import 'package:monkey_app/core/utils/api_serviece.dart';
+import 'package:monkey_app/feature/children/data/model/children_non_active_model.dart';
+import 'package:monkey_app/feature/children/data/model/mapper.dart';
+import 'package:monkey_app/feature/children/domain/entity/children/non_active.dart';
 
 import '../../../../core/param/create_children_params/create_children_params.dart';
 import '../../../../core/param/update_children_param/update_children_param.dart';
@@ -15,6 +18,8 @@ abstract class ChildrenRemoteDataSource {
   Future<ChildrenEntity> updateChildren(UpdateChildrenParam param);
 
   Future<ChildrenEntity> createChildren(CreateChildrenParam param);
+
+  Future<List<ChildrenNonActiveEntity>> childrenNonActive(FetchChildrenParam param);
 }
 
 class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
@@ -61,5 +66,20 @@ class ChildrenRemoteDataSourceImpl extends ChildrenRemoteDataSource {
     );
     final data = response.data;
     return ChildrenModel.fromJson(data);
+  }
+
+  @override
+  Future<List<ChildrenNonActiveEntity>>  childrenNonActive(
+    FetchChildrenParam param,
+  ) async {
+    final result = await getIt.get<Api>().get(
+      endPoint: 'child/non_active/all/',
+    );
+
+    final List<ChildrenNonActiveEntity> children = [];
+    for (var item in result) {
+      children.add(ChildrenNonActiveModel.fromJson(item).toEntity());
+    }
+    return children;
   }
 }

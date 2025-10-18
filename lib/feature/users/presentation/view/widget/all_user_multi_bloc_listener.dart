@@ -49,12 +49,13 @@ class AllUserMultiBlocListener extends StatelessWidget {
         ),
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected && state.selectedBranchId != null) {
               context.read<UserCubit>().fetchUsers(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId!]),
               );
             }
           },
+
         ),
       ],
 

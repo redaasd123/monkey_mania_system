@@ -39,12 +39,14 @@ class HomeListView extends StatelessWidget {
       listeners: [
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected && state.selectedBranchId != null) {
+              final branchId = state.selectedBranchId!;
               context.read<HomeCubit>().fetchDashBoardData(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [branchId]),
               );
             }
           },
+
         ),
 
         BlocListener<HomeCubit, HomeState>(

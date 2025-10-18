@@ -101,7 +101,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
         ),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min, // 👈 takes only needed space
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildHandle(),

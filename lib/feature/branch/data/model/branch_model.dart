@@ -51,7 +51,7 @@ class BranchModel extends BranchEntity {
     );
   }
 
-  num? id;
+  int? id;
   String? name;
   String? address;
   bool? indoor;
@@ -66,7 +66,7 @@ class BranchModel extends BranchEntity {
   List<HourPricesSet>? hourPricesSet;
 
   BranchModel copyWith({
-    num? id,
+    int? id,
     String? name,
     String? address,
     bool? indoor,

@@ -23,9 +23,6 @@ class SchoolListView extends StatelessWidget {
         itemCount: school.length,
         padding: const EdgeInsets.all(8),
         itemBuilder: (context, index) {
-          // 👇 قلبنا الفهرس بحيث 0 ← أحدث عنصر
-          // final model = school[school.length - 1 - index];
-
           return  GestureDetector(
               onTap: () async {
                 final data = await schoolShowAddSchoolSheet(
@@ -50,7 +47,7 @@ class SchoolListView extends StatelessWidget {
                 }
               },
 
-              child: CustomDetailSchoolCard(schoolModel: school[index],),
+              child:CustomDetailSchoolCard(schoolModel: school[index],),
 
           );
         },

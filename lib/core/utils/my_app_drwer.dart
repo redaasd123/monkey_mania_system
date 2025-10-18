@@ -12,6 +12,8 @@ import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
+import '../secret/secret.dart';
+
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
 
@@ -68,13 +70,7 @@ class MyAppDrawer extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "Smart Management".tr(),
-                  style: GoogleFonts.roboto(
-                    color: Colors.white70,
-                    fontSize: 13,
-                  ),
-                ),
+                const SecretTapArea()
               ],
             ),
           ),

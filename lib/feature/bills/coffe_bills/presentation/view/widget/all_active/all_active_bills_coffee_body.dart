@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../core/download_fiels/download_file.dart';
+import '../../../../../../../core/secret/secret.dart';
 import '../../../../../../../core/utils/constans.dart';
 import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../../../core/utils/my_app_drwer.dart';
@@ -105,11 +106,6 @@ class _AllActiveBillsCoffeeBodyState extends State<AllActiveBillsCoffeeBody> {
               final param = cubit.filters;
               final url =
                   '${kBaseUrl}product_bill/active/all?is_csv_response=true&${param.toQueryParams()}';
-              print("📤 Download Started");
-              print("🔍 Search Query: ${cubit.searchQuery}");
-              print("🛠️ Param (toQueryParams): ${param.toQueryParams()}");
-              print("🌍 URL: $url");
-              print("📂 File Name: allBills.csv");
               await downloader.downloadFile(
                 context,
                 url,

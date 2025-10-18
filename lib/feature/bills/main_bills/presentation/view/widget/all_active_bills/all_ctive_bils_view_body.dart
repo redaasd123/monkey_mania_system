@@ -2,13 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/styles.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/core/widget/widget/custom_show_loder.dart';
 
 import '../../../../../../../core/download_fiels/download_file.dart';
 import '../../../../../../../core/helper/auth_helper.dart';
+import '../../../../../../../core/secret/secret.dart';
 import '../../../../../../../core/utils/langs_key.dart';
 import '../../../../../../../core/utils/my_app_drwer.dart';
 import '../../../../../../../core/utils/poppup_menu_button.dart';
@@ -19,7 +19,6 @@ import '../../../../domain/use_case/param/fetch_bills_param.dart';
 import '../../../manager/apply_discount_cubit/apply_discount_cubit.dart';
 import '../../../manager/close_bills_cubit/close_bills_cubit.dart';
 import '../../../manager/fetch_bills_cubit/bills_cubit.dart';
-
 import '../show_bills_bottom_sheet.dart';
 import 'all_active_list_view.dart';
 
@@ -119,7 +118,10 @@ class _AllActiveBillsViewBodyState extends State<AllActiveBillsViewBody> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          final data = await showBillsBottomSheet(context,  LangKeys.appName.tr());
+          final data = await showBillsBottomSheet(
+            context,
+            LangKeys.appName.tr(),
+          );
           final cubit = BlocProvider.of<BillsCubit>(context);
           if (data != null) {
             final branch = AuthHelper.getBranch();
@@ -157,7 +159,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
                 break;
 
               case BillsStatus.createSuccess:
-                showGreenFlush(context,  LangKeys.ok.tr());
+                showGreenFlush(context, LangKeys.ok.tr());
                 hideLoader(context);
                 break;
 
@@ -172,9 +174,10 @@ class AllActiveBillsConsumer extends StatelessWidget {
         ),
         BlocListener<BranchCubit, BranchState>(
           listener: (context, state) {
-            if (state is BranchSelectedState) {
+            if (state.status == BranchStatus.selected &&
+                state.selectedBranchId != null) {
               context.read<BillsCubit>().fetchActiveBills(
-                RequestParameters(branch: [state.branchId]),
+                RequestParameters(branch: [state.selectedBranchId!]),
               );
             }
           },
@@ -223,7 +226,7 @@ class AllActiveBillsConsumer extends StatelessWidget {
               return AllActiveListView(bills: state.bills);
 
             case BillsStatus.empty:
-              return  Center(
+              return Center(
                 child: Text(LangKeys.notFound.tr(), style: Styles.textStyle14),
               );
 

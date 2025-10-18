@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
@@ -12,19 +13,33 @@ part 'branch_state.dart';
 class BranchCubit extends Cubit<BranchState> {
   final BranchUseCase branchUseCase;
 
-  BranchCubit(this.branchUseCase) : super(BranchInitial());
+  BranchCubit(this.branchUseCase) : super(const BranchState());
 
-  Future<void> fetchBranch() async {
-    emit(BranchLoadingState());
-    var result = await branchUseCase.call(NoParam());
+  Future<void> fetchBranches() async {
+    emit(state.copyWith(status: BranchStatus.loading));
+
+    final result = await branchUseCase.call(NoParam());
+
     result.fold(
-      (failure) => emit(BranchFailureState(errMessage: failure.errMessage)),
-          (branch) => emit(BranchSuccessState(branch: branch)),
+          (failure) => emit(state.copyWith(
+        status: BranchStatus.failure,
+        errorMessage: failure.errMessage,
+      )),
+          (branches) => emit(state.copyWith(
+        status: BranchStatus.success,
+        branches: branches,
+      )),
     );
+  }
+  void saveSelectedBranches(List<int> branches) {
+    emit(state.copyWith(savedBranches: branches));
   }
 
   void selectBranch(int branchId) {
     Hive.box(kAuthBox).put(AuthKeys.branch, branchId);
-    emit(BranchSelectedState(branchId: branchId));
+    emit(state.copyWith(
+      status: BranchStatus.selected,
+      selectedBranchId: branchId,
+    ));
   }
 }

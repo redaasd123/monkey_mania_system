@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monkey_app/core/widget/widget/custom_build_header_sheet_.dart';
+import 'package:monkey_app/core/widget/widget/custom_button.dart';
 import 'package:monkey_app/core/widget/widget/custom_flush.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
+import 'package:monkey_app/feature/children/domain/entity/children/non_active.dart';
 import 'package:monkey_app/feature/children/presentation/manager/cubit/children_cubit.dart';
 
 import '../../../../../../core/helper/auth_helper.dart';
-import '../../../../../../core/utils/constans.dart';
 import '../../../../../../core/utils/langs_key.dart';
 import '../../../../../children/domain/param/fetch_children_param.dart';
 import '../../../../../children/presentation/manager/cubit/children_state.dart';
@@ -33,38 +34,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
   List<Map<String, dynamic>> children = [];
   final _relations = ['father', 'mother', 'sibling', 'other'];
   List<NewChildField> childrenFields = [NewChildField()];
-
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_selectedChildrenId == null) {
-      showRedFlush(context, LangKeys.nameRequired.tr());
-      return;
-    }
-
-    List<NewChildren> newChildren = children.map((child) {
-      return NewChildren(
-        name: child['name'],
-        dateBirth: child['birthDate'],
-        phoneNumber: (child['phones'] as List).map((phone) {
-          return PhoneNumber(
-            value: phone['value'],
-            relationship: phone['relationship'],
-          );
-        }).toList(),
-      );
-    }).toList();
-
-    final branch = AuthHelper.getBranch();
-    final param = CreateBillsParam(
-      discount: promoCode.text,
-      childrenId: _selectedChildrenId!,
-      newChildren: newChildren,
-      branch: branch!,
-    );
-
-    Navigator.pop(context, param);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +64,11 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildHandle(),
-              CustombuildHeader(colorScheme, widget.title, colorScheme.onPrimary),
+              CustombuildHeader(
+                colorScheme,
+                widget.title,
+                colorScheme.onPrimary,
+              ),
               const SizedBox(height: 20),
               _buildForm(context),
             ],
@@ -104,7 +77,6 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
       ),
     );
   }
-
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -152,17 +124,39 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _submit,
-                child: Text(LangKeys.save.tr(), style: const TextStyle(fontSize: 18)),
+              child: CustomButton(
+                text: LangKeys.save.tr(),
+                onPressed: () {
+                  if (!_formKey.currentState!.validate()) return;
+
+                  if (_selectedChildrenId == null) {
+                    showRedFlush(context, LangKeys.nameRequired.tr());
+                    return;
+                  }
+
+                  List<NewChildren> newChildren = children.map((child) {
+                    return NewChildren(
+                      name: child['name'],
+                      dateBirth: child['birthDate'],
+                      phoneNumber: (child['phones'] as List).map((phone) {
+                        return PhoneNumber(
+                          value: phone['value'],
+                          relationship: phone['relationship'],
+                        );
+                      }).toList(),
+                    );
+                  }).toList();
+
+                  final branch = AuthHelper.getBranch();
+                  final param = CreateBillsParam(
+                    discount: promoCode.text,
+                    childrenId: _selectedChildrenId!,
+                    newChildren: newChildren,
+                    branch: branch!,
+                  );
+
+                  Navigator.pop(context, param);
+                },
               ),
             ),
           ],
@@ -172,11 +166,11 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
   }
 
   Widget _buildField(
-      TextEditingController? controller,
-      String label,
-      IconData icon, {
-        int maxLines = 1,
-      }) {
+    TextEditingController? controller,
+    String label,
+    IconData icon, {
+    int maxLines = 1,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     return TextFormField(
       maxLines: maxLines,
@@ -209,7 +203,10 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('طفل ${childIndex + 1}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'طفل ${childIndex + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () {
@@ -230,8 +227,12 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
               TextFormField(
                 validator: _validate,
                 readOnly: true,
-                controller: TextEditingController(text: children[childIndex]['birthDate']),
-                decoration: InputDecoration(labelText: LangKeys.dateOfBirth.tr()),
+                controller: TextEditingController(
+                  text: children[childIndex]['birthDate'],
+                ),
+                decoration: InputDecoration(
+                  labelText: LangKeys.dateOfBirth.tr(),
+                ),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
                     context: context,
@@ -241,7 +242,9 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                   );
                   if (pickedDate != null) {
                     setState(() {
-                      children[childIndex]['birthDate'] = _toEnglishDigits(DateFormat('y-M-d').format(pickedDate));
+                      children[childIndex]['birthDate'] = _toEnglishDigits(
+                        DateFormat('y-M-d').format(pickedDate),
+                      );
                     });
                   }
                 },
@@ -266,7 +269,8 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(11),
                             ],
-                            onChanged: (val) => phones[phoneIndex]['value'] = val,
+                            onChanged: (val) =>
+                                phones[phoneIndex]['value'] = val,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -276,14 +280,21 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                             isExpanded: true,
                             value: phones[phoneIndex]['relationship'],
                             items: _relations
-                                .map((r) => DropdownMenuItem(value: r, child: Text(r)))
+                                .map(
+                                  (r) => DropdownMenuItem(
+                                    value: r,
+                                    child: Text(r),
+                                  ),
+                                )
                                 .toList(),
                             onChanged: (val) {
                               setState(() {
                                 phones[phoneIndex]['relationship'] = val!;
                               });
                             },
-                            decoration: InputDecoration(labelText: LangKeys.relationShip.tr()),
+                            decoration: InputDecoration(
+                              labelText: LangKeys.relationShip.tr(),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -294,7 +305,8 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
-                                if (phoneIndex >= 1) phones.removeAt(phoneIndex);
+                                if (phoneIndex >= 1)
+                                  phones.removeAt(phoneIndex);
                               });
                             },
                           ),
@@ -310,7 +322,10 @@ class _BillsBottomSheetState extends State<BillsBottomSheet> {
                 child: TextButton.icon(
                   onPressed: () {
                     setState(() {
-                      phones.add({'value': '', 'relationship': _relations.first});
+                      phones.add({
+                        'value': '',
+                        'relationship': _relations.first,
+                      });
                     });
                   },
                   icon: const Icon(Icons.add),
@@ -354,17 +369,23 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
       onTap: () async {
         final cubit = BlocProvider.of<ChildrenCubit>(context);
         if (!hasFetched) {
-          await cubit.fetchChildren(FetchChildrenParam());
+          await cubit.childrenNonActive(FetchChildrenParam());
           hasFetched = true;
         }
 
         final state = cubit.state;
-        if (state.status == ChildrenStatus.success) {
-          final result = await showModalBottomSheet<List<ChildrenEntity>>(
+        if (state.status == ChildrenStatus.nonSuccess) {
+          final TextEditingController searchCtrl = TextEditingController();
+          List<ChildrenNonActiveEntity> filteredChildren = List.from(state.nonActiveChildren);
+          List<ChildrenNonActiveEntity> selectedChildren = [];
+
+          final result = await showModalBottomSheet<List<ChildrenNonActiveEntity>>(
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
             builder: (_) {
               return DraggableScrollableSheet(
                 expand: false,
@@ -372,39 +393,64 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                 minChildSize: 0.4,
                 maxChildSize: 0.95,
                 builder: (context, scrollController) {
-                  List<ChildrenEntity> filteredChildren = List.from(state.allChildren);
-                  final TextEditingController searchCtrl = TextEditingController();
-                  List<ChildrenEntity> selectedChildren = [];
-
                   return StatefulBuilder(
                     builder: (context, setState) {
                       return Container(
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [Color(0xFF004953), Color(0xFF004953)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF004953), Color(0xFF004953)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             children: [
-                              Container(width: 50, height: 5, margin: const EdgeInsets.only(bottom: 16), decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(10))),
-                              Text(LangKeys.selectChildren.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Container(
+                                width: 50,
+                                height: 5,
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              Text(
+                                LangKeys.selectChildren.tr(),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                               const SizedBox(height: 16),
                               TextField(
                                 controller: searchCtrl,
                                 style: const TextStyle(color: Colors.white),
+                                textInputAction: TextInputAction.done,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white.withOpacity(0.15),
                                   hintText: LangKeys.search.tr(),
                                   hintStyle: const TextStyle(color: Colors.white70),
                                   prefixIcon: const Icon(Icons.search, color: Colors.white70),
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
                                 onChanged: (query) {
                                   setState(() {
-                                    filteredChildren = state.allChildren
-                                        .where((children) => (children.name ?? '').toLowerCase().contains(query.toLowerCase()))
+                                    filteredChildren = state.nonActiveChildren
+                                        .where(
+                                          (children) => (children.name ?? '')
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase()),
+                                    )
                                         .toList();
                                   });
                                 },
@@ -416,24 +462,44 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                   itemCount: filteredChildren.length,
                                   itemBuilder: (context, index) {
                                     final child = filteredChildren[index];
-                                    final isSelected = selectedChildren.any((e) => e.id == child.id);
+                                    final isSelected = selectedChildren.any(
+                                          (e) => e.id == child.id,
+                                    );
 
                                     return Card(
                                       elevation: 4,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 4,
+                                      ),
                                       child: ListTile(
                                         contentPadding: const EdgeInsets.all(12),
                                         leading: CircleAvatar(
-                                          backgroundColor: isSelected ? Colors.green : const Color(0xFF004953),
+                                          backgroundColor: isSelected
+                                              ? Colors.green
+                                              : const Color(0xFF004953),
                                           child: const Icon(Icons.child_care, color: Colors.white),
                                         ),
-                                        title: Text(child.name ?? 'لا يوجد اسم', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                                        trailing: Icon(isSelected ? Icons.check_circle : Icons.circle_outlined, color: isSelected ? Colors.green : Colors.grey),
+                                        title: Text(
+                                          child.name ?? 'لا يوجد اسم',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Icon(
+                                          isSelected ? Icons.check_circle : Icons.circle_outlined,
+                                          color: isSelected ? Colors.green : Colors.grey,
+                                        ),
                                         onTap: () {
                                           setState(() {
                                             if (isSelected) {
-                                              selectedChildren.removeWhere((e) => e.id == child.id);
+                                              selectedChildren.removeWhere(
+                                                    (e) => e.id == child.id,
+                                              );
                                             } else {
                                               selectedChildren.add(child);
                                             }
@@ -444,19 +510,28 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                    backgroundColor: const Color(0xFFF4EDF6),
-                                    foregroundColor: Colors.white,
-                                    elevation: 6,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                      backgroundColor: const Color(0xFFF4EDF6),
+                                      foregroundColor: Colors.white,
+                                      elevation: 6,
+                                    ),
+                                    onPressed: () => Navigator.pop(context, selectedChildren),
+                                    child: Text(
+                                      LangKeys.save.tr(),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ),
-                                  onPressed: () => Navigator.pop(context, selectedChildren),
-                                  child: Text(LangKeys.save.tr(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
                                 ),
                               ),
                             ],
@@ -472,11 +547,12 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
 
           if (result != null && result.isNotEmpty) {
             final names = result.map((e) => e.name).join(', ');
-            final ids = result.map((e) => e.id).whereType<num>().toList();
+            final ids = result.map((e) => e.id).whereType<int>().toList();
             widget.onSelected?.call(ids);
             widget._childCtrl.text = names;
           }
         }
+
       },
       readOnly: true,
       controller: widget._childCtrl,
@@ -485,9 +561,15 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
       decoration: InputDecoration(
         labelText: LangKeys.children.tr(),
         labelStyle: TextStyle(color: widget.colorScheme.onSurface),
-        prefixIcon: Icon(Icons.child_care_sharp, color: widget.colorScheme.onSurface),
+        prefixIcon: Icon(
+          Icons.child_care_sharp,
+          color: widget.colorScheme.onSurface,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: widget.colorScheme.primary, width: 2)),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: widget.colorScheme.primary, width: 2),
+        ),
       ),
     );
   }
@@ -496,7 +578,8 @@ class _TextFieldChildrenIDState extends State<TextFieldChildrenID> {
 String _toEnglishDigits(String input) {
   const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
   const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  for (int i = 0; i < arabicNumbers.length; i++) input = input.replaceAll(arabicNumbers[i], englishNumbers[i]);
+  for (int i = 0; i < arabicNumbers.length; i++)
+    input = input.replaceAll(arabicNumbers[i], englishNumbers[i]);
   return input;
 }
 
