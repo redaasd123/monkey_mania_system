@@ -1,9 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String kBaseUrl = 'https://monkey-mania-production.up.railway.app/';
+import '../widget/widget/logo_with_shimer.dart';
+
+String kBaseUrl = 'https://new.monkey-mania.com/';
 
 class SecretTapArea extends StatefulWidget {
   const SecretTapArea({super.key});
@@ -18,17 +18,6 @@ class _SecretTapAreaState extends State<SecretTapArea> {
   @override
   void initState() {
     super.initState();
-    _loadSavedBaseUrl();
-  }
-
-  Future<void> _loadSavedBaseUrl() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedUrl = prefs.getString('base_url');
-    if (savedUrl != null) {
-      setState(() {
-        kBaseUrl = savedUrl;
-      });
-    }
   }
 
   void _onTap() {
@@ -51,18 +40,14 @@ class _SecretTapAreaState extends State<SecretTapArea> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
                 setState(() {
-                  if (kBaseUrl ==
-                      'https://monkey-mania-production.up.railway.app/') {
-                    kBaseUrl = 'https://new.monkey-mania.com/';
-                  } else {
+                  if (kBaseUrl == 'https://new.monkey-mania.com/') {
                     kBaseUrl =
-                    'https://monkey-mania-production.up.railway.app/';
+                        'https://monkey-mania-production.up.railway.app/';
+                  } else {
+                    kBaseUrl = 'https://new.monkey-mania.com/';
                   }
                 });
-
-                await prefs.setString('base_url', kBaseUrl);
 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -79,22 +64,11 @@ class _SecretTapAreaState extends State<SecretTapArea> {
 
   @override
   Widget build(BuildContext context) {
-
-    final isStaging = kBaseUrl=='https://monkey-mania-production.up.railway.app/';
-    final colorScheme = Theme.of(context).colorScheme;
+    final isStaging =
+        kBaseUrl == 'https://monkey-mania-production.up.railway.app/';
     return Container(
-      color: colorScheme.primary.withOpacity(0.05),
       child: Center(
-        child: GestureDetector(
-          onTap: _onTap,
-          child: Text(
-            "Smart Management".tr(),
-            style: GoogleFonts.roboto(
-              color: isStaging?Colors.red:Colors.white,
-              fontSize: 13,
-            ),
-          ),
-        ),
+        child: GestureDetector(onTap: _onTap, child: LogoWithAnimatedText()),
       ),
     );
   }

@@ -4,10 +4,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
 import 'package:monkey_app/core/utils/constans.dart';
+import 'package:monkey_app/feature/branch/presentation/view/show_branch_bottom_sheet.dart';
 import 'package:monkey_app/feature/home/presentation/manager/home_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
 import '../../../../../../core/utils/my_app_drwer.dart';
+import '../../../../../../core/utils/poppup_menu_button.dart';
 import '../../../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import '../../../../../branch/presentation/manager/branch_cubit.dart';
 import 'home_view_item.dart';
@@ -21,6 +23,14 @@ class HomeViewBody extends StatelessWidget {
     return Scaffold(
       body: HomeListView(),
       appBar: AppBar(
+        actions:[
+          CustomPopupMenu(onBranch: (){
+            showBranchBottomSheet(context, onSelected: (param){
+              final cubit = context.read<HomeCubit>();
+              cubit.fetchDashBoardData(param);
+            });
+          },)
+        ],
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),

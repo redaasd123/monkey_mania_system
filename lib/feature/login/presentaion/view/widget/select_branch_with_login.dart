@@ -188,7 +188,7 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                             final selectedBranch = branches[selectedIndex!].id;
 
                             context.read<BranchCubit>().selectBranch(
-                              selectedBranch??1,
+                              selectedBranch??0,
                             );
 
                             Navigator.pop(context, selectedBranch);

@@ -86,7 +86,7 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                           shrinkWrap: true,
                           itemCount: branches.length,
                           separatorBuilder: (_, __) =>
-                          const SizedBox(height: 8),
+                              const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final isSelected = selectIndex.contains(index);
                             return InkWell(
@@ -110,9 +110,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                                     colors: isSelected
                                         ? [Colors.greenAccent, Colors.green]
                                         : [
-                                      Colors.grey.shade200,
-                                      Colors.grey.shade300,
-                                    ],
+                                            Colors.grey.shade200,
+                                            Colors.grey.shade300,
+                                          ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -195,8 +195,9 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
                             backgroundColor: color.primary,
                           ),
                           onPressed: () {
-                            final selectedBranch =
-                            selectIndex.map((i) => branches[i].id).toList();
+                            final selectedBranch = selectIndex
+                                .map((i) => branches[i].id)
+                                .toList();
 
                             if (selectedBranch.isEmpty) {
                               showRedFlush(
@@ -259,7 +260,6 @@ class _BranchBottomSheetBodyState extends State<BranchBottomSheetBody> {
         }
       },
     );
-
   }
 
   Widget _buildDateField({

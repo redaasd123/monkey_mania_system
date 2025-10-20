@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:monkey_app/core/helper/auth_helper.dart';
+import 'package:monkey_app/core/secret/secret.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/core/widget/widget/logo_with_shimer.dart';
@@ -41,7 +42,7 @@ class _LoginPageItemState extends State<LoginPageItem> {
           child: Column(
             children: [
               const SizedBox(height: 60),
-              LogoWithAnimatedText(),
+              const SecretTapArea(),
               const SizedBox(height: 100),
               CustomTextField(
                 label: LangKeys.phoneNumber.tr(),
@@ -73,7 +74,6 @@ class _LoginPageItemState extends State<LoginPageItem> {
               ),
               const SizedBox(height: 20),
 
-              // زر تغيير اللغة هنا
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(

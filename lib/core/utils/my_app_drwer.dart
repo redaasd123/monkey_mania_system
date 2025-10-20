@@ -70,7 +70,7 @@ class MyAppDrawer extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SecretTapArea()
+                // const SecretTapArea()
               ],
             ),
           ),
