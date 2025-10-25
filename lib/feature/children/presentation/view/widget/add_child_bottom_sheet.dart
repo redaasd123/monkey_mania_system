@@ -97,7 +97,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           top: 16,
           bottom:
               MediaQuery.of(context).viewInsets.bottom +
-              24, // 👈 moves up with keyboard
+              24,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -154,7 +154,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 await context.read<SchoolCubit>().fetchSchool();
                 return context.read<SchoolCubit>().state.allSchool;
               },
-              itemTitle: (school) => school.name ?? 'لا يوجد اسم',
+              itemTitle: (school) => school.name ,
               onSelected: (school) {
                 _selectedSchoolId = school.id;
               },
@@ -288,7 +288,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF004953), // Indigo Violet
+                Color(0xFF004953),
                 Color(0xFF004953),
               ],
               begin: Alignment.topCenter,
@@ -318,7 +318,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     ),
                   ),
 
-                  // 🏷️
                   Text(
                     LangKeys.address.tr(),
                     style: const TextStyle(

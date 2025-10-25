@@ -20,7 +20,7 @@ class AuthHelper {
 
   //
   static Future<void> saveTokens({
-    required dynamic? branch,
+    required dynamic branch,
     required String? accessToken,
     required String? refreshToken,
     required String? username,
@@ -41,7 +41,7 @@ class AuthHelper {
 
   static String? getRole() => _authBox.get(AuthKeys.role);
 
-  static dynamic? getBranch() => _authBox.get(AuthKeys.branch);
+  static dynamic getBranch() => _authBox.get(AuthKeys.branch);
 
   static Future<void> clearAuthData() async => await _authBox.clear();
 

@@ -54,119 +54,128 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
           borderSide: BorderSide(color: widget.colorScheme.primary, width: 2),
         ),
       ),
-        onTap: () async {
-          if (!hasFetched) {
-            items = await widget.fetchItems();
-            hasFetched = true;
-          }
+      onTap: () async {
+        if (!hasFetched) {
+          items = await widget.fetchItems();
+          hasFetched = true;
+        }
 
-          final scrollController = ScrollController();
-          List<T> filtered = List.from(items);
-          List<T> selectedItems = [];
+        final scrollController = ScrollController();
+        List<T> filtered = List.from(items);
+        List<T> selectedItems = [];
 
-          final selected = await showModalBottomSheet<dynamic>(
-            context: context,
-            isScrollControlled: true,
-            useSafeArea: true,
-            backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            builder: (context) {
-              final searchCtrl = TextEditingController();
-              double maxHeight = MediaQuery.of(context).size.height * 0.8;
+        final selected = await showModalBottomSheet<dynamic>(
+          context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
+          backgroundColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          builder: (context) {
+            final searchCtrl = TextEditingController();
+            double maxHeight = MediaQuery.of(context).size.height * 0.8;
 
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return DraggableScrollableSheet(
-                    initialChildSize: 0.8,
-                    minChildSize: 0.4,
-                    maxChildSize: 0.95,
-                    expand: false,
-                    builder: (context, scrollSheetController) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF004953), Color(0xFF004953)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return DraggableScrollableSheet(
+                  initialChildSize: 0.8,
+                  minChildSize: 0.4,
+                  maxChildSize: 0.95,
+                  expand: false,
+                  builder: (context, scrollSheetController) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF004953), Color(0xFF004953)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                         ),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                      ),
+                      child: SafeArea(
+                        top: false,
                         child: Padding(
                           padding: EdgeInsets.only(
                             left: 16,
                             right: 16,
                             top: 16,
-                            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                            bottom:
+                                MediaQuery.of(context).viewInsets.bottom + 16,
                           ),
-                          child: SingleChildScrollView(
-                            controller: scrollSheetController,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 5,
-                                  margin: const EdgeInsets.only(bottom: 16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white54,
-                                    borderRadius: BorderRadius.circular(10),
+                          child: Column(
+                            children: [
+                              // السطر الصغير فوق
+                              Container(
+                                width: 50,
+                                height: 5,
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+
+                              Text(
+                                "اختر ${widget.label}",
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // حقل البحث
+                              TextField(
+                                controller: searchCtrl,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  hintText: LangKeys.search.tr(),
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    color: Colors.white70,
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white.withOpacity(0.15),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
                                   ),
                                 ),
-                                Text(
-                                  "اختر ${widget.label}",
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                TextField(
-                                  controller: searchCtrl,
-                                  style: const TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    hintText: LangKeys.search.tr(),
-                                    hintStyle:
-                                    const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(
-                                      Icons.search,
-                                      color: Colors.white70,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white.withOpacity(0.15),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                  onChanged: (query) {
-                                    setState(() {
-                                      filtered = items
-                                          .where(
-                                            (e) => widget
-                                            .itemTitle(e)
-                                            .toLowerCase()
-                                            .contains(query.toLowerCase()),
-                                      )
-                                          .toList();
-                                    });
-                                  },
-                                ),
-                                const SizedBox(height: 16),
-                                ListView.builder(
-                                  controller: scrollController,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
+                                onChanged: (query) {
+                                  setState(() {
+                                    filtered = items
+                                        .where(
+                                          (e) => widget
+                                              .itemTitle(e)
+                                              .toLowerCase()
+                                              .contains(query.toLowerCase()),
+                                        )
+                                        .toList();
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 16),
+
+                              // الليست قابلة للسكرول
+                              Expanded(
+                                child: ListView.builder(
+                                  controller: scrollSheetController,
                                   itemCount: filtered.length,
                                   itemBuilder: (context, index) {
                                     final item = filtered[index];
-                                    final isSelected = selectedItems.contains(item);
+                                    final isSelected = selectedItems.contains(
+                                      item,
+                                    );
                                     final icon =
-                                        widget.itemIcon?.call(item) ?? Icons.check;
+                                        widget.itemIcon?.call(item) ??
+                                        Icons.check;
 
                                     return Card(
                                       elevation: 6,
@@ -179,12 +188,17 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
                                         horizontal: 4,
                                       ),
                                       child: ListTile(
-                                        contentPadding: const EdgeInsets.all(12),
+                                        contentPadding: const EdgeInsets.all(
+                                          12,
+                                        ),
                                         leading: CircleAvatar(
                                           backgroundColor: isSelected
                                               ? Colors.green
                                               : Colors.grey[400],
-                                          child: Icon(icon, color: Colors.white),
+                                          child: Icon(
+                                            icon,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                         title: Text(
                                           widget.itemTitle(item),
@@ -195,13 +209,13 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
                                         ),
                                         trailing: widget.multiSelect
                                             ? Icon(
-                                          isSelected
-                                              ? Icons.check_circle
-                                              : Icons.circle_outlined,
-                                          color: isSelected
-                                              ? Colors.green
-                                              : Colors.grey,
-                                        )
+                                                isSelected
+                                                    ? Icons.check_circle
+                                                    : Icons.circle_outlined,
+                                                color: isSelected
+                                                    ? Colors.green
+                                                    : Colors.grey,
+                                              )
                                             : null,
                                         onTap: () {
                                           setState(() {
@@ -220,13 +234,18 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 12),
-                                SizedBox(
+                              ),
+
+                              // زر ثابت في الأسفل
+                              SafeArea(
+                                top: false,
+                                child: SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(16),
                                       ),
@@ -238,7 +257,10 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
                                       if (widget.multiSelect) {
                                         Navigator.pop(context, selectedItems);
                                       } else if (selectedItems.isNotEmpty) {
-                                        Navigator.pop(context, selectedItems.first);
+                                        Navigator.pop(
+                                          context,
+                                          selectedItems.first,
+                                        );
                                       }
                                     },
                                     child: Text(
@@ -250,30 +272,30 @@ class _SelectItemTextFieldState<T> extends State<SelectItemTextField<T>> {
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          );
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
 
-          if (selected != null) {
-            if (widget.multiSelect) {
-              widget.controller.text = (selected as List<T>)
-                  .map((e) => widget.itemTitle(e))
-                  .join(", ");
-            } else {
-              widget.controller.text = widget.itemTitle(selected as T);
-            }
-            widget.onSelected(selected);
+        if (selected != null) {
+          if (widget.multiSelect) {
+            widget.controller.text = (selected as List<T>)
+                .map((e) => widget.itemTitle(e))
+                .join(", ");
+          } else {
+            widget.controller.text = widget.itemTitle(selected as T);
           }
+          widget.onSelected(selected);
         }
-
+      },
     );
   }
 }

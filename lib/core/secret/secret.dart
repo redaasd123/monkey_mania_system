@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/widget/logo_with_shimer.dart';
 
-String kBaseUrl = 'https://new.monkey-mania.com/';
+String kBaseUrl = 'https://monkey-mania-production.up.railway.app/';
 
 class SecretTapArea extends StatefulWidget {
   const SecretTapArea({super.key});

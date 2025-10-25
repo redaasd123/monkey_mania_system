@@ -6,6 +6,7 @@ import 'package:monkey_app/core/param/create_school_param/create_school_param.da
 import 'package:monkey_app/core/param/update_children_param/update_children_param.dart';
 import 'package:monkey_app/core/param/update_school_param/update_school_param.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/data/hive_entity/layers_hive_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/age/age_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/domain/entity/phone/phone_entity.dart';
@@ -29,7 +30,6 @@ class AppInitializer {
     // await Hive.deleteBoxFromDisk(kSchoolBox);
     // await Hive.deleteBoxFromDisk(kChildrenBox);
     // await Hive.deleteBoxFromDisk(kSaveCreateChild);
-
     await _openHiveBoxes();
 
     setUpServiceLocator();
@@ -54,6 +54,7 @@ class AppInitializer {
     Hive.registerAdapter(UpdateChildrenParamAdapter());
     Hive.registerAdapter(UpdateSchoolParamAdapter());
     Hive.registerAdapter(CreateSchoolParamAdapter());
+    Hive.registerAdapter(LayersHiveEntityAdapter());
   }
 
   static Future<void> _initHive() async {
@@ -68,5 +69,6 @@ class AppInitializer {
     await Hive.openBox<UpdateChildrenParam>(kSaveUpdateChild);
     await Hive.openBox<CreateSchoolParam>(kSaveCreateSchool);
     await Hive.openBox<UpdateSchoolParam>(kSaveUpdateSchool);
+    await Hive.openBox<LayersHiveEntity>(kSaveLayerOne);
   }
 }

@@ -29,7 +29,6 @@ class CardLayer3Widget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // الصورة مع الاسم مظلل
           Stack(
             children: [
               ClipRRect(
@@ -37,11 +36,10 @@ class CardLayer3Widget extends StatelessWidget {
                 child: Image.asset(
                   imagePath,
                   fit: BoxFit.cover,
-                  height: 120, // حجم أصغر من السابق
+                  height: 120,
                   width: double.infinity,
                 ),
               ),
-              // الاسم على خلفية مظللة
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -73,13 +71,11 @@ class CardLayer3Widget extends StatelessWidget {
               ),
             ],
           ),
-          // السعر والكمية المتاحة
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // السعر على Badge صغير
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   decoration: BoxDecoration(

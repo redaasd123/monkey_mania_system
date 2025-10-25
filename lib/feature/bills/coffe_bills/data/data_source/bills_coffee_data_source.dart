@@ -1,5 +1,9 @@
+import 'package:hive/hive.dart';
 import 'package:monkey_app/core/utils/api_serviece.dart';
+import 'package:monkey_app/core/utils/constans.dart';
+import 'package:monkey_app/core/utils/save_data.dart';
 import 'package:monkey_app/core/utils/service_locator.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/data/hive_entity/layers_hive_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/model/bills_coffee_model.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/model/get_all_layers_model.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/model/get_layer1_model.dart';
@@ -100,11 +104,14 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
     var response = await getIt.get<Api>().get(endPoint: url);
 
     List<LayersEntity> layers = [];
+    List<LayersHiveEntity> hiveLayers = [];
     for (var item in response) {
+      final hiveEntity = LayersModel.fromJson(item).toHiveEntity();
       final entity = LayersModel.fromJson(item).toEntity();
+      hiveLayers.add(hiveEntity);
       layers.add(entity);
     }
-
+    saveLayers(hiveLayers, kSaveLayerOne);
     return layers;
   }
 
@@ -118,7 +125,6 @@ class BillsCoffeeDataSourceImpl extends BillsCoffeeDataSource {
       final entity = LayersModel.fromJson(item).toEntity();
       layers.add(entity);
     }
-
     return layers;
   }
 

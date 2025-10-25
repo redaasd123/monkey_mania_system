@@ -7,6 +7,8 @@ import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_all_layer
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/get_one_bills_coffee_entity.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/entity/layers_entity.dart';
 
+import '../hive_entity/layers_hive_entity.dart';
+
 extension GetCoffeeBillMapper on BillsCoffeeModel {
   BillsCoffeeEntity toEntity() {
     return BillsCoffeeEntity(
@@ -51,6 +53,17 @@ extension GetOneProductBillMapper on GetOneProducts {
 }
 
 extension GetLayers on LayersModel {
+  LayersEntity toEntity() {
+    return LayersEntity(name: name);
+  }
+}
+
+extension GetHiveLayers on LayersModel {
+  LayersHiveEntity toHiveEntity() {
+    return LayersHiveEntity(name: name);
+  }
+}
+extension LayersHiveMapper on LayersHiveEntity {
   LayersEntity toEntity() {
     return LayersEntity(name: name);
   }

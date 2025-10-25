@@ -10,7 +10,7 @@ import '../../../../../core/widget/widget/custom_flush.dart';
 import '../../../../branch/presentation/manager/branch_cubit.dart';
 
 class SelectBranchWithLogin extends StatefulWidget {
-  SelectBranchWithLogin({super.key});
+  const SelectBranchWithLogin({super.key});
 
   @override
   State<SelectBranchWithLogin> createState() => _SelectBranchWithLoginState();
@@ -186,7 +186,6 @@ class _SelectBranchWithLoginState extends State<SelectBranchWithLogin> {
                             }
 
                             final selectedBranch = branches[selectedIndex!].id;
-
                             context.read<BranchCubit>().selectBranch(
                               selectedBranch??0,
                             );

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:monkey_app/core/utils/api_serviece.dart';
 import 'package:monkey_app/core/utils/contivity.dart';
+import 'package:monkey_app/feature/bills/coffe_bills/data/data_source/bills_coffe_local_data_source.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/data_source/bills_coffee_data_source.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/data/repos/bills_coffee_impl.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/domain/repo/coffee_bills_repo.dart';
@@ -194,8 +195,9 @@ void setUpServiceLocator() {
   getIt.registerLazySingleton<BillsCoffeeDataSource>(
     () => BillsCoffeeDataSourceImpl(),
   );
+  getIt.registerLazySingleton<BillsCoffeeLocalDataSource>(()=>BillsCoffeeLocalDataSourceImpl());
   getIt.registerLazySingleton<CoffeeBillsRepo>(
-    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt()),
+    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt(), billsCoffeeLocalDataSource: getIt.get()),
   );
   getIt.registerLazySingleton(
     () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
