@@ -1,10 +1,14 @@
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:monkey_app/feature/bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
 import 'package:monkey_app/feature/bills/main_bills/presentation/manager/fetch_bills_cubit/bills_cubit.dart';
 import 'package:monkey_app/feature/children/domain/param/fetch_children_param.dart';
+import 'package:monkey_app/feature/users/presentation/manager/user_cubit.dart';
 
 import 'core/theme_color/color_them.dart';
 import 'core/theme_color/theme_Cubit.dart';
@@ -15,14 +19,21 @@ import 'feature/bills/coffe_bills/presentation/manager/coffee_bills/order_cubit.
 import 'feature/bills/main_bills/presentation/manager/apply_discount_cubit/apply_discount_cubit.dart';
 import 'feature/bills/main_bills/presentation/manager/close_bills_cubit/close_bills_cubit.dart';
 import 'feature/branch/presentation/manager/branch_cubit.dart';
+import 'feature/chat/presentation/manager/chat_cubit.dart';
 import 'feature/children/presentation/manager/cubit/children_cubit.dart';
 import 'feature/expense/material_expense/presentation/manager/material_expense_cubit.dart';
 import 'feature/school/presintation/manager/school_cubit/school_cubit.dart';
+import 'firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await AppInitializer.initializeApp();
+
   runApp(AppInitializer.buildApp());
 }
 
@@ -31,52 +42,62 @@ class MonkeyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => getIt<MaterialExpenseCubit>()),
-        BlocProvider(create: (context) => getIt<OrdersCubit>()),
-        BlocProvider(create: (context) => getIt<BillsCubit>()),
-        BlocProvider(create: (context) => getIt<CloseBillsCubit>()),
-        BlocProvider(create: (context) => getIt<ApplyDiscountCubit>()),
-        BlocProvider(create: (context) =>
-        getIt<ChildrenCubit>()
-          ..fetchChildren(FetchChildrenParam()),
-        ),
-        BlocProvider(create: (context) =>
-        getIt<SchoolCubit>()
-          ..fetchSchool()),
-        BlocProvider(create: (context) => getIt<BranchCubit>()),
-        BlocProvider(create: (_) => ThemeCubit()),
-      ],
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, mode) {
-          return Builder(
-            builder: (context) {
-              final isArabic = context.locale.languageCode == 'ar';
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => getIt<MaterialExpenseCubit>()),
+            BlocProvider(create: (context) => getIt<OrdersCubit>()),
+            BlocProvider(
+              create: (context) =>
+                  getIt<UserCubit>()..fetchUsers(RequestParameters()),
+            ),
+            BlocProvider(create: (context) => getIt<BillsCubit>()),
+            BlocProvider(create: (context) => getIt<CloseBillsCubit>()),
+            BlocProvider(create: (context) => getIt<ApplyDiscountCubit>()),
+            BlocProvider(
+              create: (context) =>
+                  getIt<ChildrenCubit>()..fetchChildren(FetchChildrenParam()),
+            ),
+            BlocProvider(
+              create: (context) => getIt<SchoolCubit>()..fetchSchool(),
+            ),
+            BlocProvider(create: (context) => getIt<BranchCubit>()),
+            BlocProvider(create: (_) => ThemeCubit()),
+          ],
+          child: BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, mode) {
+              return Builder(
+                builder: (context) {
+                  final isArabic = context.locale.languageCode == 'ar';
 
-              return MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: mode,
-                routerConfig: AppRouter.router,
-                locale: context.locale,
-                supportedLocales: context.supportedLocales,
-                localizationsDelegates: context.localizationDelegates,
-
-                builder: (context, child) {
-                  return Directionality(
-                    textDirection: isArabic
-                        ? ui.TextDirection.rtl
-                        : ui.TextDirection.ltr,
-                    child: child!,
+                  return MaterialApp.router(
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.lightTheme,
+                    darkTheme: AppTheme.darkTheme,
+                    themeMode: mode,
+                    routerConfig: AppRouter.router,
+                    locale: context.locale,
+                    supportedLocales: context.supportedLocales,
+                    localizationsDelegates: context.localizationDelegates,
+                    builder: (context, child) {
+                      return Directionality(
+                        textDirection: isArabic
+                            ? ui.TextDirection.rtl
+                            : ui.TextDirection.ltr,
+                        child: child!,
+                      );
+                    },
                   );
                 },
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

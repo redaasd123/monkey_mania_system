@@ -7,7 +7,7 @@ class HomeState extends Equatable {
   final String? errMessage;
   final HomeEntity? data;
 
-  HomeState({
+  const HomeState({
     this.status = HomeStatus.initial,
     this.errMessage,
     this.data,
@@ -26,5 +26,5 @@ class HomeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [errMessage,status,data];
+  List<Object?> get props => [errMessage, status, data];
 }

@@ -31,7 +31,9 @@ class LoginRemoteDataSourceImpl extends LoginRemoteDataSource {
 
 
       await AuthHelper.saveTokens(
-        branch: authModel.branch,
+        branchName: authModel.branch,
+        userId: authModel.id,
+        branchId: authModel.branch,
         accessToken: authModel.access,
         refreshToken: authModel.reFresh,
         username: authModel.username,

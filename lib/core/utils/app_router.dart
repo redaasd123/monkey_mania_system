@@ -7,6 +7,7 @@ import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/coffe_bil
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/show_detail_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_coffee_bills_view.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/create_bills/create_bills_view.dart';
+import 'package:monkey_app/feature/chat/presentation/view/widget/owner_page.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
 import 'package:monkey_app/feature/children/presentation/view/show_detail_children.dart';
@@ -28,6 +29,7 @@ import '../../feature/bills/main_bills/presentation/manager/get_one_bills_cubit.
 import '../../feature/bills/main_bills/presentation/view/get_all_bills_view.dart';
 import '../../feature/bills/main_bills/presentation/view/widget/all_active_bills/all_active_bills_view.dart';
 import '../../feature/bills/main_bills/presentation/view/widget/show_detail_bills/show_detail_bills.dart';
+import '../../feature/chat/presentation/view/chat_to_owner_view.dart';
 import '../../feature/expense/general_expense/presentation/view/general_expense_view.dart';
 import '../../feature/home/presentation/view/home_view.dart';
 import '../../main.dart';
@@ -50,10 +52,18 @@ abstract class AppRouter {
   static const kActiveCoffeeBills = '/kActiveCoffeeBills';
   static const kShowDetailCoffeeBills = '/kShowDetailCoffeeBills';
   static const kCreateCoffeeBillsView = '/kCreateCoffeeBillsView';
+  static const kChatWithOwner = '/kChatWithOwner';
+  static const kOwnerPage = '/kOwnerPage';
 
   static final router = GoRouter(
     navigatorKey: navigatorKey,
     routes: [
+
+      GoRoute(
+        path: kOwnerPage,
+        builder: (context, state) => const OwnerPage(),
+      ),
+
       GoRoute(
         path: kUsers,
         builder: (context, state) {
@@ -112,6 +122,14 @@ abstract class AppRouter {
       GoRoute(
         path: kActiveCoffeeBills,
         builder: (context, state) => const AllActiveCoffeeBillsView(),
+      ),
+
+      GoRoute(
+        path: kChatWithOwner,
+        builder: (context, state) {
+          print("🟢 EXTRA VALUE: ${state.extra}");
+          return ChatToOwnerView(id: (state.extra ?? 0) as int);
+        },
       ),
 
       GoRoute(

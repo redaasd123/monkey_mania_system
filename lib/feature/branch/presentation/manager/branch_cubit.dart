@@ -36,7 +36,7 @@ class BranchCubit extends Cubit<BranchState> {
   }
 
   void selectBranch(int branchId) {
-    Hive.box(kAuthBox).put(AuthKeys.branch, branchId);
+    Hive.box(kAuthBox).put(AuthKeys.branchId, branchId);
     emit(state.copyWith(
       status: BranchStatus.selected,
       selectedBranchId: branchId,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815851120541",
+    "project_id": "monkymania-c6191",
+    "storage_bucket": "monkymania-c6191.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815851120541:android:2858cbdd1ff1f1f156f174",
+        "android_client_info": {
+          "package_name": "com.example.monkey_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk7JUXUQlvxaG4nNYN6mG4g2Am0i8jpFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

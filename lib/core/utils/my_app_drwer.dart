@@ -12,8 +12,6 @@ import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
-import '../secret/secret.dart';
-
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
 
@@ -209,6 +207,22 @@ class MyAppDrawer extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context,
+                  title: LangKeys.chatToOwner.tr(),
+                  icon: FontAwesomeIcons.chartBar,
+                  color: Colors.green,
+                  onTap: () async {
+                    final role = AuthHelper.getRole();
+
+                    if (role == 'waiter' || role == 'reception') {
+                      GoRouter.of(context).push(AppRouter.kChatWithOwner);
+                    } else {
+                       GoRouter.of(context).push(AppRouter.kOwnerPage);
+                    }
+                  },
+                ),
+
+                _buildDrawerItem(
+                  context,
                   title: LangKeys.logOut.tr(),
                   icon: FontAwesomeIcons.rightFromBracket,
                   color: Colors.red,
@@ -222,7 +236,6 @@ class MyAppDrawer extends StatelessWidget {
             ),
           ),
 
-          // ---------- FOOTER ----------
           Container(
             padding: const EdgeInsets.all(12),
             color: colorScheme.primary.withOpacity(0.05),
@@ -243,13 +256,13 @@ class MyAppDrawer extends StatelessWidget {
 
   // ---- DRAWER ITEM ----
   Widget _buildDrawerItem(
-      BuildContext context, {
-        required String title,
-        required IconData icon,
-        required Color color,
-        VoidCallback? onTap,
-        List<Map<String, dynamic>>? popupItems,
-      }) {
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    VoidCallback? onTap,
+    List<Map<String, dynamic>>? popupItems,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
@@ -270,43 +283,49 @@ class MyAppDrawer extends StatelessWidget {
           ),
           trailing: popupItems != null
               ? PopupMenuButton<int>(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[900]!.withOpacity(0.95)
-                : Colors.white.withOpacity(0.95),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.settings, color: colorScheme.primary, size: 20),
-                const SizedBox(width: 4),
-                const Icon(Icons.arrow_drop_down, size: 20),
-              ],
-            ),
-            itemBuilder: (context) {
-              return popupItems.asMap().entries.map((entry) {
-                final idx = entry.key;
-                final item = entry.value;
-                return PopupMenuItem<int>(
-                  value: idx,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[900]!.withOpacity(0.95)
+                      : Colors.white.withOpacity(0.95),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (item['icon'] != null)
-                        Icon(item['icon'], color: colorScheme.primary),
-                      if (item['icon'] != null) const SizedBox(width: 8),
-                      Text(
-                        item['title'],
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w500),
+                      Icon(
+                        Icons.settings,
+                        color: colorScheme.primary,
+                        size: 20,
                       ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_drop_down, size: 20),
                     ],
                   ),
-                  onTap: item['onTap'],
-                );
-              }).toList();
-            },
-          )
+                  itemBuilder: (context) {
+                    return popupItems.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final item = entry.value;
+                      return PopupMenuItem<int>(
+                        value: idx,
+                        child: Row(
+                          children: [
+                            if (item['icon'] != null)
+                              Icon(item['icon'], color: colorScheme.primary),
+                            if (item['icon'] != null) const SizedBox(width: 8),
+                            Text(
+                              item['title'],
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: item['onTap'],
+                      );
+                    }).toList();
+                  },
+                )
               : null,
           onTap: onTap,
         ),
@@ -316,9 +335,7 @@ class MyAppDrawer extends StatelessWidget {
               ? Color(0xFF424242)
               : const Color(0xFFE0E0E0),
         ),
-
       ],
     );
   }
-
 }

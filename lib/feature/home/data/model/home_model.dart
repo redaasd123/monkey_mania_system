@@ -33,36 +33,36 @@ class HomeModel {
     todaysVisa = json['todays_visa'];
   }
 
-  num? todaysKidsSales;
+  String? todaysKidsSales;
   String? kidsSalesDifferenceFromYesterday;
-  num? todaysCafeSales;
+  String? todaysCafeSales;
   String? cafeSalesDifferenceFromYesterday;
-  num? todaysChildrenCount;
+  String? todaysChildrenCount;
   String? childrenCountDifferenceFromYesterday;
-  num? todaysSubscriptionsSales;
-  num? todaysSubscriptionsCount;
-  num? todaysStaffWithdrawsTotal;
-  num? todaysStaffRequestedWithdrawCount;
+  String? todaysSubscriptionsSales;
+  String? todaysSubscriptionsCount;
+  String? todaysStaffWithdrawsTotal;
+  String? todaysStaffRequestedWithdrawCount;
   String? todaysMoneyUnbalance;
-  num? todaysCash;
-  num? todaysInstapay;
-  num? todaysVisa;
+  String? todaysCash;
+  String? todaysInstapay;
+  String? todaysVisa;
 
   HomeModel copyWith({
-    num? todaysKidsSales,
+    String? todaysKidsSales,
     String? kidsSalesDifferenceFromYesterday,
-    num? todaysCafeSales,
+    String? todaysCafeSales,
     String? cafeSalesDifferenceFromYesterday,
-    num? todaysChildrenCount,
+    String? todaysChildrenCount,
     String? childrenCountDifferenceFromYesterday,
-    num? todaysSubscriptionsSales,
-    num? todaysSubscriptionsCount,
-    num? todaysStaffWithdrawsTotal,
-    num? todaysStaffRequestedWithdrawCount,
+    String? todaysSubscriptionsSales,
+    String? todaysSubscriptionsCount,
+    String? todaysStaffWithdrawsTotal,
+    String? todaysStaffRequestedWithdrawCount,
     String? todaysMoneyUnbalance,
-    num? todaysCash,
-    num? todaysInstapay,
-    num? todaysVisa,
+    String? todaysCash,
+    String? todaysInstapay,
+    String? todaysVisa,
   }) =>
       HomeModel(
         todaysKidsSales: todaysKidsSales ?? this.todaysKidsSales,

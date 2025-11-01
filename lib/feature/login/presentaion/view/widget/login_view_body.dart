@@ -35,7 +35,7 @@ class LoginViewBody extends StatelessWidget {
               showSelectBranchWithLoginBottomSheet(
                 context,
                 onSelected: (id) async {
-                  Hive.box(kAuthBox).put(AuthKeys.branch, id);
+                  Hive.box(kAuthBox).put(AuthKeys.branchId, id);
                   showGreenFlush(context, LangKeys.loginSuccess.tr());
                   await Future.delayed(const Duration(milliseconds: 1000));
                   if (context.mounted) {

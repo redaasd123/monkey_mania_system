@@ -31,7 +31,6 @@ class AppInitializer {
     // await Hive.deleteBoxFromDisk(kChildrenBox);
     // await Hive.deleteBoxFromDisk(kSaveCreateChild);
     await _openHiveBoxes();
-
     setUpServiceLocator();
     await initializeSyncServices();
   }

@@ -10,6 +10,7 @@
   "children": "Children",
   "nightMode": "Night Mode",
   "logOut": "Logout",
+  "chatToOwner" : "chatToOwner",
   "name": "Name",
   "Address": "Address",
   "Notes": "Notes (optional)",

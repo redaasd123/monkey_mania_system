@@ -12,25 +12,29 @@ class AuthKeys {
   static const username = 'username';
   static const userId = 'user_id';
   static const role = 'role';
-  static const branch = 'branch';
+  static const branchId = 'branch';
+  static const branchName = 'branchName';
 }
 
 class AuthHelper {
   static final Box _authBox = Hive.box(kAuthBox);
 
-  //
   static Future<void> saveTokens({
-    required dynamic branch,
+    required dynamic branchId,
+    required int userId,
+    required String branchName,
     required String? accessToken,
     required String? refreshToken,
     required String? username,
     required String? role,
   }) async {
+    await _authBox.put(AuthKeys.userId, userId);
+    await _authBox.put(AuthKeys.branchName, branchName);
     await _authBox.put(AuthKeys.accessToken, accessToken);
     await _authBox.put(AuthKeys.refreshToken, refreshToken);
     await _authBox.put(AuthKeys.username, username);
     await _authBox.put(AuthKeys.role, role);
-    await _authBox.put(AuthKeys.branch, branch);
+    await _authBox.put(AuthKeys.branchId, branchId);
   }
 
   static String? getAccessToken() => _authBox.get(AuthKeys.accessToken);
@@ -41,7 +45,9 @@ class AuthHelper {
 
   static String? getRole() => _authBox.get(AuthKeys.role);
 
-  static dynamic getBranch() => _authBox.get(AuthKeys.branch);
+  static int getUserId() => _authBox.get(AuthKeys.userId);
+
+  static dynamic getBranch() => _authBox.get(AuthKeys.branchId);
 
   static Future<void> clearAuthData() async => await _authBox.clear();
 
@@ -62,11 +68,6 @@ class AuthHelper {
     }
   }
 
-
-
-
-
-
   static Future<String?> refreshAccessToken() async {
     final refreshToken = getRefreshToken();
     if (refreshToken == null) return null;
@@ -84,10 +85,7 @@ class AuthHelper {
       }
 
       await _authBox.put(AuthKeys.accessToken, data['access']);
-      await _authBox.put(
-        AuthKeys.refreshToken,
-        data['refresh'],
-      );
+      await _authBox.put(AuthKeys.refreshToken, data['refresh']);
 
       return data['access'];
     } catch (e, st) {
@@ -96,4 +94,3 @@ class AuthHelper {
     }
   }
 }
-

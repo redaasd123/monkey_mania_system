@@ -15,7 +15,6 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(status: HomeStatus.loading));
     final result = await homeUseCase.call(param);
     result.fold((failure) {
-      print("❌ Failure: $failure");
       emit(
         state.copyWith(
           status: HomeStatus.failure,

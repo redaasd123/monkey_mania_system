@@ -7,7 +7,6 @@ import 'package:monkey_app/feature/children/domain/entity/children/children_enti
 import 'package:monkey_app/feature/school/presintation/manager/school_cubit/school_cubit.dart';
 
 import '../../../../../core/param/create_children_params/create_children_params.dart';
-import '../../../../../core/utils/constans.dart';
 import '../../../../../core/utils/langs_key.dart';
 import '../../../../../core/utils/selected_item_text_field.dart';
 import '../../../../../core/widget/widget/custom_build_header_sheet_.dart';
@@ -95,9 +94,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
           left: 20,
           right: 20,
           top: 16,
-          bottom:
-              MediaQuery.of(context).viewInsets.bottom +
-              24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -105,7 +102,11 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildHandle(),
-              CustombuildHeader(colorScheme, LangKeys.appName.tr(), colorScheme.onPrimary),
+              CustombuildHeader(
+                colorScheme,
+                LangKeys.appName.tr(),
+                colorScheme.onPrimary,
+              ),
               const SizedBox(height: 20),
               _buildForm(context),
             ],
@@ -114,8 +115,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
       ),
     );
   }
-
-
 
   Widget _buildForm(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -154,7 +153,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                 await context.read<SchoolCubit>().fetchSchool();
                 return context.read<SchoolCubit>().state.allSchool;
               },
-              itemTitle: (school) => school.name ,
+              itemTitle: (school) => school.name,
               onSelected: (school) {
                 _selectedSchoolId = school.id;
               },
@@ -287,10 +286,7 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFF004953),
-                Color(0xFF004953),
-              ],
+              colors: [Color(0xFF004953), Color(0xFF004953)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -327,7 +323,6 @@ class _AddChildBottomSheetState extends State<AddChildBottomSheet> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   TextField(
                     controller: searchCtrl,
                     style: const TextStyle(color: Colors.white),

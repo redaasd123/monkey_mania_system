@@ -10,6 +10,7 @@ const kSaveUpdateSchool = 'kSaveUpdateSchool';
 const kSaveCreateSchool = 'kSaveCreateSchool';
 const kSaveLayerOne = 'kSaveLayerOne';
 
+ const int ownerId = 1;
 /// 🌍 Base URL
 
 
@@ -56,5 +57,16 @@ const List<String> kProductImages = [
   kImage3,
   kImage4,
   kImage9,
+];
+
+ const List<String> images = [
+  'assets/image/img.png',
+  'assets/image/img_5.png',
+  'assets/image/img_2.png',
+  'assets/image/img.png',
+  'assets/image/img_1.png',
+  'assets/image/img_6.png',
+  'assets/image/img_4.png',
+  'assets/image/img_3.png',
 ];
 

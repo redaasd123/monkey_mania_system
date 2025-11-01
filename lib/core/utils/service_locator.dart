@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:monkey_app/core/utils/api_serviece.dart';
@@ -37,6 +38,11 @@ import 'package:monkey_app/feature/branch/data/repos/branch_repos_impl.dart';
 import 'package:monkey_app/feature/branch/domain/repo/branch_repo.dart';
 import 'package:monkey_app/feature/branch/domain/use_case/branch_use_case.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
+import 'package:monkey_app/feature/chat/data/data_source/remote_data_source.dart';
+import 'package:monkey_app/feature/chat/data/repo_impl/chat_repo_impl.dart';
+import 'package:monkey_app/feature/chat/domain/repo/chat_repo.dart';
+import 'package:monkey_app/feature/chat/domain/use_case/send_message_use_case.dart';
+import 'package:monkey_app/feature/chat/presentation/manager/chat_cubit.dart';
 import 'package:monkey_app/feature/children/data/data_source/childern_local_data_source.dart';
 import 'package:monkey_app/feature/children/data/data_source/children_remote_data_source.dart';
 import 'package:monkey_app/feature/children/data/repos/children_repo_impl.dart';
@@ -91,6 +97,7 @@ import 'package:monkey_app/feature/users/domain/use_case/fetch_user_use_case.dar
 import 'package:monkey_app/feature/users/domain/use_case/update_user_use_case.dart';
 import 'package:monkey_app/feature/users/presentation/manager/user_cubit.dart';
 
+import '../../feature/chat/domain/use_case/get_message_use_case.dart';
 import '../../feature/expense/material_expense/data/repo_impl/material_repo_impl.dart';
 
 final getIt = GetIt.instance;
@@ -104,23 +111,23 @@ void setUpServiceLocator() {
 
   /* ───────── Login Layer ───────── */
   getIt.registerLazySingleton<LoginRemoteDataSource>(
-    () => LoginRemoteDataSourceImpl(getIt<Api>()),
+        () => LoginRemoteDataSourceImpl(getIt<Api>()),
   );
   getIt.registerLazySingleton<LoginRepo>(
-    () => LoginRepoImpl(loginRemoteDataSource: getIt()),
+        () => LoginRepoImpl(loginRemoteDataSource: getIt()),
   );
   getIt.registerFactory(() => LoginRepoUseCase(loginRepo: getIt()));
   getIt.registerFactory(() => LoginCubit(getIt()));
 
   /* ───────── School Layer ───────── */
   getIt.registerLazySingleton<SchoolRemoteDataSource>(
-    () => SchoolRemoteDataSourceImpl(api: getIt()),
+        () => SchoolRemoteDataSourceImpl(api: getIt()),
   );
   getIt.registerLazySingleton<SchoolLocalDataSource>(
-    () => SchoolLocalDataSourceImpl(),
+        () => SchoolLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<SchoolRepo>(
-    () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
+        () => SchoolRepoImpl(getIt(), schoolRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => FetchSchoolUseCase(schoolRpo: getIt()));
   getIt.registerLazySingleton(() => UpdateSchoolUseCase(schoolRpo: getIt()));
@@ -129,63 +136,64 @@ void setUpServiceLocator() {
 
   /* ───────── Children Layer ───────── */
   getIt.registerLazySingleton<ChildrenRemoteDataSource>(
-    () => ChildrenRemoteDataSourceImpl(),
+        () => ChildrenRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenLocalDataSource>(
-    () => ChildrenLocalDataSourceImpl(),
+        () => ChildrenLocalDataSourceImpl(),
   );
   getIt.registerLazySingleton<ChildrenRepo>(
-    () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
+        () => ChildrenRepoImpl(getIt(), childrenRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchChildrenUseCase(childrenRepo: getIt()),
+        () => FetchChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerLazySingleton<ChildrenNonActiveUseCase>(
-    () => ChildrenNonActiveUseCase(childrenRepo: getIt.get()),
+        () => ChildrenNonActiveUseCase(childrenRepo: getIt.get()),
   );
   getIt.registerLazySingleton(() => CreateChildUseCase(childrenRepo: getIt()));
   getIt.registerLazySingleton(
-    () => UpdateChildrenUseCase(childrenRepo: getIt()),
+        () => UpdateChildrenUseCase(childrenRepo: getIt()),
   );
   getIt.registerFactory(
-    () => ChildrenCubit(
-      childrenNonActiveUseCase: getIt.get(),
-      fetchChildrenUseCase: getIt(),
-      createChildUseCase: getIt(),
-      updateChildrenUseCase: getIt(),
-    ),
+        () =>
+        ChildrenCubit(
+          childrenNonActiveUseCase: getIt.get(),
+          fetchChildrenUseCase: getIt(),
+          createChildUseCase: getIt(),
+          updateChildrenUseCase: getIt(),
+        ),
   );
 
   /* ───────── Branch Layer ───────── */
   getIt.registerLazySingleton<BranchRemoteDataSource>(
-    () => BranchRemoteDataSourceImpl(),
+        () => BranchRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BranchRepo>(
-    () => BranchRepoImpl(branchRemoteDataSource: getIt()),
+        () => BranchRepoImpl(branchRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BranchUseCase(branchRepo: getIt()));
   getIt.registerFactory(() => BranchCubit(getIt()));
 
   /* ───────── Main Bills Layer ───────── */
   getIt.registerLazySingleton<BillsRemoteDataSource>(
-    () => BillsRemoteDataSourceImpl(),
+        () => BillsRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<BillsRepo>(
-    () => BillsRepoImpl(billsRemoteDataSource: getIt()),
+        () => BillsRepoImpl(billsRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton(() => BillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => CreateBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => ApplyDiscountUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(
-    () => FetchActiveBillsUseCase(billsRepo: getIt()),
+        () => FetchActiveBillsUseCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(() => CloseBillsUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(() => GetOneBillUseCase(billsRepo: getIt()));
   getIt.registerLazySingleton(
-    () => UpdateCalculationsUseCase(billsRepo: getIt()),
+        () => UpdateCalculationsUseCase(billsRepo: getIt()),
   );
   getIt.registerFactory(
-    () => BillsCubit(getIt(), getIt(), getIt(), getIt.get(), getIt.get()),
+        () => BillsCubit(getIt(), getIt(), getIt(), getIt.get(), getIt.get()),
   );
   getIt.registerFactory(() => ApplyDiscountCubit(getIt()));
   getIt.registerFactory(() => CloseBillsCubit(getIt()));
@@ -193,124 +201,149 @@ void setUpServiceLocator() {
 
   /* ───────── Coffee Bills Layer ───────── */
   getIt.registerLazySingleton<BillsCoffeeDataSource>(
-    () => BillsCoffeeDataSourceImpl(),
+        () => BillsCoffeeDataSourceImpl(),
   );
-  getIt.registerLazySingleton<BillsCoffeeLocalDataSource>(()=>BillsCoffeeLocalDataSourceImpl());
+  getIt.registerLazySingleton<BillsCoffeeLocalDataSource>(() =>
+      BillsCoffeeLocalDataSourceImpl());
   getIt.registerLazySingleton<CoffeeBillsRepo>(
-    () => BillsCoffeeImpl(billsCoffeeDataSource: getIt(), billsCoffeeLocalDataSource: getIt.get()),
+        () =>
+        BillsCoffeeImpl(billsCoffeeDataSource: getIt(),
+            billsCoffeeLocalDataSource: getIt.get()),
   );
   getIt.registerLazySingleton(
-    () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
+        () => CreateBillsCoffeeUSeCase(billsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
+        () => GetOneCoffeeBillsUseCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton(
-    () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton<ReturnProductsUseCase>(
-    () => ReturnProductsUseCase(coffeeBillsRepo: getIt.get()),
+        () => ReturnProductsUseCase(coffeeBillsRepo: getIt.get()),
   );
   getIt.registerLazySingleton(
-    () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
+        () => FetchActiveBillsCoffeeUSeCase(coffeeBillsRepo: getIt()),
   );
   getIt.registerLazySingleton<GetLayerOneUseCase>(
-    () => GetLayerOneUseCase(billsRepo: getIt.get()),
+        () => GetLayerOneUseCase(billsRepo: getIt.get()),
   );
   getIt.registerLazySingleton<GetLayerTowUseCase>(
-    () => GetLayerTowUseCase(billsRepo: getIt.get()),
+        () => GetLayerTowUseCase(billsRepo: getIt.get()),
   );
   getIt.registerFactory(
-    () => CoffeeBillsCubit(getIt(), getIt(), getIt(), getIt()),
+        () => CoffeeBillsCubit(getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerLazySingleton<GetAllLayersUseCase>(
-    () => GetAllLayersUseCase(coffeeBillsRepo: getIt.get()),
+        () => GetAllLayersUseCase(coffeeBillsRepo: getIt.get()),
   );
   getIt.registerFactory(() => LayersCubit(getIt(), getIt(), getIt()));
   getIt.registerFactory(() => GetOneBillsCoffeeCubit(getIt()));
   getIt.registerLazySingleton<OrdersCubit>(() => OrdersCubit());
   getIt.registerLazySingleton<HomeRemoteDataSource>(
-    () => HomeRemoteDataSourceImpl(),
+        () => HomeRemoteDataSourceImpl(),
   );
   getIt.registerLazySingleton<HomeRepo>(
-    () => HomeRepoImpl(homeRemoteDataSource: getIt.get()),
+        () => HomeRepoImpl(homeRemoteDataSource: getIt.get()),
   );
   getIt.registerLazySingleton<HomeUseCase>(
-    () => HomeUseCase(homeRepo: getIt.get()),
+        () => HomeUseCase(homeRepo: getIt.get()),
   );
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt.get()));
   getIt.registerLazySingleton<GeneralExpenseRepo>(
-    () => GeneralExpenseImpl(remoteDataSource: getIt.get()),
+        () => GeneralExpenseImpl(remoteDataSource: getIt.get()),
   );
   getIt.registerCachedFactory<GeneralExpenseRemoteDataSource>(
-    () => GeneralExpenseRemoteDataSourceImpl(),
+        () => GeneralExpenseRemoteDataSourceImpl(),
   );
   getIt.registerCachedFactory<CreateGeneralExpenseUseCase>(
-    () => CreateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+        () => CreateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
   );
   getIt.registerCachedFactory<UpdateGeneralExpenseUseCase>(
-    () => UpdateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+        () => UpdateGeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
   );
   getIt.registerFactory<GeneralExpenseCubit>(
-    () => GeneralExpenseCubit(
-      updateGeneralExpenseUseCase: getIt.get(),
-      generalExpenseUseCase: getIt.get(),
-      createGeneralExpenseUseCase: getIt.get(),
-    ),
+        () =>
+        GeneralExpenseCubit(
+          updateGeneralExpenseUseCase: getIt.get(),
+          generalExpenseUseCase: getIt.get(),
+          createGeneralExpenseUseCase: getIt.get(),
+        ),
   );
 
   getIt.registerLazySingleton<GeneralExpenseUseCase>(
-    () => GeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
+        () => GeneralExpenseUseCase(generalExpenseRepo: getIt.get()),
   );
 
   getIt.registerLazySingleton<MaterialExpenseRepo>(
-    () => MaterialExpenseImpl(remoteDataSource: getIt.get()),
+        () => MaterialExpenseImpl(remoteDataSource: getIt.get()),
   );
   getIt.registerCachedFactory<MaterialExpenseRemoteDataSource>(
-    () => MaterialExpenseRemoteDataSourceImpl(),
+        () => MaterialExpenseRemoteDataSourceImpl(),
   );
   getIt.registerCachedFactory<CreateMaterialExpenseUseCase>(
-    () => CreateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+        () => CreateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
   );
   getIt.registerCachedFactory<UpdateMaterialExpenseUseCase>(
-    () => UpdateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+        () => UpdateMaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
   );
   getIt.registerCachedFactory<MaterialsUseCase>(
-    () => MaterialsUseCase(repo: getIt.get()),
+        () => MaterialsUseCase(repo: getIt.get()),
   );
   getIt.registerFactory<MaterialExpenseCubit>(
-    () => MaterialExpenseCubit(
-      materialsUseCase: getIt.get(),
-      updateMaterialExpenseUseCase: getIt.get(),
-      materialExpenseUseCase: getIt.get(),
-      createMaterialExpenseUseCase: getIt.get(),
-    ),
+        () =>
+        MaterialExpenseCubit(
+          materialsUseCase: getIt.get(),
+          updateMaterialExpenseUseCase: getIt.get(),
+          materialExpenseUseCase: getIt.get(),
+          createMaterialExpenseUseCase: getIt.get(),
+        ),
   );
 
   getIt.registerLazySingleton<MaterialExpenseUseCase>(
-    () => MaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
+        () => MaterialExpenseUseCase(materialExpenseRepo: getIt.get()),
   );
 
   getIt.registerLazySingleton<AnalyticCubit>(() => AnalyticCubit(getIt.get()));
   getIt.registerLazySingleton<AnalyticTypeUseCase>(
-    () => AnalyticTypeUseCase(repo: getIt.get()),
+        () => AnalyticTypeUseCase(repo: getIt.get()),
   );
   getIt.registerLazySingleton<AnalyticRepo>(() => AnalyticTypeImpl());
 
   getIt.registerLazySingleton<UserRemoteDataSource>(() => UserDataSourceImpl());
   getIt.registerLazySingleton<UsersRepo>(
-    () => UsersRepoImpl(userRemoteDataSource: getIt.get()),
+        () => UsersRepoImpl(userRemoteDataSource: getIt.get()),
   );
   getIt.registerLazySingleton<FetchUserUseCase>(
-    () => FetchUserUseCase(usersRepo: getIt.get()),
+        () => FetchUserUseCase(usersRepo: getIt.get()),
   );
   getIt.registerLazySingleton<CreateUserUseCase>(
-    () => CreateUserUseCase(usersRepo: getIt.get()),
+        () => CreateUserUseCase(usersRepo: getIt.get()),
   );
   getIt.registerLazySingleton<UpdateUserUseCase>(
-    () => UpdateUserUseCase(usersRepo: getIt.get()),
+        () => UpdateUserUseCase(usersRepo: getIt.get()),
   );
   getIt.registerLazySingleton<UserCubit>(
-    () => UserCubit(getIt.get(), getIt.get(), getIt.get()),
+        () => UserCubit(getIt.get(), getIt.get(), getIt.get()),
   );
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // 2️⃣ Remote DataSource
+  final ChatRemoteDataSource remoteDataSource = ChatRemoteDataSourceImpl(firestore);
+  getIt.registerLazySingleton<ChatRemoteDataSource>(() => remoteDataSource);
+
+  // 3️⃣ Repository
+  final ChatRepo repo = ChatRepoImpl(remoteDataSource);
+  getIt.registerLazySingleton<ChatRepo>(() => repo);
+
+  // 4️⃣ UseCases
+  final SendMessageUseCase sendMessageUseCase = SendMessageUseCase(repo: repo);
+  final GetMessageUseCase getMessageUseCase = GetMessageUseCase(repo: repo);
+  getIt.registerLazySingleton<SendMessageUseCase>(() => sendMessageUseCase);
+  getIt.registerLazySingleton<GetMessageUseCase>(() => getMessageUseCase);
+
+  // 5️⃣ Cubit
+  getIt.registerLazySingleton<ChatCubit>(() => ChatCubit(
+      sendMessageUseCase: sendMessageUseCase,
+      getMessageUseCase: getMessageUseCase));
 }

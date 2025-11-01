@@ -67,7 +67,7 @@ class HomeListView extends StatelessWidget {
                 showSelectBranchWithLoginBottomSheet(
                   context,
                   onSelected: (selectedBranch) {
-                    Hive.box(kAuthBox).put(AuthKeys.branch, selectedBranch);
+                    Hive.box(kAuthBox).put(AuthKeys.branchId, selectedBranch);
                     BlocProvider.of<HomeCubit>(context).fetchDashBoardData(
                       RequestParameters(branch: [selectedBranch]),
                     );
