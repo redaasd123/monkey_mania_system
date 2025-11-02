@@ -10,6 +10,7 @@ import 'package:monkey_app/core/utils/app_router.dart';
 import 'package:monkey_app/core/utils/constans.dart';
 import 'package:monkey_app/core/utils/langs_key.dart';
 import 'package:monkey_app/feature/branch/presentation/manager/branch_cubit.dart';
+import 'package:monkey_app/feature/chat/presentation/view/widget/owner_list_view.dart';
 import 'package:monkey_app/feature/login/presentaion/view/widget/show_select_branch_with_login.dart';
 
 class MyAppDrawer extends StatelessWidget {
@@ -207,20 +208,27 @@ class MyAppDrawer extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context,
-                  title: LangKeys.chatToOwner.tr(),
+                  title: AuthHelper.getRole() == 'admin'
+                      ? LangKeys.allChats.tr()
+                      : LangKeys.chatToOwner.tr(),
                   icon: FontAwesomeIcons.chartBar,
                   color: Colors.green,
                   onTap: () async {
                     final role = AuthHelper.getRole();
-
-                    if (role == 'waiter' || role == 'reception') {
-                      GoRouter.of(context).push(AppRouter.kChatWithOwner);
+                    if (role == 'admin') {
+                      GoRouter.of(context).push(AppRouter.kOwnerPage);
                     } else {
-                       GoRouter.of(context).push(AppRouter.kOwnerPage);
+                      final data = UserDataFromChat(
+                        image: kTest,
+                        name: 'Ammar Hammed',
+                        id: 1,
+                      );
+                      GoRouter.of(
+                        context,
+                      ).push(AppRouter.kChatWithOwner, extra: data);
                     }
                   },
                 ),
-
                 _buildDrawerItem(
                   context,
                   title: LangKeys.logOut.tr(),

@@ -125,4 +125,5 @@ class LangKeys {
   static const String noBill = "noBill";
   static const String error = "error";
   static const String chatToOwner = 'chatToOwner';
+  static const String allChats = 'allChats';
 }

@@ -7,6 +7,8 @@ import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/coffe_bil
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/show_detail_coffee.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/all_active/all_active_coffee_bills_view.dart';
 import 'package:monkey_app/feature/bills/coffe_bills/presentation/view/widget/create_bills/create_bills_view.dart';
+import 'package:monkey_app/feature/chat/presentation/manager/chat_cubit.dart';
+import 'package:monkey_app/feature/chat/presentation/view/widget/owner_list_view.dart';
 import 'package:monkey_app/feature/chat/presentation/view/widget/owner_page.dart';
 import 'package:monkey_app/feature/children/domain/entity/children/children_entity.dart';
 import 'package:monkey_app/feature/children/presentation/view/children_view.dart';
@@ -59,10 +61,6 @@ abstract class AppRouter {
     navigatorKey: navigatorKey,
     routes: [
 
-      GoRoute(
-        path: kOwnerPage,
-        builder: (context, state) => const OwnerPage(),
-      ),
 
       GoRoute(
         path: kUsers,
@@ -128,9 +126,15 @@ abstract class AppRouter {
         path: kChatWithOwner,
         builder: (context, state) {
           print("🟢 EXTRA VALUE: ${state.extra}");
-          return ChatToOwnerView(id: (state.extra ?? 0) as int);
+          return ChatToOwnerView(userData: state.extra  as UserDataFromChat);
         },
       ),
+
+      GoRoute(
+        path: kOwnerPage,
+        builder: (context, state) => const OwnerPage(),
+      ),
+
 
       GoRoute(
         path: kGetAllActiveBillsView,

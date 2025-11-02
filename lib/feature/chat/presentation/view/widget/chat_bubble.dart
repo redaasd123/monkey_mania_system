@@ -1,15 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:monkey_app/feature/chat/domain/entity/chat_entity.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({super.key, required this.text});
-  final String text;
+  const ChatBubble({super.key, required this.data});
+  final ChatEntity data;
 
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final timeText = DateFormat('HH:mm').format(data.timestamp.toDate());
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -48,7 +50,7 @@ class ChatBubble extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
                Text(
-                text,
+                data.messageText,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
@@ -60,9 +62,9 @@ class ChatBubble extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
+                children:  [
                   Text(
-                    '3:00 PM',
+                    timeText,
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
@@ -86,12 +88,12 @@ class ChatBubble extends StatelessWidget {
 }
 
 class ChatBubbleForFriend extends StatelessWidget {
-  const ChatBubbleForFriend({super.key, required this.text});
-  final String text;
+  const ChatBubbleForFriend({super.key, required this.data});
+  final ChatEntity data;
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final timeText = DateFormat('HH:mm').format(data.timestamp.toDate());
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -130,7 +132,7 @@ class ChatBubbleForFriend extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
                Text(
-                text,
+                data.messageText,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
@@ -142,9 +144,9 @@ class ChatBubbleForFriend extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
+                children:  [
                   Text(
-                    '3:02 PM',
+                    timeText,
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
@@ -160,3 +162,5 @@ class ChatBubbleForFriend extends StatelessWidget {
     );
   }
 }
+
+

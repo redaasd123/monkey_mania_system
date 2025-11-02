@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/helper/auth_helper.dart';
@@ -9,11 +10,9 @@ class EnterMessageField extends StatefulWidget {
   const EnterMessageField({
     super.key,
     required this.id,
-    required this.chatCubit,
   });
 
   final int id;
-  final ChatCubit chatCubit; // 🌟 reference to Cubit
 
   @override
   State<EnterMessageField> createState() => _EnterMessageFieldState();
@@ -81,17 +80,17 @@ class _EnterMessageFieldState extends State<EnterMessageField> {
                     1,
                     userName!,
                   );
-                  widget.chatCubit.sendMessage(
+                  context.read<ChatCubit>().sendMessage(
                     messageEntity,
                   ); // use Cubit reference
-                } else if (role == 'admin') {
+                } else if (role == 'admin'||role == 'owner') {
                   final messageEntity = ChatEntity.createFromText(
                     text,
                     1,
                     widget.id,
                     userName!,
                   );
-                  widget.chatCubit.sendMessage(messageEntity);
+                  context.read<ChatCubit>().sendMessage(messageEntity);
                 }
 
                 _controller.clear();

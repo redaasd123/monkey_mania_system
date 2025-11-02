@@ -50,6 +50,7 @@ class MonkeyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => getIt<MaterialExpenseCubit>()),
+            BlocProvider(create: (context) => getIt<ChatCubit>()),
             BlocProvider(create: (context) => getIt<OrdersCubit>()),
             BlocProvider(
               create: (context) =>

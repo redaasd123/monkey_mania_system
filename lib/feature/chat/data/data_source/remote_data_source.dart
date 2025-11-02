@@ -36,7 +36,6 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
           .collection('messages')
           .add(message.toFirestore());
 
-      // 🔹 تحديث وقت آخر رسالة (لو حبيت تعمل شاشة محادثات في المستقبل)
       await firestore.collection('chats').doc(chatId).set({
         'lastUpdate': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
@@ -45,7 +44,6 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
     }
   }
 
-  /// ✅ جلب الرسائل مرة واحدة فقط
   @override
   Future<List<ChatEntity>> getMessages({
     required int ownerId,
@@ -69,7 +67,6 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
     }
   }
 
-  /// ✅ الاستماع للرسائل في الوقت الفعلي (real-time)
   @override
   Stream<List<ChatEntity>> getMessagesStream({
     required int ownerId,
