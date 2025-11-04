@@ -344,6 +344,7 @@ void setUpServiceLocator() {
 
   // 5️⃣ Cubit
   getIt.registerLazySingleton<ChatCubit>(() => ChatCubit(
+    fetchUserUseCase: getIt.get(),
       sendMessageUseCase: sendMessageUseCase,
       getMessageUseCase: getMessageUseCase));
 }

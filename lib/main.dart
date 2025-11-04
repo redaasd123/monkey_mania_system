@@ -56,6 +56,10 @@ class MonkeyApp extends StatelessWidget {
               create: (context) =>
                   getIt<UserCubit>()..fetchUsers(RequestParameters()),
             ),
+            // BlocProvider(
+            //   create: (context) =>
+            //       getIt<UserCubit>()..fetchUsers(RequestParameters()),
+            // ),
             BlocProvider(create: (context) => getIt<BillsCubit>()),
             BlocProvider(create: (context) => getIt<CloseBillsCubit>()),
             BlocProvider(create: (context) => getIt<ApplyDiscountCubit>()),

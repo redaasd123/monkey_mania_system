@@ -74,7 +74,6 @@ class _ChatToOwnerViewBodyState extends State<ChatToOwnerViewBody> {
           final userId = AuthHelper.getUserId();
           final chatUserId = widget.userDataFromChat.id;
 
-          // نجيب آخر رسالة للمستخدم اللي بنكلمه
           final userMessages = messages.where((msg) =>
           msg.senderId == chatUserId || msg.receiverId == chatUserId
           ).toList();

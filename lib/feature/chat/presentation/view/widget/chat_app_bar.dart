@@ -3,10 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../../core/utils/styles.dart';
 import 'owner_list_view.dart';
 
-class ChatAppBar extends StatelessWidget {
+class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatAppBar({
     super.key,
     required this.userDataFromChat,
@@ -16,16 +17,16 @@ class ChatAppBar extends StatelessWidget {
   final UserDataFromChat userDataFromChat;
   final Timestamp? lastUpdate;
 
+
   bool get isOnline {
     if (lastUpdate == null) return false;
     final now = DateTime.now();
     final diff = now.difference(lastUpdate!.toDate());
-    return diff.inMinutes < 5;
+    return diff.inSeconds < 15;
   }
 
   String getLastSeenText() {
     if (lastUpdate == null) return "Offline";
-
     final lastSeen = lastUpdate!.toDate();
     final now = DateTime.now();
 
@@ -34,10 +35,8 @@ class ChatAppBar extends StatelessWidget {
     } else if (now.day == lastSeen.day &&
         now.month == lastSeen.month &&
         now.year == lastSeen.year) {
-      // same day
-      return "last seen today at ${DateFormat('HH:mm').format(lastSeen)}";
+      return "last seen  ${DateFormat('HH:mm').format(lastSeen)}";
     } else {
-      // different day
       return "last seen on ${DateFormat('MMM d, HH:mm').format(lastSeen)}";
     }
   }
@@ -46,27 +45,18 @@ class ChatAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final statusText = getLastSeenText();
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.white,
+      elevation: 0.8,
+      toolbarHeight: 60.h,
+      titleSpacing: 0,
+      title: Row(
         children: [
-          // Back button
-          Padding(
-            padding: EdgeInsets.only(top: 12.h),
-            child: InkWell(
-              onTap: () => Navigator.pop(context),
-              child: Icon(
-                CupertinoIcons.back,
-                size: 26.sp,
-                color: Colors.black,
-              ),
-            ),
+          IconButton(
+            icon: const Icon(CupertinoIcons.back, color: Colors.black87),
+            onPressed: () => Navigator.pop(context),
           ),
-
-          SizedBox(width: 12.w),
-
-          // Profile image + green dot (only if online)
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -92,36 +82,68 @@ class ChatAppBar extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1.5),
+                      border: Border.all(color: Colors.white, width: 1.5.w),
                     ),
                   ),
                 ),
             ],
           ),
-
-          SizedBox(width: 12.w),
-
-          // Name + status
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                userDataFromChat.name,
-                style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                statusText,
-                style: TextStyle(
-                  color: isOnline ? Colors.green : Colors.grey,
-                  fontSize: 12.sp,
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  userDataFromChat.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Styles.textStyle16.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    fontSize: 15.sp,
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 2.h),
+                Text(
+                  statusText,
+                  style: TextStyle(
+                    color: isOnline ? Colors.teal : Colors.grey,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.videocam_outlined, color: Colors.black87),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.call_outlined, color: Colors.black87),
+          onPressed: () {},
+        ),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert, color: Colors.black87),
+          onSelected: (value) {},
+          itemBuilder: (context) => const [
+            PopupMenuItem(value: 'view', child: Text('View contact')),
+            PopupMenuItem(
+              value: 'media',
+              child: Text('Media, links, and docs'),
+            ),
+            PopupMenuItem(value: 'search', child: Text('Search')),
+            PopupMenuItem(value: 'mute', child: Text('Mute notifications')),
+            PopupMenuItem(value: 'wallpaper', child: Text('Wallpaper')),
+          ],
+        ),
+      ],
     );
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(60.h);
 }

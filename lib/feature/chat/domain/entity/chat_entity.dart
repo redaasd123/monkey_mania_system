@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
+
 
 class ChatEntity extends Equatable {
   final String name;
@@ -35,8 +37,8 @@ class ChatEntity extends Equatable {
     isActive,
     seenMessage,
     messageIsSend,
+    messageText,
   ];
-
 
   factory ChatEntity.createFromText(
       String text,
@@ -59,4 +61,19 @@ class ChatEntity extends Equatable {
   }
 
 
+
+  bool get isOnline {
+    final now = DateTime.now();
+    final diff = now.difference(lastUpdate.toDate());
+    return diff.inSeconds < 15;
+  }
+
+  String get lastSeenFormatted {
+    if (isOnline) return 'Online';
+    final diff = DateTime.now().difference(lastUpdate.toDate());
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
+    if (diff.inHours < 24) return '${diff.inHours} hr ago';
+    return DateFormat('dd MMM, hh:mm a').format(lastUpdate.toDate());
+  }
 }

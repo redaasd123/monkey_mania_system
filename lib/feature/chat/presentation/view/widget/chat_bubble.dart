@@ -7,7 +7,6 @@ class ChatBubble extends StatelessWidget {
   const ChatBubble({super.key, required this.data});
   final ChatEntity data;
 
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -24,8 +23,9 @@ class ChatBubble extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                colorScheme.primary,
-                colorScheme.primary.withOpacity(0.8),
+                ?Colors.deepPurple[400],
+               ? Colors.deepPurple[200]
+
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -75,7 +75,7 @@ class ChatBubble extends StatelessWidget {
                   Icon(
                     Icons.done_all,
                     size: 16,
-                    color: Colors.blueAccent,
+                    color: Colors.black,
                   ),
                 ],
               ),
@@ -106,8 +106,8 @@ class ChatBubbleForFriend extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.grey.shade700,
-                Colors.grey.shade800,
+                Color(0xFFE1BEE7), Color(0xFFE1BEE7),
+
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -134,7 +134,7 @@ class ChatBubbleForFriend extends StatelessWidget {
                Text(
                 data.messageText,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 15,
                   height: 1.3,
                   fontWeight: FontWeight.w500,

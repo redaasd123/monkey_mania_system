@@ -60,8 +60,6 @@ abstract class AppRouter {
   static final router = GoRouter(
     navigatorKey: navigatorKey,
     routes: [
-
-
       GoRoute(
         path: kUsers,
         builder: (context, state) {
@@ -126,15 +124,22 @@ abstract class AppRouter {
         path: kChatWithOwner,
         builder: (context, state) {
           print("🟢 EXTRA VALUE: ${state.extra}");
-          return ChatToOwnerView(userData: state.extra  as UserDataFromChat);
+          return ChatToOwnerView(userData: state.extra as UserDataFromChat);
         },
       ),
 
       GoRoute(
         path: kOwnerPage,
-        builder: (context, state) => const OwnerPage(),
+        builder: (context, state) {
+          return const OwnerPage();
+        },
       ),
 
+  // BlocProvider(
+  // create: (context) =>
+  // getIt<ChatCubit>()
+  // ..fetchUsers(RequestParameters(branch: ['all'])),
+  // child:
 
       GoRoute(
         path: kGetAllActiveBillsView,

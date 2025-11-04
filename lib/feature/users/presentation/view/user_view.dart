@@ -60,6 +60,7 @@ class _UserViewState extends State<UserView> {
                   );
           },
         ),
+
         actions: [
           IconButton(
             icon: BlocBuilder<UserCubit, UserState>(

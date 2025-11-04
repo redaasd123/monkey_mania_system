@@ -27,8 +27,6 @@ class _UserListViewState extends State<UserListView> {
     super.initState();
     scrollController = ScrollController();
     scrollController.addListener(scrollListener);
-
-    // ✅ تأكد إن الصفحة لسه mounted قبل تشغيل autoFetch
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _autoFetchMore();

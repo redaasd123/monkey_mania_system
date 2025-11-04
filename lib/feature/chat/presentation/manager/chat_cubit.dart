@@ -5,17 +5,22 @@ import 'package:equatable/equatable.dart';
 import 'package:monkey_app/feature/chat/domain/entity/chat_entity.dart';
 import 'package:monkey_app/feature/chat/domain/use_case/get_message_use_case.dart';
 import 'package:monkey_app/feature/chat/domain/use_case/send_message_use_case.dart';
+import 'package:monkey_app/feature/users/domain/use_case/fetch_user_use_case.dart';
 import '../../../../core/errors/fire_base_failure.dart';
+import '../../../bills/main_bills/domain/use_case/param/fetch_bills_param.dart';
+import '../../../users/domain/entity/user_data_entity.dart';
 
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final SendMessageUseCase sendMessageUseCase;
   final GetMessageUseCase getMessageUseCase;
+  final FetchUserUseCase fetchUserUseCase;
 
   StreamSubscription<List<ChatEntity>>? _messagesSubscription;
 
   ChatCubit({
+    required this.fetchUserUseCase,
     required this.sendMessageUseCase,
     required this.getMessageUseCase,
   }) : super(const ChatState());
@@ -49,7 +54,7 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  /// 🔥 الاستماع للرسائل في الوقت الفعلي (Real-time)
+
   Future<void> listenToMessages({
     required int ownerId,
     required int userId,
@@ -97,6 +102,7 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
   }
+
 
   /// 🧹 إلغاء الاستماع بأمان
   @override

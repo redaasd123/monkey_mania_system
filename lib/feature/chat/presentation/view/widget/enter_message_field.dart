@@ -63,38 +63,46 @@ class _EnterMessageFieldState extends State<EnterMessageField> {
             backgroundColor: colorScheme.primary,
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.white),
-              onPressed: () {
-                print(
-                  '💬 Sending from user: ${AuthHelper.getUserId()} to receiver: ${widget.id}',
-                );
-                final role = AuthHelper.getRole();
-                final text = _controller.text.trim();
-                final userName = AuthHelper.getUsername();
-                if (text.isEmpty) return;
+                onPressed: () {
+                  final text = _controller.text.trim();
+                  if (text.isEmpty) return;
 
-                if (role == 'waiter' || role == 'reception') {
+                  final role = AuthHelper.getRole();
                   final userId = AuthHelper.getUserId();
-                  final messageEntity = ChatEntity.createFromText(
-                    text,
-                    userId,
-                    1,
-                    userName!,
-                  );
-                  context.read<ChatCubit>().sendMessage(
-                    messageEntity,
-                  ); // use Cubit reference
-                } else if (role == 'admin'||role == 'owner') {
-                  final messageEntity = ChatEntity.createFromText(
-                    text,
-                    1,
-                    widget.id,
-                    userName!,
-                  );
-                  context.read<ChatCubit>().sendMessage(messageEntity);
+                  final userName = AuthHelper.getUsername();
+                  final receiverId = widget.id;
+
+                  print('💬 Sending from user: $userId to receiver: $receiverId (role: $role)');
+
+                  final chatCubit = context.read<ChatCubit>();
+
+                  ChatEntity messageEntity;
+
+                  if (role == 'waiter' || role == 'reception') {
+                    // 👇 Waiter or reception sends message to admin (id = 1)
+                    messageEntity = ChatEntity.createFromText(
+                      text,
+                      userId,
+                      1,
+                      userName ?? 'Unknown User',
+                    );
+                  } else if (role == 'admin' || role == 'owner') {
+                    // 👇 Admin or owner sends message to user (widget.id)
+                    messageEntity = ChatEntity.createFromText(
+                      text,
+                      1,
+                      receiverId,
+                      userName ?? 'Admin',
+                    );
+                  } else {
+                    print('⚠️ Unknown role: $role');
+                    return;
+                  }
+
+                  chatCubit.sendMessage(messageEntity);
+                  _controller.clear();
                 }
 
-                _controller.clear();
-              },
             ),
           ),
         ],

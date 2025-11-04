@@ -67,6 +67,7 @@ class UserCubit extends Cubit<UserState> {
           state.copyWith(
             isLoading: false,
             data: updatedBills,
+            userDataForFireBase: List<UserDataEntity>.from(updatedBills),
             hasMore: more,
             currentPage: more ? pageNumber + 1 : pageNumber,
             status: UserStatus.success,

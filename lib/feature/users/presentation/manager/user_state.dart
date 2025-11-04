@@ -19,6 +19,7 @@ enum UserStatus {
 class UserState extends Equatable {
   final UserStatus status;
   final List<UserDataEntity>? data;
+  final List<UserDataEntity>? userDataForFireBase;
   final String? errorMessage;
   final bool isSearching;
   final String searchQuery;
@@ -27,6 +28,7 @@ class UserState extends Equatable {
   final bool isLoading;
 
   const UserState({
+    this.userDataForFireBase,
     this.data,
     this.status = UserStatus.initial,
     this.errorMessage,
@@ -40,6 +42,7 @@ class UserState extends Equatable {
   UserState copyWith({
     UserStatus? status,
     List<UserDataEntity>? data,
+    List<UserDataEntity>? userDataForFireBase,
     String? errorMessage,
     bool? isSearching,
     String? searchQuery,
@@ -48,6 +51,7 @@ class UserState extends Equatable {
     bool? isLoading,
   }) {
     return UserState(
+      userDataForFireBase: userDataForFireBase??this.userDataForFireBase,
       status: status ?? this.status,
       data: data ?? this.data,
       errorMessage: errorMessage ?? this.errorMessage,
@@ -61,6 +65,7 @@ class UserState extends Equatable {
 
   @override
   List<Object?> get props => [
+    userDataForFireBase,
     status,
     data,
     errorMessage,
