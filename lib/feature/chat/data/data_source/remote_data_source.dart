@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:monkey_app/feature/chat/data/model/chat_model.dart';
 import 'package:monkey_app/feature/chat/domain/entity/chat_entity.dart';
 
@@ -30,12 +32,17 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
           : '${ownerId}_${message.senderId}';
 
 
-      await firestore
+      final docRef = await firestore
           .collection('chats')
           .doc(chatId)
           .collection('messages')
-          .add(message.toFirestore());
+          .add({
+        ...message.toFirestore(),
+        'messageIsSend': false,
+      });
 
+      /// ✅ Immediately after success, mark as sent
+      await docRef.update({'messageIsSend': true});
       await firestore.collection('chats').doc(chatId).set({
         'lastUpdate': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
@@ -67,6 +74,7 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
     }
   }
 
+
   @override
   Stream<List<ChatEntity>> getMessagesStream({
     required int ownerId,
@@ -85,3 +93,6 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
         .toList());
   }
 }
+
+
+

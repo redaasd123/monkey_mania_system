@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:monkey_app/feature/users/presentation/manager/user_cubit.dart';
+
 import '../../../../../core/utils/langs_key.dart';
 import 'owner_list_view.dart';
 
@@ -63,47 +64,40 @@ class _OwnerPageState extends State<OwnerPage> {
           default:
             body = OwnerListViewBlocConsumer(users: users);
         }
-
         return Scaffold(
           appBar: AppBar(
             backgroundColor: colorScheme.primary,
             foregroundColor: colorScheme.onPrimary,
             title: state.isSearching
                 ? TextField(
-              autofocus: true,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-              cursorColor: colorScheme.onPrimary,
-              decoration: InputDecoration(
-                hintText: LangKeys.search.tr(),
-                hintStyle: TextStyle(
-                  color: colorScheme.onPrimary.withOpacity(0.6),
-                ),
-                border: InputBorder.none,
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8),
-                filled: true,
-                fillColor: colorScheme.primary,
-              ),
-              onChanged: (val) {
-                context.read<UserCubit>().searchUsers(val);
-              },
-            )
+                    autofocus: true,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    cursorColor: colorScheme.onPrimary,
+                    decoration: InputDecoration(
+                      hintText: LangKeys.search.tr(),
+                      hintStyle: TextStyle(
+                        color: colorScheme.onPrimary.withOpacity(0.6),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                      filled: true,
+                      fillColor: colorScheme.primary,
+                    ),
+                    onChanged: (val) {
+                      context.read<UserCubit>().searchUsers(val);
+                    },
+                  )
                 : Text(
-              LangKeys.users.tr(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+                    LangKeys.users.tr(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
             actions: [
               IconButton(
-                icon: Icon(
-                  state.isSearching ? Icons.close : Icons.search,
-                ),
+                icon: Icon(state.isSearching ? Icons.close : Icons.search),
                 onPressed: () {
                   context.read<UserCubit>().toggleSearch();
                 },

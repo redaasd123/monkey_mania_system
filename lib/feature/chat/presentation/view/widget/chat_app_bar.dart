@@ -17,7 +17,6 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final UserDataFromChat userDataFromChat;
   final Timestamp? lastUpdate;
 
-
   bool get isOnline {
     if (lastUpdate == null) return false;
     final now = DateTime.now();
@@ -37,7 +36,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         now.year == lastSeen.year) {
       return "last seen  ${DateFormat('HH:mm').format(lastSeen)}";
     } else {
-      return "last seen on ${DateFormat('MMM d, HH:mm').format(lastSeen)}";
+      return "last seen  ${DateFormat('MMM d, HH:mm').format(lastSeen)}";
     }
   }
 

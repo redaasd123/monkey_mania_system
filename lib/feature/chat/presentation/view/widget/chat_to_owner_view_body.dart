@@ -26,7 +26,7 @@ class _ChatToOwnerViewBodyState extends State<ChatToOwnerViewBody> {
     final chatCubit = context.read<ChatCubit>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final role = AuthHelper.getRole();
-      if (role == 'admin') {
+      if (role == 'admin'||role == 'owner') {
         chatCubit.listenToMessages(ownerId: 1, userId: widget.userDataFromChat.id);
       } else {
         chatCubit.listenToMessages(ownerId: 1, userId: AuthHelper.getUserId());
@@ -98,8 +98,8 @@ class _ChatToOwnerViewBodyState extends State<ChatToOwnerViewBody> {
                         final message = messages[index];
                         final isMe = message.senderId == userId;
                         return isMe
-                            ? ChatBubble(data: message)
-                            : ChatBubbleForFriend(data: message);
+                            ? ChatBubble(message: message)
+                            : ChatBubbleForFriend(message: message);
                       },
                     ),
                   ),
